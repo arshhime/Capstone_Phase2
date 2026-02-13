@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { CheckCircle, Lightbulb, Eye, EyeOff, Brain, ChevronRight, Zap } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { useProblem } from '../contexts/ProblemContext';
@@ -9,7 +9,7 @@ import OptimalSolution from './OptimalSolution';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProblemSolver() {
-  const { currentProblem } = useProblem();
+  const { currentProblem, problems, selectProblem } = useProblem();
   const [isCompleted, setIsCompleted] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [currentHintIndex, setCurrentHintIndex] = useState(0);
@@ -17,6 +17,17 @@ export default function ProblemSolver() {
   const [phase, setPhase] = useState<'reading' | 'mcq' | 'coding' | 'completed'>('reading');
   const [showOptimalSolution, setShowOptimalSolution] = useState(false);
   const [solutionWorked, setSolutionWorked] = useState<boolean | null>(null);
+
+  // Reset state when problem changes
+  useEffect(() => {
+    setPhase('reading');
+    setIsCompleted(false);
+    setShowOptimalSolution(false);
+    setTimerRunning(false);
+    setCurrentHintIndex(0);
+    setShowHint(false);
+    setSolutionWorked(null);
+  }, [currentProblem?.id]);
 
   useEffect(() => {
     let interval: any;
@@ -82,7 +93,15 @@ export default function ProblemSolver() {
                 <Zap className="h-4 w-4 text-violet-500" />
               </div>
               <div className="hidden sm:block">
-                <h2 className="text-sm font-bold truncate max-w-[200px]">{currentProblem.title}</h2>
+                <select
+                  value={currentProblem.id}
+                  onChange={(e) => selectProblem(e.target.value)}
+                  className="bg-transparent text-sm font-bold text-white border-none focus:ring-0 cursor-pointer hover:text-violet-400 transition-colors"
+                >
+                  {problems.map(p => (
+                    <option key={p.id} value={p.id} className="bg-zinc-900">{p.title}</option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -206,8 +225,8 @@ export default function ProblemSolver() {
 
                   <div className="flex flex-wrap gap-2 mb-8">
                     <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-widest ${currentProblem.difficulty === 'Easy' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                        currentProblem.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                          'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                      currentProblem.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                        'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                       }`}>
                       {currentProblem.difficulty}
                     </span>
@@ -356,7 +375,10 @@ export default function ProblemSolver() {
             className="absolute bottom-0 left-0 right-0 h-[320px] bg-zinc-900 border-t border-violet-500/30 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] z-40 overflow-hidden rounded-t-[40px]"
           >
             <div className="h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-600/10 via-zinc-900 to-zinc-900">
-              <MCQSection onComplete={() => setPhase('coding')} />
+              <MCQSection key={currentProblem.id} onComplete={() => {
+                setPhase('coding');
+                setTimerRunning(true);
+              }} />
             </div>
           </motion.div>
         )}

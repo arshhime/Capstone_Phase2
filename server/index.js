@@ -37,6 +37,22 @@ app.post('/api/signup', async (req, res) => {
       email,
       password: hashedPassword,
       avatar: `https://i.pravatar.cc/150?u=${email}`,
+      recentActivity: [
+        {
+          problemId: '1',
+          title: 'Two Sum',
+          difficulty: 'Easy',
+          status: 'Solved',
+          timeSpent: '15m',
+          timestamp: new Date(Date.now() - 86400000) // 1 day ago
+        }
+      ],
+      skillDistribution: [
+        { name: 'Arrays', level: 90 },
+        { name: 'Strings', level: 75 },
+        { name: 'Hash Tables', level: 60 },
+        { name: 'Sorting', level: 45 }
+      ]
     });
     await newUser.save();
     const token = jwt.sign({ id: newUser._id, email: newUser.email }, SECRET_KEY, { expiresIn: '1h' });

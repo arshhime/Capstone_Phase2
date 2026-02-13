@@ -1,10 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from models import QueryRequest, QueryResponse, UserSignup, UserLogin, TokenResponse, UserResponse
+from models import QueryRequest, QueryResponse, UserSignup, UserLogin, TokenResponse, UserResponse, CodeExecutionRequest, CodeExecutionResponse, TestCaseResult
 from graph import app_graph
 from auth import create_user, get_user_by_email, verify_password, create_access_token
+from executor import PythonExecutor, CppExecutor, JavaExecutor
+from leetcode_service import LeetCodeService
 import uvicorn
 import os
+import sys
 
 app = FastAPI(title="Kshitij Capstone AI Agent")
 
@@ -40,7 +43,9 @@ async def signup(user_data: UserSignup):
         id=user["id"],
         name=user["name"],
         email=user["email"],
-        avatar=user["avatar"]
+        avatar=user["avatar"],
+        recentActivity=user.get("recentActivity", []),
+        skillDistribution=user.get("skillDistribution", [])
     )
     
     return TokenResponse(token=token, user=user_response)
@@ -64,7 +69,9 @@ async def login(credentials: UserLogin):
         id=user["id"],
         name=user["name"],
         email=user["email"],
-        avatar=user["avatar"]
+        avatar=user["avatar"],
+        recentActivity=user.get("recentActivity", []),
+        skillDistribution=user.get("skillDistribution", [])
     )
     
     return TokenResponse(token=token, user=user_response)
@@ -80,6 +87,49 @@ async def chat(request: QueryRequest):
         print(f"Error in chat endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# Code Execution Endpoints
+executors = {
+    "python": PythonExecutor(),
+    "cpp": CppExecutor(),
+    "java": JavaExecutor()
+}
+
+@app.post("/execute", response_model=CodeExecutionResponse)
+async def execute_code(request: CodeExecutionRequest):
+    """Execute user code against test cases using the appropriate executor."""
+    executor = executors.get(request.language)
+    if not executor:
+        return CodeExecutionResponse(success=False, error=f"Language '{request.language}' is not supported yet.")
+
+    try:
+        results = executor.execute(request.code, request.test_cases, request.method_name)
+        all_passed = all(r.passed for r in results)
+        return CodeExecutionResponse(success=all_passed, results=results)
+    except Exception as e:
+        return CodeExecutionResponse(success=False, error=str(e))
+
+# LeetCode Fetching Endpoint
+leetcode_service = LeetCodeService()
+
+@app.post("/api/problems/fetch")
+async def fetch_leetcode_problem(request: dict):
+    """Fetch problem from LeetCode by title slug."""
+    title_slug = request.get("title_slug")
+    print(f"Fetching problem for slug: {title_slug}")
+    if not title_slug:
+        raise HTTPException(status_code=400, detail="title_slug is required")
+    
+    lc_data = leetcode_service.fetch_problem_details(title_slug)
+    if not lc_data:
+        raise HTTPException(status_code=404, detail=f"Problem '{title_slug}' not found on LeetCode")
+    
+    transformed_problem = leetcode_service.transform_to_app_format(lc_data)
+    
+    # Optionally generate MCQs (mocked for now in the service)
+    mcqs = await leetcode_service.generate_mcqs_with_ai(transformed_problem['description'])
+    transformed_problem['mcqs'] = mcqs
+    
+    return {"success": True, "problem": transformed_problem}
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
-

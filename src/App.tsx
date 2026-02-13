@@ -7,6 +7,7 @@ import ChatPage from './pages/ChatPage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import PracticePage from './pages/PracticePage';
+import ProblemSolver from './components/ProblemSolver';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/practice" element={<PracticePage />} />
             <Route path="/chat" element={<ChatPage />} />
+            <Route path="/ide" element={<ProblemSolver />} />
           </Routes>
         </Router>
       </ProblemProvider>
@@ -27,3 +29,4 @@ function App() {
 }
 
 export default App;
+

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogOut, Home, Bot, Zap } from 'lucide-react';
+import { LogOut, Home, Bot, Zap, Code2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -41,6 +41,16 @@ export default function Navigation() {
             >
               <Zap className="h-4 w-4 mr-2" />
               Practice
+            </button>
+            <button
+              onClick={() => navigate('/ide')}
+              className={`flex items-center px-4 py-2 rounded-xl transition-all duration-300 text-sm font-medium ${location.pathname === '/ide'
+                ? 'bg-violet-600 text-white shadow-[0_0_15px_rgba(139,92,246,0.4)]'
+                : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                }`}
+            >
+              <Code2 className="h-4 w-4 mr-2" />
+              IDE
             </button>
             <button
               onClick={() => navigate('/chat')}

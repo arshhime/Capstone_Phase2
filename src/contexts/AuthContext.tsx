@@ -8,6 +8,18 @@ interface User {
   experience: 'beginner' | 'intermediate' | 'advanced';
   solvedProblems: number;
   accuracy: number;
+  recentActivity?: {
+    problemId: string;
+    title: string;
+    difficulty: string;
+    status: 'Solved' | 'Attempted';
+    timestamp: string;
+    timeSpent: string;
+  }[];
+  skillDistribution?: {
+    name: string;
+    level: number;
+  }[];
 }
 
 interface AuthContextType {
@@ -19,7 +31,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-const API_URL = 'http://localhost:8000';
+const API_URL = 'http://127.0.0.1:8000';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -29,7 +41,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check for a user in local storage when the app loads
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Failed to parse user from local storage:', error);
+        localStorage.removeItem('user');
+      }
     }
     setLoading(false);
   }, []);

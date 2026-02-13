@@ -3,11 +3,29 @@ import { motion } from 'framer-motion';
 import { Trophy, Target, Clock, TrendingUp, Code2, Zap, ArrowRight, Star, BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useProblem } from '../contexts/ProblemContext';
 import Navigation from '../components/Navigation';
 
 const Dashboard: React.FC = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const { selectProblem, fetchProblem, problems: allProblems } = useProblem();
+    const [titleSlug, setTitleSlug] = React.useState('');
+    const [isFetching, setIsFetching] = React.useState(false);
+
+    const handleProblemClick = (id: string) => {
+        selectProblem(id);
+        navigate('/ide');
+    };
+
+    const handleFetchProblem = async () => {
+        if (!titleSlug.trim()) return;
+        setIsFetching(true);
+        await fetchProblem(titleSlug);
+        setIsFetching(false);
+        setTitleSlug('');
+        navigate('/ide');
+    };
 
     const stats = [
         { label: 'Problems Solved', value: user?.solvedProblems || 12, icon: Trophy, color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
@@ -16,10 +34,17 @@ const Dashboard: React.FC = () => {
         { label: 'Streak', value: '7 days', icon: TrendingUp, color: 'text-violet-400', bg: 'bg-violet-400/10' }
     ];
 
-    const recommendedProblems = [
-        { id: '1', title: 'Two Sum', difficulty: 'Easy', tags: ['Array', 'Hash Table'], success: 89, time: '15m' },
-        { id: '2', title: 'Reverse Linked List', difficulty: 'Easy', tags: ['Linked List'], success: 92, time: '10m' },
-        { id: '3', title: 'Binary Tree Inorder Traversal', difficulty: 'Medium', tags: ['Tree', 'Recursion'], success: 85, time: '20m' }
+    const recommendedProblems = allProblems.slice(0, 5); // Use first 5 from our dynamic list
+
+    const quickImportSlugs = [
+        "two-sum", "palindrome-number", "roman-to-integer", "longest-common-prefix",
+        "valid-parentheses", "merge-two-sorted-lists", "remove-duplicates-from-sorted-array",
+        "remove-element", "find-the-index-of-the-first-occurrence-in-a-string",
+        "search-insert-position", "length-of-last-word", "plus-one", "add-binary",
+        "sqrtx", "climbing-stairs", "remove-duplicates-from-sorted-list",
+        "merge-sorted-array", "binary-tree-inorder-traversal", "same-tree",
+        "symmetric-tree", "maximum-depth-of-binary-tree", "convert-sorted-array-to-binary-search-tree",
+        "balanced-binary-tree", "minimum-depth-of-binary-tree", "path-sum"
     ];
 
     return (
@@ -82,7 +107,7 @@ const Dashboard: React.FC = () => {
                                     <h3 className="text-2xl font-bold">Data Structures & Algorithms</h3>
                                     <p className="text-zinc-400 max-w-md">You're making great progress on Hash Tables. Up next: Graph Theory foundations.</p>
                                     <button
-                                        onClick={() => navigate('/chat')}
+                                        onClick={() => handleProblemClick('1')}
                                         className="px-6 py-3 bg-white text-zinc-950 rounded-xl font-bold hover:bg-zinc-200 transition-all flex items-center gap-2 mx-auto md:mx-0"
                                     >
                                         Continue Learning <ArrowRight className="w-4 h-4" />
@@ -93,13 +118,66 @@ const Dashboard: React.FC = () => {
 
                         <section className="space-y-4">
                             <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-bold">Import from LeetCode</h2>
+                            </div>
+                            <div className="glass-panel p-6 rounded-3xl border border-white/5 bg-white/[0.02] flex flex-col md:flex-row gap-4">
+                                <input
+                                    type="text"
+                                    value={titleSlug}
+                                    onChange={(e) => setTitleSlug(e.target.value)}
+                                    placeholder="Enter LeetCode title slug (e.g., two-sum)"
+                                    className="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all font-mono"
+                                />
+                                <button
+                                    onClick={handleFetchProblem}
+                                    disabled={isFetching || !titleSlug}
+                                    className="px-6 py-3 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                                >
+                                    {isFetching ? (
+                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    ) : (
+                                        <Zap className="w-4 h-4" />
+                                    )}
+                                    Fetch Problem
+                                </button>
+                            </div>
+                        </section>
+
+                        <section className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-bold">Discover Problems (Import from LeetCode)</h2>
+                                <span className="text-[10px] bg-violet-500/20 text-violet-400 px-2 py-1 rounded font-bold uppercase tracking-tighter">Auto-Gen Logic</span>
+                            </div>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                                {quickImportSlugs.map(slug => (
+                                    <button
+                                        key={slug}
+                                        onClick={async () => {
+                                            setTitleSlug(slug);
+                                            setIsFetching(true);
+                                            await fetchProblem(slug);
+                                            setIsFetching(false);
+                                            setTitleSlug('');
+                                            navigate('/ide');
+                                        }}
+                                        className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-xs font-mono text-zinc-400 hover:text-violet-400 transition-all"
+                                    >
+                                        {slug}
+                                    </button>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section className="space-y-4">
+                            <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold">Recommended for You</h2>
                             </div>
                             <div className="grid gap-4">
-                                {recommendedProblems.map((prob, i) => (
+                                {recommendedProblems.map((prob: any) => (
                                     <motion.div
                                         key={prob.id}
                                         whileHover={{ x: 10 }}
+                                        onClick={() => handleProblemClick(prob.id)}
                                         className="glass-panel p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between group cursor-pointer"
                                     >
                                         <div className="flex items-center gap-4">
@@ -109,7 +187,7 @@ const Dashboard: React.FC = () => {
                                             <div>
                                                 <h4 className="font-bold">{prob.title}</h4>
                                                 <div className="flex gap-2 mt-1">
-                                                    {prob.tags.map(tag => (
+                                                    {(prob.tags || []).map((tag: any) => (
                                                         <span key={tag} className="text-[10px] uppercase tracking-wider font-bold text-zinc-500">{tag}</span>
                                                     ))}
                                                 </div>
@@ -117,10 +195,10 @@ const Dashboard: React.FC = () => {
                                         </div>
                                         <div className="flex items-center gap-6">
                                             <div className="hidden md:block text-right">
-                                                <div className={`text-xs font-bold ${prob.difficulty === 'Easy' ? 'text-green-500' : 'text-yellow-500'}`}>{prob.difficulty}</div>
-                                                <div className="text-zinc-500 text-[10px] mt-0.5">{prob.success}% Success</div>
+                                                <div className={`text-xs font-bold ${prob.difficulty === 'Easy' ? 'text-green-500' : prob.difficulty === 'Medium' ? 'text-yellow-500' : 'text-rose-500'}`}>{prob.difficulty}</div>
+                                                <div className="text-zinc-500 text-[10px] mt-0.5">Community Favorite</div>
                                             </div>
-                                            <div className="w-10 h-10 rounded-full border border-white/5 flex items-center justify-center group-hover:bg-violet-600 transition-all">
+                                            <div className="w-10 h-10 rounded-xl border border-white/5 flex items-center justify-center group-hover:bg-violet-600 transition-all">
                                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                                             </div>
                                         </div>
@@ -138,41 +216,48 @@ const Dashboard: React.FC = () => {
                                 Skill Distribution
                             </h3>
                             <div className="space-y-4">
-                                {[
-                                    { name: 'Arrays', level: 90, color: 'bg-green-500' },
-                                    { name: 'Strings', level: 75, color: 'bg-blue-500' },
-                                    { name: 'Hash Tables', level: 60, color: 'bg-violet-500' },
-                                    { name: 'Sorting', level: 45, color: 'bg-fuchsia-500' }
-                                ].map(skill => (
-                                    <div key={skill.name} className="space-y-1.5">
-                                        <div className="flex justify-between text-xs font-medium">
-                                            <span className="text-zinc-400">{skill.name}</span>
-                                            <span>{skill.level}%</span>
+                                {(user?.skillDistribution?.length ? user.skillDistribution : [
+                                    { name: 'Arrays', level: 90 },
+                                    { name: 'Strings', level: 75 },
+                                    { name: 'Hash Tables', level: 60 },
+                                    { name: 'Sorting', level: 45 }
+                                ]).map((skill, index) => {
+                                    const colors = ['bg-green-500', 'bg-blue-500', 'bg-violet-500', 'bg-fuchsia-500'];
+                                    const color = colors[index % colors.length];
+                                    return (
+                                        <div key={skill.name} className="space-y-1.5">
+                                            <div className="flex justify-between text-xs font-medium">
+                                                <span className="text-zinc-400">{skill.name}</span>
+                                                <span>{skill.level}%</span>
+                                            </div>
+                                            <div className="h-1.5 w-full bg-zinc-900 rounded-full overflow-hidden border border-white/5">
+                                                <motion.div
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: `${skill.level}%` }}
+                                                    className={`h-full ${color}`}
+                                                ></motion.div>
+                                            </div>
                                         </div>
-                                        <div className="h-1.5 w-full bg-zinc-900 rounded-full overflow-hidden border border-white/5">
-                                            <motion.div
-                                                initial={{ width: 0 }}
-                                                animate={{ width: `${skill.level}%` }}
-                                                className={`h-full ${skill.color}`}
-                                            ></motion.div>
-                                        </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </section>
 
                         <section className="glass-panel p-6 rounded-3xl border border-white/5 bg-white/[0.02]">
                             <h3 className="text-lg font-bold mb-6">Recent Activity</h3>
                             <div className="space-y-6">
-                                {[1, 2, 3].map(i => (
+                                {(user?.recentActivity?.length ? user.recentActivity : []).map((activity, i) => (
                                     <div key={i} className="flex gap-4">
-                                        <div className="w-2 h-2 rounded-full bg-violet-600 mt-2 shadow-[0_0_10px_rgba(139,92,246,0.5)]"></div>
+                                        <div className={`w-2 h-2 rounded-full mt-2 shadow-[0_0_10px_rgba(139,92,246,0.5)] ${activity.status === 'Solved' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
                                         <div>
-                                            <p className="text-sm font-medium">Solved "Two Sum" in 14 minutes</p>
-                                            <p className="text-xs text-zinc-500 mt-1">2 hours ago</p>
+                                            <p className="text-sm font-medium">{activity.status} "{activity.title}" {activity.timeSpent ? `in ${activity.timeSpent}` : ''}</p>
+                                            <p className="text-xs text-zinc-500 mt-1">{new Date(activity.timestamp).toLocaleDateString()}</p>
                                         </div>
                                     </div>
                                 ))}
+                                {!user?.recentActivity?.length && (
+                                    <p className="text-zinc-500 text-sm">No recent activity.</p>
+                                )}
                             </div>
                         </section>
                     </div>
