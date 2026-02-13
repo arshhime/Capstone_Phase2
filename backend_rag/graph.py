@@ -12,7 +12,7 @@ load_dotenv()
 # --- Config ---
 CHROMA_PATH = "chroma_db"
 # Use the same embedding model as ingestion
-EMBEDDING_MODEL = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+EMBEDDING_MODEL = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
 # --- State ---
 class GraphState(TypedDict):
@@ -55,7 +55,7 @@ def generate(state: GraphState):
     """
     prompt = ChatPromptTemplate.from_template(template)
     
-    # Use Gemini Pro
+    # Use Gemini 2.5 Flash
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
     
     try:

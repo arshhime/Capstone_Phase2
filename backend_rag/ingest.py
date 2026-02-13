@@ -33,7 +33,7 @@ def ingest():
 
     print(f"Creating embeddings for {len(documents)} documents using Google Gemini...")
     # Use the appropriate model for embeddings, e.g., "models/embedding-001"
-    embedding_function = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+    embedding_function = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
     
     db = Chroma.from_documents(
         documents=documents,

@@ -24,7 +24,40 @@ class UserResponse(BaseModel):
     name: str
     email: str
     avatar: str
+    recentActivity: List[dict] = []
+    skillDistribution: List[dict] = []
 
 class TokenResponse(BaseModel):
     token: str
     user: UserResponse
+
+# Code Execution Models
+class TestCaseInput(BaseModel):
+    input: str
+    expected_output: str
+
+class CodeExecutionRequest(BaseModel):
+    code: str
+    language: str = "python"
+    method_name: Optional[str] = None
+    test_cases: List[TestCaseInput] = []
+
+class TestCaseResult(BaseModel):
+    input: str
+    expected_output: str
+    actual_output: str
+    passed: bool
+    error: Optional[str] = None
+
+class CodeExecutionResponse(BaseModel):
+    success: bool
+    results: List[TestCaseResult] = []
+    error: Optional[str] = None
+
+class LeetCodeRequest(BaseModel):
+    title_slug: str
+
+class LeetCodeResponse(BaseModel):
+    success: bool
+    problem: Optional[dict] = None
+    error: Optional[str] = None

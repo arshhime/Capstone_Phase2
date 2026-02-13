@@ -8,12 +8,20 @@ interface MCQSectionProps {
 }
 
 export default function MCQSection({ onComplete }: MCQSectionProps) {
-  const { mcqQuestions, currentMCQIndex, nextMCQ } = useProblem();
+  const { currentProblem, mcqQuestions, currentMCQIndex, nextMCQ } = useProblem();
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [answered, setAnswered] = useState(false);
   const [startTime] = useState(Date.now());
   const [answerTime, setAnswerTime] = useState<number | null>(null);
+
+  // Reset state when question changes
+  React.useEffect(() => {
+    setSelectedAnswer(null);
+    setAnswered(false);
+    setShowExplanation(false);
+    setAnswerTime(null);
+  }, [currentMCQIndex, currentProblem?.id]);
 
   const currentQuestion = mcqQuestions[currentMCQIndex];
 
@@ -28,6 +36,7 @@ export default function MCQSection({ onComplete }: MCQSectionProps) {
     setSelectedAnswer(answerIndex);
     setAnswered(true);
     setShowExplanation(true);
+    console.log('Answer selected:', answerIndex, 'Correct:', currentQuestion.correctAnswer);
   };
 
   const handleNext = () => {
@@ -131,35 +140,42 @@ export default function MCQSection({ onComplete }: MCQSectionProps) {
           </div>
         </div>
 
-        <AnimatePresence>
-          {showExplanation && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`p-6 rounded-3xl mb-8 relative overflow-hidden border ${isCorrect ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-rose-500/5 border-rose-500/20'
-                }`}
-            >
-              <div className="flex items-start gap-4 h-full">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isCorrect ? 'bg-emerald-500/20' : 'bg-rose-500/20'
-                  }`}>
-                  {isCorrect ? <Zap className="w-5 h-5 text-emerald-400" /> : <ShieldCheck className="w-5 h-5 text-rose-400" />}
-                </div>
-                <div>
-                  <h4 className={`text-sm font-bold uppercase tracking-widest mb-2 ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {isCorrect ? 'Logic Verified' : 'Logic Correction'}
+        {/* Logic Feedback Section - Always visible after answer */}
+        {(answered || showExplanation) && (
+          <div
+            id="logic-feedback-box"
+            className={`p-6 rounded-3xl mb-8 relative overflow-hidden border-2 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500 ${isCorrect ? 'bg-emerald-500/10 border-emerald-500/40' : 'bg-rose-500/10 border-rose-500/40'
+              }`}
+          >
+            <div className="flex items-start gap-4 h-full">
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${isCorrect ? 'bg-emerald-500/20' : 'bg-rose-500/20'
+                }`}>
+                {isCorrect ? <Zap className="w-6 h-6 text-emerald-400" /> : <ShieldCheck className="w-6 h-6 text-rose-400" />}
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className={`text-sm font-black uppercase tracking-[0.2em] ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}`}>
+                    {isCorrect ? 'Logic Verified' : `Logic Correction • Expected: ${String.fromCharCode(65 + currentQuestion.correctAnswer)}`}
                   </h4>
-                  <p className="text-zinc-300 text-sm font-medium leading-relaxed">{currentQuestion.explanation}</p>
-                  {answerTime && (
-                    <div className="flex items-center mt-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                      <Clock className="h-3 w-3 mr-2" />
-                      Verification Latency: {Math.round(answerTime / 1000)}s
+                  {isCorrect && (
+                    <div className="flex items-center text-[10px] font-bold text-emerald-500/60 uppercase tracking-widest">
+                      <Clock className="h-3 w-3 mr-1" />
+                      {Math.round((answerTime || 0) / 1000)}s
                     </div>
                   )}
                 </div>
+                <p className="text-zinc-200 text-base font-semibold leading-relaxed mb-1">
+                  {currentQuestion.explanation || "No explanation provided for this question."}
+                </p>
+                {!isCorrect && (
+                  <p className="text-zinc-400 text-xs font-medium italic mt-2">
+                    Review the logic above before proceeding to the next challenge.
+                  </p>
+                )}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+          </div>
+        )}
       </div>
 
       <AnimatePresence>

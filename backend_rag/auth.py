@@ -51,7 +51,23 @@ def create_user(name: str, email: str, password: str) -> dict:
         "name": name,
         "email": email,
         "password": hashed_password,
-        "avatar": f"https://i.pravatar.cc/150?u={email}"
+        "avatar": f"https://i.pravatar.cc/150?u={email}",
+        "recentActivity": [
+            {
+                "problemId": "1",
+                "title": "Two Sum",
+                "difficulty": "Easy",
+                "status": "Solved",
+                "timestamp": (datetime.utcnow() - timedelta(days=1)).isoformat(),
+                "timeSpent": "15m"
+            }
+        ],
+        "skillDistribution": [
+            { "name": "Arrays", "level": 90 },
+            { "name": "Strings", "level": 75 },
+            { "name": "Hash Tables", "level": 60 },
+            { "name": "Sorting", "level": 45 }
+        ]
     }
     
     users_db[email] = user
