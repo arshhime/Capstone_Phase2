@@ -104,7 +104,18 @@ async def execute_code(request: CodeExecutionRequest):
     try:
         results = executor.execute(request.code, request.test_cases, request.method_name)
         all_passed = all(r.passed for r in results)
-        return CodeExecutionResponse(success=all_passed, results=results)
+        
+        # Calculate metrics
+        total_runtime = sum(r.runtime for r in results)
+        total_memory = sum(r.memory for r in results)
+        count = len(results) if results else 1
+        
+        return CodeExecutionResponse(
+            success=all_passed, 
+            results=results,
+            metric_runtime_ms=round(total_runtime / count, 2),
+            metric_memory_kb=round(total_memory / count, 2)
+        )
     except Exception as e:
         return CodeExecutionResponse(success=False, error=str(e))
 

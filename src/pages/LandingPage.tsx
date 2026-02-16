@@ -14,7 +14,7 @@ const LandingPage: React.FC = () => {
       <nav className="relative z-10 p-6 flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-2 text-2xl font-bold tracking-tighter cursor-pointer" onClick={() => navigate('/')}>
           <Bot className="w-8 h-8 text-violet-500" />
-          <span className="text-white">Kshitij<span className="text-violet-500">Agent</span></span>
+          <span className="text-white">Niche<span className="text-violet-500">Code</span></span>
         </div>
         <div className="flex items-center gap-6">
           <button

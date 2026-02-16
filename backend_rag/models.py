@@ -48,11 +48,15 @@ class TestCaseResult(BaseModel):
     actual_output: str
     passed: bool
     error: Optional[str] = None
+    runtime: float = 0.0
+    memory: float = 0.0
 
 class CodeExecutionResponse(BaseModel):
     success: bool
     results: List[TestCaseResult] = []
     error: Optional[str] = None
+    metric_runtime_ms: float = 0.0
+    metric_memory_kb: float = 0.0
 
 class LeetCodeRequest(BaseModel):
     title_slug: str

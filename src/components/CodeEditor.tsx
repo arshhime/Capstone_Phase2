@@ -12,12 +12,16 @@ import OutputConsole, { TestCaseResult } from './CodeEditor/OutputConsole';
 interface CodeEditorProps {
   onStartCoding: () => void;
   phase: 'reading' | 'mcq' | 'coding' | 'completed';
+  language: string;
+  onLanguageChange: (lang: string) => void;
+  code: string;
+  onCodeChange: (code: string) => void;
 }
 
-export default function CodeEditor({ onStartCoding, phase }: CodeEditorProps) {
+export default function CodeEditor({ onStartCoding, phase, language, onLanguageChange, code, onCodeChange }: CodeEditorProps) {
   const { currentProblem } = useProblem();
-  const [code, setCode] = useState(currentProblem?.template || '');
-  const [language, setLanguage] = useState('python');
+  // const [code, setCode] = useState(currentProblem?.template || ''); // Lifted up
+  // const [language, setLanguage] = useState('python'); // Lifted up
   const [isRunning, setIsRunning] = useState(false);
   const [results, setResults] = useState<TestCaseResult[]>([]);
   const [showOutput, setShowOutput] = useState(false);
@@ -25,17 +29,50 @@ export default function CodeEditor({ onStartCoding, phase }: CodeEditorProps) {
   // Update code when problem changes
   useEffect(() => {
     if (currentProblem) {
-      // Use templates for specific language if available, else fallback to template
-      const initialCode = currentProblem.templates?.[language] || currentProblem.template || '';
-      setCode(initialCode);
+      // Use templates for specific language if available
+      // Check for saved code first
+      const savedCode = localStorage.getItem(`code-${currentProblem.id}-${language}`);
+
+      let initialCode = '';
+
+      if (savedCode) {
+        initialCode = savedCode;
+      } else if (currentProblem.templates && currentProblem.templates[language]) {
+        initialCode = currentProblem.templates[language];
+      } else if (language === 'python' && currentProblem.template) {
+        // Fallback for Python using the legacy template field
+        initialCode = currentProblem.template;
+      } else {
+        // Placeholder for missing templates
+        const taskName = currentProblem.methodName || 'solution';
+        if (language === 'python') {
+          initialCode = `class Solution:\n    # Function to implement\n    # def ${taskName}(self, ...):\n    pass`;
+        } else if (language === 'cpp') {
+          initialCode = `class Solution {\npublic:\n    // Function to implement\n    // void ${taskName}() {\n    //     \n    // }\n};`;
+        } else if (language === 'java') {
+          initialCode = `class Solution {\n    // Function to implement\n    // public void ${taskName}() {\n    //     \n    // }\n}`;
+        } else {
+          initialCode = `// No template available for ${language}`;
+        }
+      }
+
+      onCodeChange(initialCode);
       setResults([]);
       setShowOutput(false);
       setGeneralError(null);
     }
-  }, [currentProblem, language]); // Also re-sync when language changes
+  }, [currentProblem, language]);
+
+  // Save code to localStorage whenever it changes
+  useEffect(() => {
+    if (currentProblem && code) {
+      localStorage.setItem(`code-${currentProblem.id}-${language}`, code);
+    }
+  }, [code, currentProblem, language]);
+
 
   const handleLanguageChange = (newLang: string) => {
-    setLanguage(newLang);
+    onLanguageChange(newLang);
   };
 
   const handleRunCode = async () => {
@@ -77,7 +114,23 @@ export default function CodeEditor({ onStartCoding, phase }: CodeEditorProps) {
 
   const handleReset = () => {
     if (currentProblem) {
-      setCode(currentProblem.template);
+      let initialCode = '';
+
+      if (currentProblem.templates && currentProblem.templates[language]) {
+        initialCode = currentProblem.templates[language];
+      } else if (language === 'python' && currentProblem.template) {
+        initialCode = currentProblem.template;
+      } else {
+        const taskName = currentProblem.methodName || 'solution';
+        if (language === 'cpp') {
+          initialCode = `class Solution {\npublic:\n    // Function to implement\n    // void ${taskName}() {\n    //     \n    // }\n};`;
+        } else if (language === 'java') {
+          initialCode = `class Solution {\n    // Function to implement\n    // public void ${taskName}() {\n    //     \n    // }\n}`;
+        } else {
+          initialCode = `// No template available for ${language}`;
+        }
+      }
+      onCodeChange(initialCode);
     }
     setResults([]);
     setShowOutput(false);
@@ -100,7 +153,7 @@ export default function CodeEditor({ onStartCoding, phase }: CodeEditorProps) {
       <div className="relative" style={{ flex: showOutput ? '1 1 60%' : '1 1 100%', minHeight: 0 }}>
         <EditorWindow
           code={code}
-          onChange={setCode}
+          onChange={onCodeChange}
           language={language}
           phase={phase}
           onStartCoding={onStartCoding}

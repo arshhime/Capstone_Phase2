@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, User, Bot, Menu, Plus } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 import Navigation from '../components/Navigation';
 
@@ -11,7 +11,7 @@ interface Message {
 
 const ChatPage: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', content: "Hello! I am Kshitij's Agent. Ask me anything about Data Structures or the training data." }
+        { role: 'assistant', content: "Hello! I am NicheCode AI. Ask me anything about Data Structures or the training data." }
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -99,7 +99,7 @@ const ChatPage: React.FC = () => {
                     <header className="md:hidden p-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/50 backdrop-blur-md sticky top-0 z-20">
                         <div className="flex items-center gap-2">
                             <Bot className="w-6 h-6 text-violet-500" />
-                            <span className="font-bold">KshitijAgent</span>
+                            <span className="font-bold">NicheCode</span>
                         </div>
                         <Menu className="w-6 h-6" />
                     </header>
@@ -176,7 +176,7 @@ const ChatPage: React.FC = () => {
                             </div>
                         </form>
                         <div className="text-center mt-3 text-xs text-zinc-600">
-                            Powered by LangGraph & RAG • Kshitij Capstone
+                            Powered by Gemini 2.5 • NicheCode Platform
                         </div>
                     </div>
 

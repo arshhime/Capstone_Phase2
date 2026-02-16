@@ -17,7 +17,7 @@ export default function Navigation() {
               <Bot className="h-6 w-6 text-violet-500" />
             </div>
             <span className="text-xl font-bold text-white tracking-tighter">
-              Kshitij<span className="text-violet-500">Agent</span>
+              Niche<span className="text-violet-500">Code</span>
             </span>
           </div>
 
@@ -82,7 +82,10 @@ export default function Navigation() {
           </div>
 
           <button
-            onClick={logout}
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
             className="p-2.5 text-zinc-400 hover:text-rose-400 hover:bg-rose-400/10 rounded-xl transition-all duration-300"
             title="Logout"
           >

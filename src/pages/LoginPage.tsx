@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
                     </h2>
                     <p className="text-zinc-500 mt-2 text-center">
                         {isLogin
-                            ? 'Continue your journey with Kshitij Agent'
+                            ? 'Continue your journey with NicheCode'
                             : 'Start building intelligent agentic systems today'}
                     </p>
                 </div>

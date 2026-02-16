@@ -1,22 +1,48 @@
+
 import { useState, useEffect } from 'react';
-import { CheckCircle, Lightbulb, Eye, EyeOff, Brain, ChevronRight, Zap } from 'lucide-react';
+import { CheckCircle, Lightbulb, Eye, EyeOff, Brain, ChevronRight, Zap, List, Sparkles, Loader2 } from 'lucide-react';
+import axios from 'axios';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { useProblem } from '../contexts/ProblemContext';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useUserPreferences } from '../contexts/UserPreferencesContext';
+import { useAuth } from '../contexts/AuthContext';
 import CodeEditor from './CodeEditor';
 import MCQSection from './MCQSection';
 import Timer from './Timer';
 import OptimalSolution from './OptimalSolution';
+import ProblemListModal from './ProblemListModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProblemSolver() {
   const { currentProblem, problems, selectProblem } = useProblem();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { submitKeyBinding } = useUserPreferences();
+  const [showProblemList, setShowProblemList] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [currentHintIndex, setCurrentHintIndex] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
+  const [startTime, setStartTime] = useState<number | null>(null);
   const [phase, setPhase] = useState<'reading' | 'mcq' | 'coding' | 'completed'>('reading');
   const [showOptimalSolution, setShowOptimalSolution] = useState(false);
   const [solutionWorked, setSolutionWorked] = useState<boolean | null>(null);
+  const [extraHints, setExtraHints] = useState<string[]>([]);
+  const [generatingHint, setGeneratingHint] = useState(false);
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [executionError, setExecutionError] = useState<string | null>(null);
+
+  const { id } = useParams();
+  const [language, setLanguage] = useState('python');
+  const [code, setCode] = useState('');
+
+  // Sync with URL
+  useEffect(() => {
+    if (id && (!currentProblem || currentProblem.id !== id)) {
+      selectProblem(id);
+    }
+  }, [id, currentProblem, selectProblem]);
 
   // Reset state when problem changes
   useEffect(() => {
@@ -27,7 +53,32 @@ export default function ProblemSolver() {
     setCurrentHintIndex(0);
     setShowHint(false);
     setSolutionWorked(null);
+    setExtraHints([]);
   }, [currentProblem?.id]);
+
+  // Combined hints
+  const allHints = [...(currentProblem?.hints || []), ...extraHints];
+
+  const generateAIHint = async () => {
+    setGeneratingHint(true);
+    try {
+      const response = await axios.post('http://localhost:5001/api/ai/hint', {
+        problemTitle: currentProblem?.title,
+        problemDescription: currentProblem?.description,
+        currentCode: currentProblem?.id ? localStorage.getItem(`code-${currentProblem.id}`) : ""
+      });
+
+      if (response.data.hint) {
+        setExtraHints(prev => [...prev, response.data.hint]);
+        setCurrentHintIndex(allHints.length); // Jump to new hint
+        setShowHint(true);
+      }
+    } catch (error) {
+      console.error("Failed to generate AI hint", error);
+    } finally {
+      setGeneratingHint(false);
+    }
+  };
 
   useEffect(() => {
     let interval: any;
@@ -43,6 +94,34 @@ export default function ProblemSolver() {
     };
   }, [phase, timerRunning, showHint]);
 
+  // Handle key bindings for submit
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (phase !== 'coding') return;
+
+      const keys = submitKeyBinding.split('+');
+      const mainKey = keys[keys.length - 1];
+      const hasMeta = keys.includes('Meta') || keys.includes('Cmd'); // Meta is Cmd on Mac
+      const hasCtrl = keys.includes('Ctrl');
+      const hasShift = keys.includes('Shift');
+      const hasAlt = keys.includes('Alt');
+
+      const isMainKey = e.key.toLowerCase() === mainKey.toLowerCase();
+      const matchMeta = hasMeta ? e.metaKey : !e.metaKey;
+      const matchCtrl = hasCtrl ? e.ctrlKey : !e.ctrlKey;
+      const matchShift = hasShift ? e.shiftKey : !e.shiftKey;
+      const matchAlt = hasAlt ? e.altKey : !e.altKey;
+
+      if (isMainKey && matchMeta && matchCtrl && matchShift && matchAlt) {
+        e.preventDefault();
+        handleComplete();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [phase, submitKeyBinding]);
+
   if (!currentProblem) {
     return (
       <div className="flex h-screen items-center justify-center bg-zinc-950 text-zinc-500">
@@ -57,13 +136,113 @@ export default function ProblemSolver() {
   const handleStartCoding = () => {
     setPhase('coding');
     setTimerRunning(true);
+    setStartTime(Date.now());
   };
 
-  const handleComplete = () => {
-    setIsCompleted(true);
-    setPhase('completed');
-    setTimerRunning(false);
-    setShowOptimalSolution(true);
+  const handleComplete = async () => {
+    setIsExecuting(true);
+    setExecutionError(null);
+    setExecutionError(null);
+    try {
+      if (!code) {
+        setExecutionError("No code found to submit.");
+        setIsExecuting(false);
+        return;
+      }
+
+      // Prepare test cases
+      const testCases = currentProblem.testCases.map(tc => ({
+        input: tc.input,
+        expected_output: tc.output
+      }));
+
+      // Call Execution API
+      // Call Execution API
+      // Call Execution API
+      const response = await axios.post('http://127.0.0.1:8000/execute', {
+        language: language,
+        code: code,
+        test_cases: testCases,
+        method_name: currentProblem.methodName || 'solution'
+      });
+
+      const result = response.data;
+      console.log("Execution Result:", result); // DEBUG
+
+      setPhase('completed');
+      setTimerRunning(false);
+      setShowOptimalSolution(true);
+
+      if (result.success) {
+        setSolutionWorked(true);
+        setExecutionError(null); // Clear any previous errors
+      } else {
+        setSolutionWorked(false);
+
+        // Find the first failed test case to show error
+        if (result.results && result.results.length > 0) {
+          const failedCase = result.results.find((r: any) => !r.passed);
+          if (failedCase) {
+            console.log("Failed Logic:", failedCase); // DEBUG
+            if (failedCase.error) {
+              setExecutionError(`Execution Error: ${failedCase.error}`);
+            } else {
+              setExecutionError(`Test Failed: Input: ${failedCase.input}, Expected: ${failedCase.expected_output}, Got: ${failedCase.actual_output}`);
+            }
+          } else {
+            // Fallback if success is false but no specific failed case found (unlikely)
+            setExecutionError("Unknown execution failure. Please check your code.");
+          }
+        } else {
+          setExecutionError(result.error || "Execution failed without results.");
+        }
+      }
+
+      // Log Interaction
+      console.log("Logging Interaction - User:", user, "StartTime:", startTime); // DEBUG
+
+      const timeTakenCalculated = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
+      const userIdToLog = user ? user.id : 'anonymous'; // Fallback if user context is missing, though unlikely if logged in
+      const usernameToLog = user ? (user.username || user.email.split('@')[0]) : 'anonymous';
+
+      if (userIdToLog) {
+        await axios.post('http://localhost:5001/api/interactions', {
+          userId: userIdToLog,
+          username: usernameToLog,
+          problemId: currentProblem.id,
+          title: currentProblem.title,
+          language: language,
+          submissionStatus: result.success ? 1 : 0,
+          timeTakenSeconds: timeTakenCalculated,
+          runtimeMs: result.metric_runtime_ms || 0,
+          memoryUsedKB: result.metric_memory_kb || 0
+        });
+      }
+
+    } catch (err: any) {
+      console.error("Execution failed:", err);
+      setExecutionError(err.message || "Failed to execute code.");
+      setPhase('completed');
+      setTimerRunning(false);
+      setShowOptimalSolution(true);
+      setSolutionWorked(false);
+
+      // Log failed execution due to error (status 0)
+      if (user && startTime) {
+        const timeTakenSeconds = Math.floor((Date.now() - startTime) / 1000);
+        await axios.post('http://localhost:5001/api/interactions', {
+          userId: user.id,
+          problemId: currentProblem.id,
+          language: language,
+          submissionStatus: 0,
+          timeTakenSeconds: timeTakenSeconds,
+          runtimeMs: 0,
+          memoryUsedKB: 0
+        });
+      }
+    } finally {
+      setIsExecuting(false);
+    }
   };
 
   const handleSolutionFeedback = (worked: boolean) => {
@@ -77,7 +256,7 @@ export default function ProblemSolver() {
   };
 
   const nextHint = () => {
-    if (currentHintIndex < currentProblem.hints.length - 1) {
+    if (currentHintIndex < allHints.length - 1) {
       setCurrentHintIndex(prev => prev + 1);
     }
   };
@@ -89,19 +268,21 @@ export default function ProblemSolver() {
         <div className="max-w-full mx-auto flex items-center justify-between px-4">
           <div className="flex items-center space-x-8">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-violet-600/20 border border-violet-500/30 flex items-center justify-center">
+              <div
+                className="w-8 h-8 rounded-lg bg-violet-600/20 border border-violet-500/30 flex items-center justify-center cursor-pointer hover:bg-violet-600/30 transition-all"
+                onClick={() => navigate('/')}
+                title="Back to Landing Page"
+              >
                 <Zap className="h-4 w-4 text-violet-500" />
               </div>
               <div className="hidden sm:block">
-                <select
-                  value={currentProblem.id}
-                  onChange={(e) => selectProblem(e.target.value)}
-                  className="bg-transparent text-sm font-bold text-white border-none focus:ring-0 cursor-pointer hover:text-violet-400 transition-colors"
+                <button
+                  onClick={() => setShowProblemList(true)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-all text-sm font-medium border border-zinc-700 hover:border-zinc-600"
                 >
-                  {problems.map(p => (
-                    <option key={p.id} value={p.id} className="bg-zinc-900">{p.title}</option>
-                  ))}
-                </select>
+                  <List className="w-4 h-4" />
+                  Problem List
+                </button>
               </div>
             </div>
 
@@ -153,6 +334,13 @@ export default function ProblemSolver() {
               </button>
             )}
 
+            {isExecuting && (
+              <div className="flex items-center px-4 py-2 bg-zinc-800 text-zinc-400 border border-white/5 rounded-xl font-bold text-xs uppercase tracking-wider">
+                <Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" />
+                Assessing...
+              </div>
+            )}
+
             {phase === 'completed' && showOptimalSolution && (
               <button
                 onClick={() => setShowOptimalSolution(!showOptimalSolution)}
@@ -182,18 +370,27 @@ export default function ProblemSolver() {
                 </div>
                 <div>
                   <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-1 leading-none">
-                    Intelligent Guidance • {currentHintIndex + 1} / {currentProblem.hints.length}
+                    Intelligent Guidance • {currentHintIndex + 1} / {allHints.length}
                   </h3>
-                  <p className="text-sm text-zinc-300 font-medium">{currentProblem.hints[currentHintIndex]}</p>
+                  <p className="text-sm text-zinc-300 font-medium">{allHints[currentHintIndex]}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 ml-6">
-                {currentHintIndex < currentProblem.hints.length - 1 && (
+                {currentHintIndex < allHints.length - 1 ? (
                   <button
                     onClick={nextHint}
                     className="text-xs font-bold text-amber-500 hover:text-amber-400 transition-colors uppercase tracking-widest flex items-center"
                   >
                     Next Logic Step <ChevronRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={generateAIHint}
+                    disabled={generatingHint}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-violet-600/20 hover:bg-violet-600/40 text-violet-300 rounded-lg text-xs font-bold uppercase tracking-widest transition-all border border-violet-500/30"
+                  >
+                    {generatingHint ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                    {generatingHint ? "Thinking..." : "Ask AI"}
                   </button>
                 )}
                 <button
@@ -224,10 +421,10 @@ export default function ProblemSolver() {
                   </div>
 
                   <div className="flex flex-wrap gap-2 mb-8">
-                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-widest ${currentProblem.difficulty === 'Easy' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                    <span className={`px - 2 py - 0.5 rounded - md text - [10px] font - bold uppercase tracking - widest ${currentProblem.difficulty === 'Easy' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
                       currentProblem.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
                         'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                      }`}>
+                      } `}>
                       {currentProblem.difficulty}
                     </span>
                     {currentProblem.tags.map((tag) => (
@@ -347,8 +544,10 @@ export default function ProblemSolver() {
                       problem={currentProblem}
                       onSolutionFeedback={handleSolutionFeedback}
                       solutionWorked={solutionWorked}
+                      executionError={executionError}
                     />
                   </motion.div>
+
                 ) : (
                   <motion.div
                     key="editor"
@@ -356,7 +555,14 @@ export default function ProblemSolver() {
                     animate={{ opacity: 1 }}
                     className="h-full"
                   >
-                    <CodeEditor onStartCoding={handleStartCoding} phase={phase} />
+                    <CodeEditor
+                      onStartCoding={handleStartCoding}
+                      phase={phase}
+                      language={language}
+                      onLanguageChange={setLanguage}
+                      code={code}
+                      onCodeChange={setCode}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -378,11 +584,17 @@ export default function ProblemSolver() {
               <MCQSection key={currentProblem.id} onComplete={() => {
                 setPhase('coding');
                 setTimerRunning(true);
+                setStartTime(Date.now());
               }} />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+
+      <ProblemListModal
+        isOpen={showProblemList}
+        onClose={() => setShowProblemList(false)}
+      />
+    </div >
   );
 }

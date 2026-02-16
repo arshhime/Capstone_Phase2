@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useMemo, ReactNode } from 'react';
-import { Problem, MCQQuestion, problems } from '../data/problems';
+import { createContext, useContext, useState, useMemo, useEffect, ReactNode } from 'react';
+import { Problem, MCQQuestion } from '../data/problems';
 import axios from 'axios';
 
 interface ProblemContextType {
@@ -18,11 +18,34 @@ interface ProblemContextType {
 const ProblemContext = createContext<ProblemContextType | undefined>(undefined);
 
 export function ProblemProvider({ children }: { children: ReactNode }) {
-  const [allProblems, setAllProblems] = useState<Problem[]>(problems);
-  const [currentProblem, setCurrentProblem] = useState<Problem | null>(problems[0]);
+  const [allProblems, setAllProblems] = useState<Problem[]>([]);
+  const [currentProblem, setCurrentProblem] = useState<Problem | null>(null);
   const [currentMCQIndex, setCurrentMCQIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const mcqQuestions = useMemo(() => currentProblem?.mcqs || [], [currentProblem]);
+
+  // Fetch problem list on mount
+  useEffect(() => {
+    const fetchProblems = async () => {
+      try {
+        const response = await axios.get('http://localhost:5001/api/problems?limit=100'); // Initial fetch
+        if (response.data && response.data.problems) {
+          setAllProblems(response.data.problems);
+          // Optionally set the first problem as current, but we need full details
+          if (response.data.problems.length > 0) {
+            selectProblem(response.data.problems[0].id);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch problems:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProblems();
+  }, []);
 
   const nextMCQ = () => {
     setCurrentMCQIndex(prev => Math.min(prev + 1, mcqQuestions.length - 1));
@@ -32,31 +55,55 @@ export function ProblemProvider({ children }: { children: ReactNode }) {
     setCurrentMCQIndex(0);
   };
 
-  const selectProblem = (id: string) => {
-    const problem = allProblems.find(p => p.id === id);
-    if (problem) {
-      setCurrentProblem(problem);
+  const selectProblem = async (id: string) => {
+    // Check if we already have the full details (e.g. description is present)
+    // The list API returns lightweight objects, so description might be missing.
+    const existing = allProblems.find(p => p.id === id);
+
+    if (existing && existing.description) {
+      setCurrentProblem(existing);
       setCurrentMCQIndex(0);
+      return;
+    }
+
+    // Fetch full details
+    try {
+      const response = await axios.get(`http://localhost:5001/api/problems/${id}`);
+      const fullProblem = response.data;
+
+      setCurrentProblem(fullProblem);
+      setCurrentMCQIndex(0);
+
+      // Update the list with full details (optional optimization)
+      setAllProblems(prev => prev.map(p => p.id === id ? fullProblem : p));
+
+    } catch (err) {
+      console.error("Error fetching problem details:", err);
     }
   };
 
   const fetchProblem = async (slug: string) => {
-    try {
-      const response = await axios.post('http://127.0.0.1:8000/api/problems/fetch', {
-        title_slug: slug
-      });
+    // Legacy or specific fetch by slug if needed
+    // For now, let's assume we use selectProblem by ID mostly
+    // But if we need to fetch by slug from LeetCode (not DB):
+    // The backend /api/leetcode/:slug is still there.
+    // But we probably want to search our DB by slug first?
+    // For now, let's keep the old logic but point to our new backend if possible?
+    // The old logic called port 8000 (Python).
+    // We are now on port 5001 (Node).
+    // Let's deprecate the Python fetch for now or point to Node.
+    // API /api/problems?search=... could find it.
 
-      if (response.data.success) {
-        setAllProblems(prev => [...prev, response.data.problem]);
-        setCurrentProblem(response.data.problem);
-        setCurrentMCQIndex(0);
+    try {
+      // Attempt to find in our DB first
+      const response = await axios.get(`http://localhost:5001/api/problems?search=${slug}`);
+      if (response.data.problems && response.data.problems.length > 0) {
+        selectProblem(response.data.problems[0].id);
       } else {
-        console.error('Failed to fetch problem:', response.data.error);
-        alert(`Error: ${response.data.error}`);
+        alert("Problem not found in database.");
       }
-    } catch (err: any) {
-      console.error('Error fetching problem:', err);
-      alert(`Connection Error: ${err.message}. Is the backend running on port 8000?`);
+    } catch (err) {
+      console.error(err);
     }
   };
 

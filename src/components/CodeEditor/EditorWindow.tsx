@@ -2,6 +2,7 @@ import React from 'react';
 import Editor from '@monaco-editor/react';
 import { motion } from 'framer-motion';
 import { ShieldCheck } from 'lucide-react';
+import { useUserPreferences } from '../../contexts/UserPreferencesContext';
 
 interface EditorWindowProps {
     code: string;
@@ -12,6 +13,8 @@ interface EditorWindowProps {
 }
 
 const EditorWindow: React.FC<EditorWindowProps> = ({ code, onChange, language, phase, onStartCoding }) => {
+    const { theme, fontSize } = useUserPreferences();
+
     return (
         <div className="relative h-full">
             {(phase === 'reading' || phase === 'mcq') && (
@@ -46,12 +49,12 @@ const EditorWindow: React.FC<EditorWindowProps> = ({ code, onChange, language, p
                 <Editor
                     height="100%"
                     defaultLanguage={language}
-                    theme="vs-dark"
+                    theme={theme}
                     value={code}
                     onChange={(value: string | undefined) => onChange(value || '')}
                     options={{
                         minimap: { enabled: false },
-                        fontSize: 14,
+                        fontSize: fontSize,
                         fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace",
                         padding: { top: 20 },
                         scrollBeyondLastLine: false,

@@ -42,7 +42,8 @@ class LeetCodeService:
             response = requests.post(
                 self.graphql_url,
                 json={"query": query, "variables": variables},
-                headers=self.headers
+                headers=self.headers,
+                timeout=10
             )
             response.raise_for_status()
             data = response.json()

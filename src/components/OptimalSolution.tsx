@@ -7,15 +7,22 @@ interface Problem {
   title: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   optimalSolution?: string;
+  timeComplexity?: string;
+  spaceComplexity?: string;
+  bruteForceTimeComplexity?: string;
+  bruteForceSpaceComplexity?: string;
+  optimalTimeComplexity?: string;
+  optimalSpaceComplexity?: string;
 }
 
 interface OptimalSolutionProps {
   problem: Problem;
   onSolutionFeedback: (worked: boolean) => void;
   solutionWorked: boolean | null;
+  executionError?: string | null;
 }
 
-export default function OptimalSolution({ problem, onSolutionFeedback, solutionWorked }: OptimalSolutionProps) {
+export default function OptimalSolution({ problem, onSolutionFeedback, solutionWorked, executionError }: OptimalSolutionProps) {
   const [language, setLanguage] = useState('python');
 
   const optimalSolutions = {
@@ -88,12 +95,12 @@ export default function OptimalSolution({ problem, onSolutionFeedback, solutionW
 }`,
 
     cpp: `class Solution {
-public:
     /**
      * Optimal Solution using unordered_map
      * Time Complexity: O(n)
      * Space Complexity: O(n)
      */
+    public:
     vector<int> twoSum(vector<int>& nums, int target) {
         unordered_map<int, int> numMap;
         
@@ -124,21 +131,26 @@ public:
   const approaches = [
     {
       name: 'Brute Force',
-      timeComplexity: 'O(n²)',
-      spaceComplexity: 'O(1)',
+      timeComplexity: problem.bruteForceTimeComplexity || 'O(n²)',
+      spaceComplexity: problem.bruteForceSpaceComplexity || 'O(1)',
       description: 'Check every pair of numbers to find the target sum.',
       pros: ['Simple to understand', 'No extra space needed'],
       cons: ['Inefficient for large arrays', 'Quadratic time complexity']
     },
     {
-      name: 'Hash Map (Optimal)',
-      timeComplexity: 'O(n)',
-      spaceComplexity: 'O(n)',
-      description: 'Use a hash map to store complements and find the solution in one pass.',
-      pros: ['Linear time complexity', 'Single pass through array'],
-      cons: ['Uses extra space for hash map']
+      name: 'Optimal Solution',
+      timeComplexity: problem.optimalTimeComplexity || problem.timeComplexity || 'O(n)',
+      spaceComplexity: problem.optimalSpaceComplexity || problem.spaceComplexity || 'O(n)',
+      description: 'Optimal approach using efficient algorithms/data structures.',
+      pros: ['Best time complexity', 'Optimized resource usage'],
+      cons: []
     }
   ];
+
+  // Use dynamic optimal solution if available
+  const currentCode = problem.optimalSolution && language === 'python'
+    ? problem.optimalSolution
+    : optimalSolutions[language as keyof typeof optimalSolutions] || '// Solution not available for this language';
 
   return (
     <div className="h-full flex flex-col bg-zinc-950">
@@ -161,8 +173,8 @@ public:
                 key={lang.id}
                 onClick={() => setLanguage(lang.id)}
                 className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${language === lang.id
-                    ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/20'
-                    : 'text-zinc-500 hover:text-white hover:bg-white/5'
+                  ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/20'
+                  : 'text-zinc-500 hover:text-white hover:bg-white/5'
                   }`}
               >
                 {lang.name}
@@ -231,8 +243,16 @@ public:
                   <XCircle className="w-8 h-8" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-rose-400 uppercase tracking-widest mb-1">Logic Drift Detected</h4>
-                  <p className="text-zinc-400 text-xs font-medium">Anomaly identified in implementation. Study the optimal blueprint below.</p>
+                  <h4 className="text-sm font-bold text-rose-400 uppercase tracking-widest mb-1">Solution Failed</h4>
+                  <p className="text-zinc-400 text-xs font-medium">
+                    {executionError ? (
+                      <span className="font-mono bg-rose-950/50 px-2 py-1 rounded text-rose-300 block mt-1 border border-rose-500/20">
+                        {executionError}
+                      </span>
+                    ) : (
+                      "Implementation did not pass all test cases. Review the logic below."
+                    )}
+                  </p>
                 </div>
               </div>
               <button
@@ -258,8 +278,8 @@ public:
           <div className="grid md:grid-cols-2 gap-6">
             {approaches.map((approach, index) => (
               <div key={index} className={`p-6 rounded-3xl border relative transition-all group hover:scale-[1.02] ${approach.name.includes('Optimal')
-                  ? 'bg-violet-600/10 border-violet-500/30 shadow-[0_0_30px_rgba(139,92,246,0.1)]'
-                  : 'bg-zinc-900 border-white/5'
+                ? 'bg-violet-600/10 border-violet-500/30 shadow-[0_0_30px_rgba(139,92,246,0.1)]'
+                : 'bg-zinc-900 border-white/5'
                 }`}>
                 {approach.name.includes('Optimal') && (
                   <div className="absolute -top-3 left-6 px-3 py-1 bg-violet-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-full shadow-lg">
@@ -327,7 +347,7 @@ public:
             </div>
             <div className="bg-zinc-900 rounded-[32px] p-8 border border-white/5 overflow-hidden shadow-inner">
               <pre className="text-zinc-100 font-mono text-sm leading-relaxed overflow-x-auto scroll-none">
-                <code className="block py-4">{optimalSolutions[language as keyof typeof optimalSolutions]}</code>
+                <code className="block py-4">{currentCode}</code>
               </pre>
             </div>
           </div>
