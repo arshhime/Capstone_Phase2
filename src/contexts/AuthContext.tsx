@@ -8,18 +8,6 @@ interface User {
   experience: 'beginner' | 'intermediate' | 'advanced';
   solvedProblems: number;
   accuracy: number;
-  recentActivity?: {
-    problemId: string;
-    title: string;
-    difficulty: string;
-    status: 'Solved' | 'Attempted';
-    timestamp: string;
-    timeSpent: string;
-  }[];
-  skillDistribution?: {
-    name: string;
-    level: number;
-  }[];
 }
 
 interface AuthContextType {
@@ -31,21 +19,39 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-const API_URL = 'http://127.0.0.1:8000';
+const API_URL = 'http://localhost:5001';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for a user in local storage when the app loads
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
+    // 1. Logic for Social Login Redirects (Google/GitHub)
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    const userData = params.get('user');
+
+    if (token && userData) {
       try {
-        setUser(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(decodeURIComponent(userData));
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(parsedUser));
+        setUser(parsedUser);
+        
+        // Clean the URL so the token isn't visible/re-processed
+        window.history.replaceState({}, document.title, "/dashboard");
       } catch (error) {
-        console.error('Failed to parse user from local storage:', error);
-        localStorage.removeItem('user');
+        console.error('Failed to parse social login data:', error);
+      }
+    } else {
+      // 2. Logic for Standard Page Refresh (Existing Session)
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (error) {
+          localStorage.removeItem('user');
+        }
       }
     }
     setLoading(false);
@@ -68,20 +74,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const response = await fetch(`${API_URL}/api/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
+      // Ensure these keys match the destructuring in your index.js
+      body: JSON.stringify({ name, email, password }), 
     });
+
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || 'Failed to sign up');
+
     setUser(data.user);
     localStorage.setItem('user', JSON.stringify(data.user));
     localStorage.setItem('token', data.token);
   };
 
-  const logout = () => {
+const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-  };
+    localStorage.clear(); // Clears user, token, and any other cached data
+    window.location.href = '/login'; // Force redirect to the login screen
+};
 
   return (
     <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
