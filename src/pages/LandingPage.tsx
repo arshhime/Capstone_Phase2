@@ -2,9 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Bot, Cpu, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   return (
     <div className="min-h-screen bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop')] bg-cover bg-center overflow-hidden relative">
@@ -17,30 +19,41 @@ const LandingPage: React.FC = () => {
           <span className="text-white">Niche<span className="text-violet-500">Code</span></span>
         </div>
         <div className="flex items-center gap-6">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => navigate('/practice')}
-            className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-          >
-            Practice
-          </button>
-          <button
-            onClick={() => navigate('/chat')}
-            className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-          >
-            AI Agent
-          </button>
-          <button
-            onClick={() => navigate('/login')}
-            className="glass-button px-6 py-2 rounded-full text-sm font-medium text-white hover:bg-white/10"
-          >
-            Sign In
-          </button>
+          {user ? (
+            <>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={() => navigate('/practice')}
+                className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+              >
+                Practice
+              </button>
+              <button
+                onClick={() => navigate('/chat')}
+                className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+              >
+                AI Agent
+              </button>
+              <button
+                onClick={() => logout()}
+                className="glass-button px-6 py-2 rounded-full text-sm font-medium text-white hover:bg-white/10"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => navigate('/login')}
+              className="glass-button px-6 py-2 rounded-full text-sm font-medium text-white hover:bg-white/10"
+            >
+              Sign In
+            </button>
+          )}
         </div>
       </nav>
 
@@ -65,12 +78,21 @@ const LandingPage: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => navigate('/chat')}
-              className="px-8 py-4 bg-violet-600 hover:bg-violet-700 text-white rounded-full font-semibold text-lg transition-all shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_40px_rgba(139,92,246,0.6)] flex items-center gap-2"
-            >
-              Launch Console <ArrowRight className="w-5 h-5" />
-            </button>
+            {user ? (
+              <button
+                onClick={() => navigate('/chat')}
+                className="px-8 py-4 bg-violet-600 hover:bg-violet-700 text-white rounded-full font-semibold text-lg transition-all shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_40px_rgba(139,92,246,0.6)] flex items-center gap-2"
+              >
+                Launch Console <ArrowRight className="w-5 h-5" />
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className="px-8 py-4 bg-violet-600 hover:bg-violet-700 text-white rounded-full font-semibold text-lg transition-all shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_40px_rgba(139,92,246,0.6)] flex items-center gap-2"
+              >
+                Get Started <ArrowRight className="w-5 h-5" />
+              </button>
+            )}
             <button className="px-8 py-4 glass-button rounded-full text-white font-semibold text-lg">
               View Documentation
             </button>

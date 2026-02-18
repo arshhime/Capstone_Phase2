@@ -1,0 +1,548 @@
+Connected to MongoDB
+
+Found 268 problems to fix
+
+Γ£ù Failed ID 69922a959a3c1e8d9a8423bf: Remove Nth Node From End of List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8423c1: Merge Two Sorted Lists - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8423c3: Merge k Sorted Lists - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8423c4: Swap Nodes in Pairs - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8423c5: Reverse Nodes in k-Group - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8423e9: Rotate List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8423fe: Remove Duplicates from Sorted List II - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8423ff: Remove Duplicates from Sorted List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842402: Partition List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842408: Reverse Linked List II - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84240a: Binary Tree Inorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84240b: Unique Binary Search Trees II - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84240e: Validate Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84240f: Recover Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842410: Same Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842411: Symmetric Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842412: Binary Tree Level Order Traversal - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842413: Binary Tree Zigzag Level Order Traversal - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842414: Maximum Depth of Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842415: Construct Binary Tree from Preorder and Inorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842416: Construct Binary Tree from Inorder and Postorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842417: Convert Sorted Array to Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842418: Convert Sorted List to Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842419: Balanced Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84241a: Minimum Depth of Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84241b: Path Sum - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84241c: Path Sum II - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84241d: Flatten Binary Tree to Linked List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84241f: Populating Next Right Pointers in Each Node - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842426: Binary Tree Maximum Path Sum - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84242d: Clone Graph - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842432: Copy List with Random Pointer - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842435: Linked List Cycle - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842436: Linked List Cycle II - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842437: Reorder List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842438: Binary Tree Preorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842439: Binary Tree Postorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84243a: LRU Cache - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84243b: Insertion Sort List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84243c: Sort List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842443: Min Stack - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842444: Intersection of Two Linked Lists - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84244e: Binary Search Tree Iterator - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842467: Binary Tree Right Side View - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84246b: Remove Linked List Elements - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84246d: Reverse Linked List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84246f: Implement Trie (Prefix Tree) - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842472: Design Add and Search Words Data Structure - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84247d: Count Complete Tree Nodes - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842480: Implement Stack using Queues - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842481: Invert Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842485: Kth Smallest Element in a BST - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842487: Implement Queue using Stacks - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842489: Palindrome Linked List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84248a: Lowest Common Ancestor of a Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84248b: Lowest Common Ancestor of a Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84248c: Delete Node in a Linked List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842492: Binary Tree Paths - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424a0: Peeking Iterator - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424a5: Find Median from Data Stream - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424a6: Serialize and Deserialize Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424aa: Range Sum Query - Immutable - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424ab: Range Sum Query 2D - Immutable - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424ad: Range Sum Query - Mutable - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424bb: Odd Even Linked List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424c3: House Robber III - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424cd: Data Stream as Disjoint Intervals - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424cf: Design Twitter - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424dd: Insert Delete GetRandom O(1) - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424de: Insert Delete GetRandom O(1) - Duplicates allowed - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424df: Linked List Random Node - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424e1: Shuffle an Array - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424e2: Mini Parser - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424ef: Random Pick Index - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a8424f5: Sum of Left Leaves - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842506: Construct Quad Tree - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842507: N-ary Tree Level Order Traversal - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842508: Flatten a Multilevel Doubly Linked List - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842509: All O`one Data Structure - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a84250e: Path Sum III - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842514: Add Two Numbers II - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842518: Serialize and Deserialize BST - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842519: Delete Node in a BST - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842523: LFU Cache - Could not extract method name
+Γ£ù Failed ID 69922a959a3c1e8d9a842532: Generate Random Point in a Circle - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842541: Random Point in Non-overlapping Rectangles - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842544: Find Mode in Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a84254a: Most Frequent Subtree Sum - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a84254d: Find Bottom Left Tree Value - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a84254f: Find Largest Value in Each Tree Row - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842553: Random Flip Matrix - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a84255b: Random Pick with Weight - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a84255d: Minimum Absolute Difference in BST - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842561: Convert BST to Greater Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842566: Diameter of Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842570: Logical OR of Two Binary Grids Represented as Quad-Trees - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842571: Maximum Depth of N-ary Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842574: Binary Tree Tilt - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a84257a: Subtree of Another Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842584: N-ary Tree Preorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842585: N-ary Tree Postorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842591: Construct String from Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842597: Merge Two Binary Trees - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a84259b: Design Circular Queue - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a84259c: Add One Row to Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425a5: Average of Levels in Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425a9: Design Circular Deque - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425b1: Find Duplicate Subtrees - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425b2: Two Sum IV - Input is a BST - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425b3: Maximum Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425b4: Print Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425b9: Maximum Width of Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425be: Trim a Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425c0: Second Minimum Node In a Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425c5: Implement Magic Dictionary - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425c6: Map Sum Pairs - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425ce: Longest Univalue Path - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425d1: Employee Importance - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425da: Search in a Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425db: Insert into a Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425dc: Kth Largest Element in a Stream - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425de: Design HashSet - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425df: Design HashMap - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425e0: Design Linked List - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425e2: Random Pick with Blacklist - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425e6: Range Module - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425ee: Split Linked List in Parts - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425f1: My Calendar I - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425f3: My Calendar II - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425f4: My Calendar III - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a8425fe: Prefix and Suffix Search - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a84261a: Minimum Distance Between BST Nodes - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842637: Binary Tree Pruning - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a84263a: Linked List Components - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842660: Exam Room - Could not extract method name
+Γ£ù Failed ID 69922a969a3c1e8d9a842668: All Nodes Distance K in Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a84266a: Smallest Subtree with all the Deepest Nodes - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842671: Leaf-Similar Trees - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842675: Middle of the Linked List - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842682: Construct Binary Tree from Preorder and Postorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842687: All Possible Full Binary Trees - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842688: Maximum Frequency Stack - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a84268a: Increasing Order Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a84268d: RLE Iterator - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a84268e: Online Stock Span - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842698: Online Election - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426a0: Complete Binary Tree Inserter - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426ae: Number of Recent Calls - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426b3: Range Sum of BST - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426c0: Flip Equivalent Binary Trees - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426c7: Check Completeness of a Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426ce: Univalued Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426d1: Binary Tree Cameras - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426d4: Flip Binary Tree To Match Preorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426dc: Distribute Coins in Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426de: Time Based Key-Value Store - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426e4: Vertical Order Traversal of a Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426e5: Smallest String Starting From Leaf - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426ea: Cousins in Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426ef: Maximum Binary Tree II - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a8426f9: Construct Binary Search Tree from Preorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842704: Next Greater Node In Linked List - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842707: Sum of Root To Leaf Binary Numbers - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a84270b: Maximum Difference Between Node and Ancestor - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a84270d: Recover a Tree From Preorder Traversal - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842711: Stream of Characters - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842717: Binary Search Tree to Greater Sum Tree - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842732: Insufficient Nodes in Root to Leaf Paths - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842743: Delete Nodes And Return Forest - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842745: Print in Order - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842746: Print FooBar Alternately - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842747: Print Zero Even Odd - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842748: Building H2O - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a84274a: Lowest Common Ancestor of Deepest Leaves - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842758: Binary Tree Coloring Game - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842759: Snapshot Array - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a84275f: Online Majority Element In Subarray - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842762: Maximum Level Sum of a Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842768: Remove Zero Sum Consecutive Nodes from Linked List - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842769: Dinner Plate Stacks - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a842778: Fizz Buzz Multithreaded - Could not extract method name
+Γ£ù Failed ID 69922a979a3c1e8d9a84277e: Design Skiplist - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427a0: Find Elements in a Contaminated Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427b0: Iterator for Combination - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427b4: Convert Binary Number in a Linked List to Integer - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427bf: Deepest Leaves Sum - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427c1: All Elements in Two Binary Search Trees - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427ca: Sum of Nodes with Even-Valued Grandparent - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427d3: Delete Leaves With a Given Value - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427e0: Maximum Product of Splitted Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427e9: Tweet Counts Per Frequency - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427ec: Product of the Last K Numbers - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427f0: Apply Discount Every n Orders - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427f9: Linked List in Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427fd: Longest ZigZag Path in a Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8427fe: Maximum Sum BST in Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a842804: Find a Corresponding Node of a Binary Tree in a Clone of That Tree - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a842806: Design a Stack With Increment Operation - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a842807: Balance a Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a842814: Design Underground System - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a84283d: Count Good Nodes in Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a842845: Pseudo-Palindromic Paths in a Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a842851: Design Browser History - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a842854: Subrectangle Queries - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a84285a: Kth Ancestor of a Tree Node - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a842880: Number of Good Leaf Nodes Pairs - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8428b6: Throne Inheritance - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8428b8: Design Parking System - Could not extract method name
+Γ£ù Failed ID 69922a989a3c1e8d9a8428bd: Even Odd Tree - Could not extract method name
+Γ£ù Failed ID 69922a999a3c1e8d9a8428c7: Fancy Sequence - Could not extract method name
+Γ£ù Failed ID 69922a999a3c1e8d9a8428e1: Design an Ordered Stream - Could not extract method name
+Γ£ù Failed ID 69922a999a3c1e8d9a8428ec: Merge In Between Linked Lists - Could not extract method name
+Γ£ù Failed ID 69922a999a3c1e8d9a8428ed: Design Front Middle Back Queue - Could not extract method name
+Γ£ù Failed ID 69922a999a3c1e8d9a842916: Swapping Nodes in a Linked List - Could not extract method name
+Γ£ù Failed ID 69922a999a3c1e8d9a842954: Design Authentication Manager - Could not extract method name
+Γ£ù Failed ID 69922a999a3c1e8d9a84296a: Finding MK Average - Could not extract method name
+Γ£ù Failed ID 69922a999a3c1e8d9a842978: Seat Reservation Manager - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842989: Finding Pairs With a Certain Sum - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a8429af: Design Movie Rental System - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a8429bf: Merge BSTs to Create Single BST - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a8429ec: Operations on Tree - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a8429fb: Detect Squares - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a0b: Stock Price Fluctuation  - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a12: Simple Bank System - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a1e: Find the Minimum and Maximum Number of Nodes Between Critical Points - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a26: Walking Robot Simulation II - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a2a: Reverse Nodes in Even Length Groups - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a2f: Range Frequency Queries - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a3a: Delete the Middle Node of a Linked List - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a3b: Step-By-Step Directions From a Binary Tree Node to Another - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a40: Sequentially Ordinal Rank Tracker - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a56: Maximum Twin Sum of a Linked List - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a73: Design Bitset - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a7e: Merge Nodes in Between Zeros - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842a8b: Create Binary Tree From Descriptions - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842aa4: Encrypt and Decrypt Strings - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842aaa: Root Equals Sum of Children - Could not extract method name
+Γ£ù Failed ID 69922a9a9a3c1e8d9a842aad: Design an ATM Machine - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842ac0: Count Nodes Equal to Average of Subtree - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842aca: Count Integers in Intervals - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842ad2: Booking Concert Tickets in Groups - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842ada: Design a Text Editor - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842af0: Spiral Matrix IV - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842af3: Evaluate Boolean Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842af8: Smallest Number in Infinite Set - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b01: Design a Number Container System - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b05: Design a Food Rating System - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b1e: Amount of Time for Binary Tree to Be Infected - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b36: Reverse Odd Levels of Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b3d: Longest Uploaded Prefix - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b5a: Height of Binary Tree After Subtree Removal Queries - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b65: Minimum Number of Operations to Sort a Binary Tree by Level - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b68: Closest Nodes Queries in a Binary Search Tree - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b71: Remove Nodes From Linked List - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b7d: Design Memory Allocator - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842b8f: Find Consecutive Integers from a Data Stream - Could not extract method name
+Γ£ù Failed ID 69922a9b9a3c1e8d9a842bc2: Kth Largest Sum in a Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a9c9a3c1e8d9a842bf2: Cousins in Binary Tree II - Could not extract method name
+Γ£ù Failed ID 69922a9c9a3c1e8d9a842bf3: Design Graph With Shortest Path Calculator - Could not extract method name
+Γ£ù Failed ID 69922a9c9a3c1e8d9a842c0b: Frequency Tracker - Could not extract method name
+Γ£ù Failed ID 69922a9d9a3c1e8d9a842c63: Insert Greatest Common Divisors in Linked List - Could not extract method name
+Γ£ù Failed ID 69922a9d9a3c1e8d9a842c6b: Double a Number Represented as a Linked List - Could not extract method name
+Γ£ù Failed ID 69922a9e9a3c1e8d9a842d9a: Delete Nodes From Linked List Present in Array - Could not extract method name
+Γ£ù Failed ID 69922a9e9a3c1e8d9a842dae: Design Neighbor Sum Service - Could not extract method name
+Γ£ù Failed ID 69922a9e9a3c1e8d9a842dea: K-th Largest Perfect Subtree Size in Binary Tree - Could not extract method name
+Γ£ù Failed ID 69922a9e9a3c1e8d9a842e2d: Design Task Manager - Could not extract method name
+Γ£ù Failed ID 69922a9e9a3c1e8d9a842e6f: Design Spreadsheet - Could not extract method name
+Γ£ù Failed ID 69922a9e9a3c1e8d9a842e84: Implement Router - Could not extract method name
+
+
+=== SUMMARY ===
+Total problems: 268
+Fixed: 0
+Failed: 268
+
+Failed problems:
+  - ID 69922a959a3c1e8d9a8423bf: Remove Nth Node From End of List
+  - ID 69922a959a3c1e8d9a8423c1: Merge Two Sorted Lists
+  - ID 69922a959a3c1e8d9a8423c3: Merge k Sorted Lists
+  - ID 69922a959a3c1e8d9a8423c4: Swap Nodes in Pairs
+  - ID 69922a959a3c1e8d9a8423c5: Reverse Nodes in k-Group
+  - ID 69922a959a3c1e8d9a8423e9: Rotate List
+  - ID 69922a959a3c1e8d9a8423fe: Remove Duplicates from Sorted List II
+  - ID 69922a959a3c1e8d9a8423ff: Remove Duplicates from Sorted List
+  - ID 69922a959a3c1e8d9a842402: Partition List
+  - ID 69922a959a3c1e8d9a842408: Reverse Linked List II
+  - ID 69922a959a3c1e8d9a84240a: Binary Tree Inorder Traversal
+  - ID 69922a959a3c1e8d9a84240b: Unique Binary Search Trees II
+  - ID 69922a959a3c1e8d9a84240e: Validate Binary Search Tree
+  - ID 69922a959a3c1e8d9a84240f: Recover Binary Search Tree
+  - ID 69922a959a3c1e8d9a842410: Same Tree
+  - ID 69922a959a3c1e8d9a842411: Symmetric Tree
+  - ID 69922a959a3c1e8d9a842412: Binary Tree Level Order Traversal
+  - ID 69922a959a3c1e8d9a842413: Binary Tree Zigzag Level Order Traversal
+  - ID 69922a959a3c1e8d9a842414: Maximum Depth of Binary Tree
+  - ID 69922a959a3c1e8d9a842415: Construct Binary Tree from Preorder and Inorder Traversal
+  - ID 69922a959a3c1e8d9a842416: Construct Binary Tree from Inorder and Postorder Traversal
+  - ID 69922a959a3c1e8d9a842417: Convert Sorted Array to Binary Search Tree
+  - ID 69922a959a3c1e8d9a842418: Convert Sorted List to Binary Search Tree
+  - ID 69922a959a3c1e8d9a842419: Balanced Binary Tree
+  - ID 69922a959a3c1e8d9a84241a: Minimum Depth of Binary Tree
+  - ID 69922a959a3c1e8d9a84241b: Path Sum
+  - ID 69922a959a3c1e8d9a84241c: Path Sum II
+  - ID 69922a959a3c1e8d9a84241d: Flatten Binary Tree to Linked List
+  - ID 69922a959a3c1e8d9a84241f: Populating Next Right Pointers in Each Node
+  - ID 69922a959a3c1e8d9a842426: Binary Tree Maximum Path Sum
+  - ID 69922a959a3c1e8d9a84242d: Clone Graph
+  - ID 69922a959a3c1e8d9a842432: Copy List with Random Pointer
+  - ID 69922a959a3c1e8d9a842435: Linked List Cycle
+  - ID 69922a959a3c1e8d9a842436: Linked List Cycle II
+  - ID 69922a959a3c1e8d9a842437: Reorder List
+  - ID 69922a959a3c1e8d9a842438: Binary Tree Preorder Traversal
+  - ID 69922a959a3c1e8d9a842439: Binary Tree Postorder Traversal
+  - ID 69922a959a3c1e8d9a84243a: LRU Cache
+  - ID 69922a959a3c1e8d9a84243b: Insertion Sort List
+  - ID 69922a959a3c1e8d9a84243c: Sort List
+  - ID 69922a959a3c1e8d9a842443: Min Stack
+  - ID 69922a959a3c1e8d9a842444: Intersection of Two Linked Lists
+  - ID 69922a959a3c1e8d9a84244e: Binary Search Tree Iterator
+  - ID 69922a959a3c1e8d9a842467: Binary Tree Right Side View
+  - ID 69922a959a3c1e8d9a84246b: Remove Linked List Elements
+  - ID 69922a959a3c1e8d9a84246d: Reverse Linked List
+  - ID 69922a959a3c1e8d9a84246f: Implement Trie (Prefix Tree)
+  - ID 69922a959a3c1e8d9a842472: Design Add and Search Words Data Structure
+  - ID 69922a959a3c1e8d9a84247d: Count Complete Tree Nodes
+  - ID 69922a959a3c1e8d9a842480: Implement Stack using Queues
+  - ID 69922a959a3c1e8d9a842481: Invert Binary Tree
+  - ID 69922a959a3c1e8d9a842485: Kth Smallest Element in a BST
+  - ID 69922a959a3c1e8d9a842487: Implement Queue using Stacks
+  - ID 69922a959a3c1e8d9a842489: Palindrome Linked List
+  - ID 69922a959a3c1e8d9a84248a: Lowest Common Ancestor of a Binary Search Tree
+  - ID 69922a959a3c1e8d9a84248b: Lowest Common Ancestor of a Binary Tree
+  - ID 69922a959a3c1e8d9a84248c: Delete Node in a Linked List
+  - ID 69922a959a3c1e8d9a842492: Binary Tree Paths
+  - ID 69922a959a3c1e8d9a8424a0: Peeking Iterator
+  - ID 69922a959a3c1e8d9a8424a5: Find Median from Data Stream
+  - ID 69922a959a3c1e8d9a8424a6: Serialize and Deserialize Binary Tree
+  - ID 69922a959a3c1e8d9a8424aa: Range Sum Query - Immutable
+  - ID 69922a959a3c1e8d9a8424ab: Range Sum Query 2D - Immutable
+  - ID 69922a959a3c1e8d9a8424ad: Range Sum Query - Mutable
+  - ID 69922a959a3c1e8d9a8424bb: Odd Even Linked List
+  - ID 69922a959a3c1e8d9a8424c3: House Robber III
+  - ID 69922a959a3c1e8d9a8424cd: Data Stream as Disjoint Intervals
+  - ID 69922a959a3c1e8d9a8424cf: Design Twitter
+  - ID 69922a959a3c1e8d9a8424dd: Insert Delete GetRandom O(1)
+  - ID 69922a959a3c1e8d9a8424de: Insert Delete GetRandom O(1) - Duplicates allowed
+  - ID 69922a959a3c1e8d9a8424df: Linked List Random Node
+  - ID 69922a959a3c1e8d9a8424e1: Shuffle an Array
+  - ID 69922a959a3c1e8d9a8424e2: Mini Parser
+  - ID 69922a959a3c1e8d9a8424ef: Random Pick Index
+  - ID 69922a959a3c1e8d9a8424f5: Sum of Left Leaves
+  - ID 69922a959a3c1e8d9a842506: Construct Quad Tree
+  - ID 69922a959a3c1e8d9a842507: N-ary Tree Level Order Traversal
+  - ID 69922a959a3c1e8d9a842508: Flatten a Multilevel Doubly Linked List
+  - ID 69922a959a3c1e8d9a842509: All O`one Data Structure
+  - ID 69922a959a3c1e8d9a84250e: Path Sum III
+  - ID 69922a959a3c1e8d9a842514: Add Two Numbers II
+  - ID 69922a959a3c1e8d9a842518: Serialize and Deserialize BST
+  - ID 69922a959a3c1e8d9a842519: Delete Node in a BST
+  - ID 69922a959a3c1e8d9a842523: LFU Cache
+  - ID 69922a959a3c1e8d9a842532: Generate Random Point in a Circle
+  - ID 69922a969a3c1e8d9a842541: Random Point in Non-overlapping Rectangles
+  - ID 69922a969a3c1e8d9a842544: Find Mode in Binary Search Tree
+  - ID 69922a969a3c1e8d9a84254a: Most Frequent Subtree Sum
+  - ID 69922a969a3c1e8d9a84254d: Find Bottom Left Tree Value
+  - ID 69922a969a3c1e8d9a84254f: Find Largest Value in Each Tree Row
+  - ID 69922a969a3c1e8d9a842553: Random Flip Matrix
+  - ID 69922a969a3c1e8d9a84255b: Random Pick with Weight
+  - ID 69922a969a3c1e8d9a84255d: Minimum Absolute Difference in BST
+  - ID 69922a969a3c1e8d9a842561: Convert BST to Greater Tree
+  - ID 69922a969a3c1e8d9a842566: Diameter of Binary Tree
+  - ID 69922a969a3c1e8d9a842570: Logical OR of Two Binary Grids Represented as Quad-Trees
+  - ID 69922a969a3c1e8d9a842571: Maximum Depth of N-ary Tree
+  - ID 69922a969a3c1e8d9a842574: Binary Tree Tilt
+  - ID 69922a969a3c1e8d9a84257a: Subtree of Another Tree
+  - ID 69922a969a3c1e8d9a842584: N-ary Tree Preorder Traversal
+  - ID 69922a969a3c1e8d9a842585: N-ary Tree Postorder Traversal
+  - ID 69922a969a3c1e8d9a842591: Construct String from Binary Tree
+  - ID 69922a969a3c1e8d9a842597: Merge Two Binary Trees
+  - ID 69922a969a3c1e8d9a84259b: Design Circular Queue
+  - ID 69922a969a3c1e8d9a84259c: Add One Row to Tree
+  - ID 69922a969a3c1e8d9a8425a5: Average of Levels in Binary Tree
+  - ID 69922a969a3c1e8d9a8425a9: Design Circular Deque
+  - ID 69922a969a3c1e8d9a8425b1: Find Duplicate Subtrees
+  - ID 69922a969a3c1e8d9a8425b2: Two Sum IV - Input is a BST
+  - ID 69922a969a3c1e8d9a8425b3: Maximum Binary Tree
+  - ID 69922a969a3c1e8d9a8425b4: Print Binary Tree
+  - ID 69922a969a3c1e8d9a8425b9: Maximum Width of Binary Tree
+  - ID 69922a969a3c1e8d9a8425be: Trim a Binary Search Tree
+  - ID 69922a969a3c1e8d9a8425c0: Second Minimum Node In a Binary Tree
+  - ID 69922a969a3c1e8d9a8425c5: Implement Magic Dictionary
+  - ID 69922a969a3c1e8d9a8425c6: Map Sum Pairs
+  - ID 69922a969a3c1e8d9a8425ce: Longest Univalue Path
+  - ID 69922a969a3c1e8d9a8425d1: Employee Importance
+  - ID 69922a969a3c1e8d9a8425da: Search in a Binary Search Tree
+  - ID 69922a969a3c1e8d9a8425db: Insert into a Binary Search Tree
+  - ID 69922a969a3c1e8d9a8425dc: Kth Largest Element in a Stream
+  - ID 69922a969a3c1e8d9a8425de: Design HashSet
+  - ID 69922a969a3c1e8d9a8425df: Design HashMap
+  - ID 69922a969a3c1e8d9a8425e0: Design Linked List
+  - ID 69922a969a3c1e8d9a8425e2: Random Pick with Blacklist
+  - ID 69922a969a3c1e8d9a8425e6: Range Module
+  - ID 69922a969a3c1e8d9a8425ee: Split Linked List in Parts
+  - ID 69922a969a3c1e8d9a8425f1: My Calendar I
+  - ID 69922a969a3c1e8d9a8425f3: My Calendar II
+  - ID 69922a969a3c1e8d9a8425f4: My Calendar III
+  - ID 69922a969a3c1e8d9a8425fe: Prefix and Suffix Search
+  - ID 69922a969a3c1e8d9a84261a: Minimum Distance Between BST Nodes
+  - ID 69922a969a3c1e8d9a842637: Binary Tree Pruning
+  - ID 69922a969a3c1e8d9a84263a: Linked List Components
+  - ID 69922a969a3c1e8d9a842660: Exam Room
+  - ID 69922a969a3c1e8d9a842668: All Nodes Distance K in Binary Tree
+  - ID 69922a979a3c1e8d9a84266a: Smallest Subtree with all the Deepest Nodes
+  - ID 69922a979a3c1e8d9a842671: Leaf-Similar Trees
+  - ID 69922a979a3c1e8d9a842675: Middle of the Linked List
+  - ID 69922a979a3c1e8d9a842682: Construct Binary Tree from Preorder and Postorder Traversal
+  - ID 69922a979a3c1e8d9a842687: All Possible Full Binary Trees
+  - ID 69922a979a3c1e8d9a842688: Maximum Frequency Stack
+  - ID 69922a979a3c1e8d9a84268a: Increasing Order Search Tree
+  - ID 69922a979a3c1e8d9a84268d: RLE Iterator
+  - ID 69922a979a3c1e8d9a84268e: Online Stock Span
+  - ID 69922a979a3c1e8d9a842698: Online Election
+  - ID 69922a979a3c1e8d9a8426a0: Complete Binary Tree Inserter
+  - ID 69922a979a3c1e8d9a8426ae: Number of Recent Calls
+  - ID 69922a979a3c1e8d9a8426b3: Range Sum of BST
+  - ID 69922a979a3c1e8d9a8426c0: Flip Equivalent Binary Trees
+  - ID 69922a979a3c1e8d9a8426c7: Check Completeness of a Binary Tree
+  - ID 69922a979a3c1e8d9a8426ce: Univalued Binary Tree
+  - ID 69922a979a3c1e8d9a8426d1: Binary Tree Cameras
+  - ID 69922a979a3c1e8d9a8426d4: Flip Binary Tree To Match Preorder Traversal
+  - ID 69922a979a3c1e8d9a8426dc: Distribute Coins in Binary Tree
+  - ID 69922a979a3c1e8d9a8426de: Time Based Key-Value Store
+  - ID 69922a979a3c1e8d9a8426e4: Vertical Order Traversal of a Binary Tree
+  - ID 69922a979a3c1e8d9a8426e5: Smallest String Starting From Leaf
+  - ID 69922a979a3c1e8d9a8426ea: Cousins in Binary Tree
+  - ID 69922a979a3c1e8d9a8426ef: Maximum Binary Tree II
+  - ID 69922a979a3c1e8d9a8426f9: Construct Binary Search Tree from Preorder Traversal
+  - ID 69922a979a3c1e8d9a842704: Next Greater Node In Linked List
+  - ID 69922a979a3c1e8d9a842707: Sum of Root To Leaf Binary Numbers
+  - ID 69922a979a3c1e8d9a84270b: Maximum Difference Between Node and Ancestor
+  - ID 69922a979a3c1e8d9a84270d: Recover a Tree From Preorder Traversal
+  - ID 69922a979a3c1e8d9a842711: Stream of Characters
+  - ID 69922a979a3c1e8d9a842717: Binary Search Tree to Greater Sum Tree
+  - ID 69922a979a3c1e8d9a842732: Insufficient Nodes in Root to Leaf Paths
+  - ID 69922a979a3c1e8d9a842743: Delete Nodes And Return Forest
+  - ID 69922a979a3c1e8d9a842745: Print in Order
+  - ID 69922a979a3c1e8d9a842746: Print FooBar Alternately
+  - ID 69922a979a3c1e8d9a842747: Print Zero Even Odd
+  - ID 69922a979a3c1e8d9a842748: Building H2O
+  - ID 69922a979a3c1e8d9a84274a: Lowest Common Ancestor of Deepest Leaves
+  - ID 69922a979a3c1e8d9a842758: Binary Tree Coloring Game
+  - ID 69922a979a3c1e8d9a842759: Snapshot Array
+  - ID 69922a979a3c1e8d9a84275f: Online Majority Element In Subarray
+  - ID 69922a979a3c1e8d9a842762: Maximum Level Sum of a Binary Tree
+  - ID 69922a979a3c1e8d9a842768: Remove Zero Sum Consecutive Nodes from Linked List
+  - ID 69922a979a3c1e8d9a842769: Dinner Plate Stacks
+  - ID 69922a979a3c1e8d9a842778: Fizz Buzz Multithreaded
+  - ID 69922a979a3c1e8d9a84277e: Design Skiplist
+  - ID 69922a989a3c1e8d9a8427a0: Find Elements in a Contaminated Binary Tree
+  - ID 69922a989a3c1e8d9a8427b0: Iterator for Combination
+  - ID 69922a989a3c1e8d9a8427b4: Convert Binary Number in a Linked List to Integer
+  - ID 69922a989a3c1e8d9a8427bf: Deepest Leaves Sum
+  - ID 69922a989a3c1e8d9a8427c1: All Elements in Two Binary Search Trees
+  - ID 69922a989a3c1e8d9a8427ca: Sum of Nodes with Even-Valued Grandparent
+  - ID 69922a989a3c1e8d9a8427d3: Delete Leaves With a Given Value
+  - ID 69922a989a3c1e8d9a8427e0: Maximum Product of Splitted Binary Tree
+  - ID 69922a989a3c1e8d9a8427e9: Tweet Counts Per Frequency
+  - ID 69922a989a3c1e8d9a8427ec: Product of the Last K Numbers
+  - ID 69922a989a3c1e8d9a8427f0: Apply Discount Every n Orders
+  - ID 69922a989a3c1e8d9a8427f9: Linked List in Binary Tree
+  - ID 69922a989a3c1e8d9a8427fd: Longest ZigZag Path in a Binary Tree
+  - ID 69922a989a3c1e8d9a8427fe: Maximum Sum BST in Binary Tree
+  - ID 69922a989a3c1e8d9a842804: Find a Corresponding Node of a Binary Tree in a Clone of That Tree
+  - ID 69922a989a3c1e8d9a842806: Design a Stack With Increment Operation
+  - ID 69922a989a3c1e8d9a842807: Balance a Binary Search Tree
+  - ID 69922a989a3c1e8d9a842814: Design Underground System
+  - ID 69922a989a3c1e8d9a84283d: Count Good Nodes in Binary Tree
+  - ID 69922a989a3c1e8d9a842845: Pseudo-Palindromic Paths in a Binary Tree
+  - ID 69922a989a3c1e8d9a842851: Design Browser History
+  - ID 69922a989a3c1e8d9a842854: Subrectangle Queries
+  - ID 69922a989a3c1e8d9a84285a: Kth Ancestor of a Tree Node
+  - ID 69922a989a3c1e8d9a842880: Number of Good Leaf Nodes Pairs
+  - ID 69922a989a3c1e8d9a8428b6: Throne Inheritance
+  - ID 69922a989a3c1e8d9a8428b8: Design Parking System
+  - ID 69922a989a3c1e8d9a8428bd: Even Odd Tree
+  - ID 69922a999a3c1e8d9a8428c7: Fancy Sequence
+  - ID 69922a999a3c1e8d9a8428e1: Design an Ordered Stream
+  - ID 69922a999a3c1e8d9a8428ec: Merge In Between Linked Lists
+  - ID 69922a999a3c1e8d9a8428ed: Design Front Middle Back Queue
+  - ID 69922a999a3c1e8d9a842916: Swapping Nodes in a Linked List
+  - ID 69922a999a3c1e8d9a842954: Design Authentication Manager
+  - ID 69922a999a3c1e8d9a84296a: Finding MK Average
+  - ID 69922a999a3c1e8d9a842978: Seat Reservation Manager
+  - ID 69922a9a9a3c1e8d9a842989: Finding Pairs With a Certain Sum
+  - ID 69922a9a9a3c1e8d9a8429af: Design Movie Rental System
+  - ID 69922a9a9a3c1e8d9a8429bf: Merge BSTs to Create Single BST
+  - ID 69922a9a9a3c1e8d9a8429ec: Operations on Tree
+  - ID 69922a9a9a3c1e8d9a8429fb: Detect Squares
+  - ID 69922a9a9a3c1e8d9a842a0b: Stock Price Fluctuation 
+  - ID 69922a9a9a3c1e8d9a842a12: Simple Bank System
+  - ID 69922a9a9a3c1e8d9a842a1e: Find the Minimum and Maximum Number of Nodes Between Critical Points
+  - ID 69922a9a9a3c1e8d9a842a26: Walking Robot Simulation II
+  - ID 69922a9a9a3c1e8d9a842a2a: Reverse Nodes in Even Length Groups
+  - ID 69922a9a9a3c1e8d9a842a2f: Range Frequency Queries
+  - ID 69922a9a9a3c1e8d9a842a3a: Delete the Middle Node of a Linked List
+  - ID 69922a9a9a3c1e8d9a842a3b: Step-By-Step Directions From a Binary Tree Node to Another
+  - ID 69922a9a9a3c1e8d9a842a40: Sequentially Ordinal Rank Tracker
+  - ID 69922a9a9a3c1e8d9a842a56: Maximum Twin Sum of a Linked List
+  - ID 69922a9a9a3c1e8d9a842a73: Design Bitset
+  - ID 69922a9a9a3c1e8d9a842a7e: Merge Nodes in Between Zeros
+  - ID 69922a9a9a3c1e8d9a842a8b: Create Binary Tree From Descriptions
+  - ID 69922a9a9a3c1e8d9a842aa4: Encrypt and Decrypt Strings
+  - ID 69922a9a9a3c1e8d9a842aaa: Root Equals Sum of Children
+  - ID 69922a9a9a3c1e8d9a842aad: Design an ATM Machine
+  - ID 69922a9b9a3c1e8d9a842ac0: Count Nodes Equal to Average of Subtree
+  - ID 69922a9b9a3c1e8d9a842aca: Count Integers in Intervals
+  - ID 69922a9b9a3c1e8d9a842ad2: Booking Concert Tickets in Groups
+  - ID 69922a9b9a3c1e8d9a842ada: Design a Text Editor
+  - ID 69922a9b9a3c1e8d9a842af0: Spiral Matrix IV
+  - ID 69922a9b9a3c1e8d9a842af3: Evaluate Boolean Binary Tree
+  - ID 69922a9b9a3c1e8d9a842af8: Smallest Number in Infinite Set
+  - ID 69922a9b9a3c1e8d9a842b01: Design a Number Container System
+  - ID 69922a9b9a3c1e8d9a842b05: Design a Food Rating System
+  - ID 69922a9b9a3c1e8d9a842b1e: Amount of Time for Binary Tree to Be Infected
+  - ID 69922a9b9a3c1e8d9a842b36: Reverse Odd Levels of Binary Tree
+  - ID 69922a9b9a3c1e8d9a842b3d: Longest Uploaded Prefix
+  - ID 69922a9b9a3c1e8d9a842b5a: Height of Binary Tree After Subtree Removal Queries
+  - ID 69922a9b9a3c1e8d9a842b65: Minimum Number of Operations to Sort a Binary Tree by Level
+  - ID 69922a9b9a3c1e8d9a842b68: Closest Nodes Queries in a Binary Search Tree
+  - ID 69922a9b9a3c1e8d9a842b71: Remove Nodes From Linked List
+  - ID 69922a9b9a3c1e8d9a842b7d: Design Memory Allocator
+  - ID 69922a9b9a3c1e8d9a842b8f: Find Consecutive Integers from a Data Stream
+  - ID 69922a9b9a3c1e8d9a842bc2: Kth Largest Sum in a Binary Tree
+  - ID 69922a9c9a3c1e8d9a842bf2: Cousins in Binary Tree II
+  - ID 69922a9c9a3c1e8d9a842bf3: Design Graph With Shortest Path Calculator
+  - ID 69922a9c9a3c1e8d9a842c0b: Frequency Tracker
+  - ID 69922a9d9a3c1e8d9a842c63: Insert Greatest Common Divisors in Linked List
+  - ID 69922a9d9a3c1e8d9a842c6b: Double a Number Represented as a Linked List
+  - ID 69922a9e9a3c1e8d9a842d9a: Delete Nodes From Linked List Present in Array
+  - ID 69922a9e9a3c1e8d9a842dae: Design Neighbor Sum Service
+  - ID 69922a9e9a3c1e8d9a842dea: K-th Largest Perfect Subtree Size in Binary Tree
+  - ID 69922a9e9a3c1e8d9a842e2d: Design Task Manager
+  - ID 69922a9e9a3c1e8d9a842e6f: Design Spreadsheet
+  - ID 69922a9e9a3c1e8d9a842e84: Implement Router

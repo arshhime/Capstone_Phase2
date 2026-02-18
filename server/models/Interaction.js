@@ -10,6 +10,9 @@ const interactionSchema = new mongoose.Schema({
     timeTakenSeconds: { type: Number, required: true },
     runtimeMs: { type: Number, required: true },
     memoryUsedKB: { type: Number, required: true },
+    companies: [String], // Fetched from display-problems
+    difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'] }, // Fetched from display-problems
+    tags: [String], // Fetched from display-problems
     createdAt: { type: Date, default: Date.now }
 }, { collection: 'interactions' });
 

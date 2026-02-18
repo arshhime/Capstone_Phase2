@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String }, // Derived from email (before @)
   userId: { type: String, unique: true }, // 16-digit numeric string
-  password: { type: String, required: true },
+  googleId: { type: String, unique: true, sparse: true }, // Added for Google OAuth
+  password: { type: String }, // Made optional for OAuth users
   avatar: { type: String },
   experience: { type: String, enum: ['Beginner', 'Intermediate', 'Advanced'], default: 'Beginner' },
   solvedProblems: { type: Number, default: 0 }, // Unique problems attempted
@@ -27,7 +28,38 @@ const userSchema = new mongoose.Schema({
   skillDistribution: [{
     name: String, // Tag name
     level: { type: Number, default: 0 } // 0.00 to 1.00
-  }]
+  }],
+  // New Statistics Fields
+  preferredCompanies: {
+    type: Map,
+    of: Number,
+    default: {}
+  },
+  topicTags: {
+    type: Map,
+    of: {
+      Easy: { type: Number, default: 0 },
+      Medium: { type: Number, default: 0 },
+      Hard: { type: Number, default: 0 }
+    },
+    default: {}
+  },
+  solvedCountByDifficulty: {
+    Easy: { type: Number, default: 0 },
+    Medium: { type: Number, default: 0 },
+    Hard: { type: Number, default: 0 }
+  }
+});
+
+// Ensure virtual fields are serialized
+userSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: function (doc, ret) {
+    ret.id = ret.userId; // Use 16-digit userId as the primary id for frontend
+    delete ret._id;
+    delete ret.password;
+  }
 });
 
 const User = mongoose.model('User', userSchema);

@@ -35,6 +35,53 @@ class BaseExecutor(ABC):
     def execute(self, code: str, test_cases: List[TestCaseInput], method_name: Optional[str] = None) -> List[TestCaseResult]:
         pass
 
+    def compare_results(self, actual: Any, expected_str: str) -> bool:
+        """Compare actual result with expected result string, handling strict and unordered list comparisons."""
+        try:
+            # Parse expected string to object
+            try:
+                expected = json.loads(expected_str)
+            except:
+                try:
+                    expected = ast.literal_eval(expected_str)
+                except:
+                    # Treat as string
+                    expected = expected_str.strip()
+
+            # 1. Strict equality
+            if actual == expected:
+                return True
+            
+            # 2. Stringified normalization (handles whitespace diffs)
+            if self.normalize_value(actual) == self.normalize_value(expected_str):
+                return True
+
+            # 3. Unordered list comparison (if both are lists)
+            if isinstance(actual, list) and isinstance(expected, list):
+                # Try sorting both
+                try:
+                    # Helper to make items comparable (handle dicts/lists inside)
+                    def make_comparable(item):
+                        if isinstance(item, list):
+                            return tuple(make_comparable(x) for x in item)
+                        if isinstance(item, dict):
+                            return tuple(sorted((k, make_comparable(v)) for k, v in item.items()))
+                        return item
+                    
+                    actual_comp = [make_comparable(x) for x in actual]
+                    expected_comp = [make_comparable(x) for x in expected]
+                    
+                    if sorted(actual_comp) == sorted(expected_comp):
+                        return True
+                except Exception:
+                    # Sorting failed (mixed types?), ignore
+                    pass
+            
+            return False
+            
+        except Exception:
+            return False
+
 class Judge0Executor:
     """Fallback executor using Judge0 Public API"""
     BASE_URL = "https://ce.judge0.com/submissions?base64_encoded=false&wait=true"
@@ -97,6 +144,11 @@ class TreeNode:
         self.left = left
         self.right = right
 
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
 def build_tree(values):
     if not values: return None
     root = TreeNode(values[0])
@@ -113,6 +165,41 @@ def build_tree(values):
             queue.append(node.right)
         i += 1
     return root
+
+def build_list(values):
+    if not values: return None
+    dummy = ListNode(0)
+    current = dummy
+    for val in values:
+        current.next = ListNode(val)
+        current = current.next
+    return dummy.next
+
+def list_to_array(head):
+    result = []
+    while head:
+        result.append(head.val)
+        head = head.next
+    return result
+
+def tree_to_list(root):
+    \"\"\"Serialize a tree to level-order list (LeetCode format), omitting trailing Nones.\"\"\"
+    if not root:
+        return []
+    result = []
+    queue = deque([root])
+    while queue:
+        node = queue.popleft()
+        if node is None:
+            result.append(None)
+        else:
+            result.append(node.val)
+            queue.append(node.left)
+            queue.append(node.right)
+    # Strip trailing Nones
+    while result and result[-1] is None:
+        result.pop()
+    return result
 
 {user_code}
 
@@ -131,8 +218,19 @@ def main():
                     name, val_str = parts
                     context[name.strip()] = ast.literal_eval(val_str.strip())
         
+        # Convert tree inputs
         if 'root' in context and isinstance(context['root'], list):
             context['root'] = build_tree(context['root'])
+        
+        # Convert linked list inputs (common parameter names)
+        list_param_names = ['l1', 'l2', 'head', 'headA', 'headB', 'list1', 'list2', 'lists']
+        for param_name in list_param_names:
+            if param_name in context and isinstance(context[param_name], list):
+                # Check if it's a list of lists (for merge k sorted lists)
+                if param_name == 'lists' and context[param_name] and isinstance(context[param_name][0], list):
+                    context[param_name] = [build_list(lst) for lst in context[param_name]]
+                else:
+                    context[param_name] = build_list(context[param_name])
         
         sol = Solution()
         target_method_name = {repr(method_name)}
@@ -147,10 +245,35 @@ def main():
         target_method = getattr(sol, target_method_name)
         result = target_method(**context)
         
-        if isinstance(result, TreeNode):
-            result = result.val
+        def serialize_result(obj):
+            if obj is None:
+                return None
             
-        print(json.dumps(result))
+            # Check for TreeNode (duck typing)
+            if hasattr(obj, 'val') and hasattr(obj, 'left') and hasattr(obj, 'right'):
+                return tree_to_list(obj)
+            
+            # Check for ListNode (duck typing)
+            if hasattr(obj, 'val') and hasattr(obj, 'next'):
+                return list_to_array(obj)
+            
+            # Handle Lists/Tuples recursively
+            if isinstance(obj, (list, tuple)):
+                return [serialize_result(item) for item in obj]
+            
+            # Handle Dicts recursively
+            if isinstance(obj, dict):
+                return {{k: serialize_result(v) for k, v in obj.items()}}
+                
+            # Base case: primitive types are already serializable
+            return obj
+
+        result = target_method(**context)
+        
+        # Recursively serialize the result
+        final_result = serialize_result(result)
+            
+        print(json.dumps(final_result))
         
     except Exception as e:
         print(json.dumps({{"error": str(e)}}))
@@ -207,9 +330,9 @@ if __name__ == "__main__":
                                 memory=memory_usage
                             ))
                         else:
-                            normalized_actual = self.normalize_value(actual_val)
-                            normalized_expected = self.normalize_value(tc.expected_output)
-                            passed = normalized_actual == normalized_expected
+                            # Use flexible comparison (handles unordered lists)
+                            passed = self.compare_results(actual_val, tc.expected_output)
+                            
                             results.append(TestCaseResult(
                                 input=tc.input,
                                 expected_output=tc.expected_output,

@@ -1,9 +1,17 @@
 
 import os
 from pymongo import MongoClient
+from dotenv import load_dotenv
+
+# Load .env from parent directory
+dotenv_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env')
+load_dotenv(dotenv_path)
 
 # MongoDB URI from .env
-MONGO_URI = "mongodb+srv://dhruvbhalode2022_db_user:0WjmURcyRPbELRcq@cluster0.qiusjwq.mongodb.net/capstone"
+MONGO_URI = os.getenv("MONGO_URI")
+if not MONGO_URI:
+    print("Error: MONGO_URI not found in .env")
+    exit(1)
 
 def merge_problems():
     try:

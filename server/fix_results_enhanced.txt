@@ -1,0 +1,278 @@
+Connected to MongoDB
+
+Found 268 problems to fix
+
+Γ£ô Fixed ID 69922a959a3c1e8d9a8423bf: Remove Nth Node From End of List -> methodName: removeNthFromEnd
+Γ£ô Fixed ID 69922a959a3c1e8d9a8423c1: Merge Two Sorted Lists -> methodName: mergeTwoLists
+Γ£ô Fixed ID 69922a959a3c1e8d9a8423c3: Merge k Sorted Lists -> methodName: mergeKLists
+Γ£ô Fixed ID 69922a959a3c1e8d9a8423c4: Swap Nodes in Pairs -> methodName: swapPairs
+Γ£ô Fixed ID 69922a959a3c1e8d9a8423c5: Reverse Nodes in k-Group -> methodName: reverseKGroup
+Γ£ô Fixed ID 69922a959a3c1e8d9a8423e9: Rotate List -> methodName: rotateRight
+Γ£ô Fixed ID 69922a959a3c1e8d9a8423fe: Remove Duplicates from Sorted List II -> methodName: deleteDuplicates
+Γ£ô Fixed ID 69922a959a3c1e8d9a8423ff: Remove Duplicates from Sorted List -> methodName: deleteDuplicates
+Γ£ô Fixed ID 69922a959a3c1e8d9a842402: Partition List -> methodName: partition
+Γ£ô Fixed ID 69922a959a3c1e8d9a842408: Reverse Linked List II -> methodName: reverseBetween
+Γ£ô Fixed ID 69922a959a3c1e8d9a84240a: Binary Tree Inorder Traversal -> methodName: inorderTraversal
+Γ£ô Fixed ID 69922a959a3c1e8d9a84240b: Unique Binary Search Trees II -> methodName: generateTrees
+Γ£ô Fixed ID 69922a959a3c1e8d9a84240e: Validate Binary Search Tree -> methodName: isValidBST
+Γ£ô Fixed ID 69922a959a3c1e8d9a84240f: Recover Binary Search Tree -> methodName: recoverTree
+Γ£ô Fixed ID 69922a959a3c1e8d9a842410: Same Tree -> methodName: isSameTree
+Γ£ô Fixed ID 69922a959a3c1e8d9a842411: Symmetric Tree -> methodName: isSymmetric
+Γ£ô Fixed ID 69922a959a3c1e8d9a842412: Binary Tree Level Order Traversal -> methodName: levelOrder
+Γ£ô Fixed ID 69922a959a3c1e8d9a842413: Binary Tree Zigzag Level Order Traversal -> methodName: zigzagLevelOrder
+Γ£ô Fixed ID 69922a959a3c1e8d9a842414: Maximum Depth of Binary Tree -> methodName: maxDepth
+Γ£ô Fixed ID 69922a959a3c1e8d9a842415: Construct Binary Tree from Preorder and Inorder Traversal -> methodName: buildTree
+Γ£ô Fixed ID 69922a959a3c1e8d9a842416: Construct Binary Tree from Inorder and Postorder Traversal -> methodName: buildTree
+Γ£ô Fixed ID 69922a959a3c1e8d9a842417: Convert Sorted Array to Binary Search Tree -> methodName: sortedArrayToBST
+Γ£ô Fixed ID 69922a959a3c1e8d9a842418: Convert Sorted List to Binary Search Tree -> methodName: sortedListToBST
+Γ£ô Fixed ID 69922a959a3c1e8d9a842419: Balanced Binary Tree -> methodName: isBalanced
+Γ£ô Fixed ID 69922a959a3c1e8d9a84241a: Minimum Depth of Binary Tree -> methodName: minDepth
+Γ£ô Fixed ID 69922a959a3c1e8d9a84241b: Path Sum -> methodName: hasPathSum
+Γ£ô Fixed ID 69922a959a3c1e8d9a84241c: Path Sum II -> methodName: pathSum
+Γ£ô Fixed ID 69922a959a3c1e8d9a84241d: Flatten Binary Tree to Linked List -> methodName: flatten
+Γ£ô Fixed ID 69922a959a3c1e8d9a84241f: Populating Next Right Pointers in Each Node -> methodName: connect
+Γ£ô Fixed ID 69922a959a3c1e8d9a842426: Binary Tree Maximum Path Sum -> methodName: maxPathSum
+Γ£ô Fixed ID 69922a959a3c1e8d9a84242d: Clone Graph -> methodName: cloneGraph
+Γ£ô Fixed ID 69922a959a3c1e8d9a842432: Copy List with Random Pointer -> methodName: copyRandomList
+Γ£ô Fixed ID 69922a959a3c1e8d9a842435: Linked List Cycle -> methodName: hasCycle
+Γ£ô Fixed ID 69922a959a3c1e8d9a842436: Linked List Cycle II -> methodName: detectCycle
+Γ£ô Fixed ID 69922a959a3c1e8d9a842437: Reorder List -> methodName: reorderList
+Γ£ô Fixed ID 69922a959a3c1e8d9a842438: Binary Tree Preorder Traversal -> methodName: preorderTraversal
+Γ£ô Fixed ID 69922a959a3c1e8d9a842439: Binary Tree Postorder Traversal -> methodName: postorderTraversal
+Γ£ô Fixed ID 69922a959a3c1e8d9a84243a: LRU Cache -> methodName: get
+Γ£ô Fixed ID 69922a959a3c1e8d9a84243b: Insertion Sort List -> methodName: insertionSortList
+Γ£ô Fixed ID 69922a959a3c1e8d9a84243c: Sort List -> methodName: sortList
+Γ£ô Fixed ID 69922a959a3c1e8d9a842443: Min Stack -> methodName: push
+Γ£ô Fixed ID 69922a959a3c1e8d9a842444: Intersection of Two Linked Lists -> methodName: getIntersectionNode
+Γ£ô Fixed ID 69922a959a3c1e8d9a84244e: Binary Search Tree Iterator -> methodName: next
+Γ£ô Fixed ID 69922a959a3c1e8d9a842467: Binary Tree Right Side View -> methodName: rightSideView
+Γ£ô Fixed ID 69922a959a3c1e8d9a84246b: Remove Linked List Elements -> methodName: removeElements
+Γ£ô Fixed ID 69922a959a3c1e8d9a84246d: Reverse Linked List -> methodName: reverseList
+Γ£ô Fixed ID 69922a959a3c1e8d9a84246f: Implement Trie (Prefix Tree) -> methodName: insert
+Γ£ô Fixed ID 69922a959a3c1e8d9a842472: Design Add and Search Words Data Structure -> methodName: addWord
+Γ£ô Fixed ID 69922a959a3c1e8d9a84247d: Count Complete Tree Nodes -> methodName: countNodes
+Γ£ô Fixed ID 69922a959a3c1e8d9a842480: Implement Stack using Queues -> methodName: push
+Γ£ô Fixed ID 69922a959a3c1e8d9a842481: Invert Binary Tree -> methodName: invertTree
+Γ£ô Fixed ID 69922a959a3c1e8d9a842485: Kth Smallest Element in a BST -> methodName: kthSmallest
+Γ£ô Fixed ID 69922a959a3c1e8d9a842487: Implement Queue using Stacks -> methodName: push
+Γ£ô Fixed ID 69922a959a3c1e8d9a842489: Palindrome Linked List -> methodName: isPalindrome
+Γ£ô Fixed ID 69922a959a3c1e8d9a84248a: Lowest Common Ancestor of a Binary Search Tree -> methodName: lowestCommonAncestor
+Γ£ô Fixed ID 69922a959a3c1e8d9a84248b: Lowest Common Ancestor of a Binary Tree -> methodName: lowestCommonAncestor
+Γ£ô Fixed ID 69922a959a3c1e8d9a84248c: Delete Node in a Linked List -> methodName: deleteNode
+Γ£ô Fixed ID 69922a959a3c1e8d9a842492: Binary Tree Paths -> methodName: binaryTreePaths
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424a0: Peeking Iterator -> methodName: peek
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424a5: Find Median from Data Stream -> methodName: addNum
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424a6: Serialize and Deserialize Binary Tree -> methodName: serialize
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424aa: Range Sum Query - Immutable -> methodName: sumRange
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424ab: Range Sum Query 2D - Immutable -> methodName: sumRegion
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424ad: Range Sum Query - Mutable -> methodName: update
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424bb: Odd Even Linked List -> methodName: oddEvenList
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424c3: House Robber III -> methodName: rob
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424cd: Data Stream as Disjoint Intervals -> methodName: addNum
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424cf: Design Twitter -> methodName: postTweet
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424dd: Insert Delete GetRandom O(1) -> methodName: insert
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424de: Insert Delete GetRandom O(1) - Duplicates allowed -> methodName: insert
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424df: Linked List Random Node -> methodName: getRandom
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424e1: Shuffle an Array -> methodName: reset
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424e2: Mini Parser -> methodName: deserialize
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424ef: Random Pick Index -> methodName: pick
+Γ£ô Fixed ID 69922a959a3c1e8d9a8424f5: Sum of Left Leaves -> methodName: sumOfLeftLeaves
+Γ£ô Fixed ID 69922a959a3c1e8d9a842506: Construct Quad Tree -> methodName: construct
+Γ£ô Fixed ID 69922a959a3c1e8d9a842507: N-ary Tree Level Order Traversal -> methodName: levelOrder
+Γ£ô Fixed ID 69922a959a3c1e8d9a842508: Flatten a Multilevel Doubly Linked List -> methodName: flatten
+Γ£ô Fixed ID 69922a959a3c1e8d9a842509: All O`one Data Structure -> methodName: inc
+Γ£ô Fixed ID 69922a959a3c1e8d9a84250e: Path Sum III -> methodName: pathSum
+Γ£ô Fixed ID 69922a959a3c1e8d9a842514: Add Two Numbers II -> methodName: addTwoNumbers
+Γ£ô Fixed ID 69922a959a3c1e8d9a842518: Serialize and Deserialize BST -> methodName: serialize
+Γ£ô Fixed ID 69922a959a3c1e8d9a842519: Delete Node in a BST -> methodName: deleteNode
+Γ£ô Fixed ID 69922a959a3c1e8d9a842523: LFU Cache -> methodName: get
+Γ£ô Fixed ID 69922a959a3c1e8d9a842532: Generate Random Point in a Circle -> methodName: randPoint
+Γ£ô Fixed ID 69922a969a3c1e8d9a842541: Random Point in Non-overlapping Rectangles -> methodName: pick
+Γ£ô Fixed ID 69922a969a3c1e8d9a842544: Find Mode in Binary Search Tree -> methodName: findMode
+Γ£ô Fixed ID 69922a969a3c1e8d9a84254a: Most Frequent Subtree Sum -> methodName: findFrequentTreeSum
+Γ£ô Fixed ID 69922a969a3c1e8d9a84254d: Find Bottom Left Tree Value -> methodName: findBottomLeftValue
+Γ£ô Fixed ID 69922a969a3c1e8d9a84254f: Find Largest Value in Each Tree Row -> methodName: largestValues
+Γ£ô Fixed ID 69922a969a3c1e8d9a842553: Random Flip Matrix -> methodName: flip
+Γ£ô Fixed ID 69922a969a3c1e8d9a84255b: Random Pick with Weight -> methodName: pickIndex
+Γ£ô Fixed ID 69922a969a3c1e8d9a84255d: Minimum Absolute Difference in BST -> methodName: getMinimumDifference
+Γ£ô Fixed ID 69922a969a3c1e8d9a842561: Convert BST to Greater Tree -> methodName: convertBST
+Γ£ô Fixed ID 69922a969a3c1e8d9a842566: Diameter of Binary Tree -> methodName: diameterOfBinaryTree
+Γ£ô Fixed ID 69922a969a3c1e8d9a842570: Logical OR of Two Binary Grids Represented as Quad-Trees -> methodName: intersect
+Γ£ô Fixed ID 69922a969a3c1e8d9a842571: Maximum Depth of N-ary Tree -> methodName: maxDepth
+Γ£ô Fixed ID 69922a969a3c1e8d9a842574: Binary Tree Tilt -> methodName: findTilt
+Γ£ô Fixed ID 69922a969a3c1e8d9a84257a: Subtree of Another Tree -> methodName: isSubtree
+Γ£ô Fixed ID 69922a969a3c1e8d9a842584: N-ary Tree Preorder Traversal -> methodName: preorder
+Γ£ô Fixed ID 69922a969a3c1e8d9a842585: N-ary Tree Postorder Traversal -> methodName: postorder
+Γ£ô Fixed ID 69922a969a3c1e8d9a842591: Construct String from Binary Tree -> methodName: tree2str
+Γ£ô Fixed ID 69922a969a3c1e8d9a842597: Merge Two Binary Trees -> methodName: mergeTrees
+Γ£ô Fixed ID 69922a969a3c1e8d9a84259b: Design Circular Queue -> methodName: enQueue
+Γ£ô Fixed ID 69922a969a3c1e8d9a84259c: Add One Row to Tree -> methodName: addOneRow
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425a5: Average of Levels in Binary Tree -> methodName: averageOfLevels
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425a9: Design Circular Deque -> methodName: insertFront
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425b1: Find Duplicate Subtrees -> methodName: findDuplicateSubtrees
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425b2: Two Sum IV - Input is a BST -> methodName: findTarget
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425b3: Maximum Binary Tree -> methodName: constructMaximumBinaryTree
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425b4: Print Binary Tree -> methodName: printTree
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425b9: Maximum Width of Binary Tree -> methodName: widthOfBinaryTree
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425be: Trim a Binary Search Tree -> methodName: trimBST
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425c0: Second Minimum Node In a Binary Tree -> methodName: findSecondMinimumValue
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425c5: Implement Magic Dictionary -> methodName: buildDict
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425c6: Map Sum Pairs -> methodName: insert
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425ce: Longest Univalue Path -> methodName: longestUnivaluePath
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425d1: Employee Importance -> methodName: getImportance
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425da: Search in a Binary Search Tree -> methodName: searchBST
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425db: Insert into a Binary Search Tree -> methodName: insertIntoBST
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425dc: Kth Largest Element in a Stream -> methodName: add
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425de: Design HashSet -> methodName: add
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425df: Design HashMap -> methodName: put
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425e0: Design Linked List -> methodName: get
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425e2: Random Pick with Blacklist -> methodName: pick
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425e6: Range Module -> methodName: addRange
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425ee: Split Linked List in Parts -> methodName: splitListToParts
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425f1: My Calendar I -> methodName: book
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425f3: My Calendar II -> methodName: book
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425f4: My Calendar III -> methodName: book
+Γ£ô Fixed ID 69922a969a3c1e8d9a8425fe: Prefix and Suffix Search -> methodName: f
+Γ£ô Fixed ID 69922a969a3c1e8d9a84261a: Minimum Distance Between BST Nodes -> methodName: minDiffInBST
+Γ£ô Fixed ID 69922a969a3c1e8d9a842637: Binary Tree Pruning -> methodName: pruneTree
+Γ£ô Fixed ID 69922a969a3c1e8d9a84263a: Linked List Components -> methodName: numComponents
+Γ£ô Fixed ID 69922a969a3c1e8d9a842660: Exam Room -> methodName: seat
+Γ£ô Fixed ID 69922a969a3c1e8d9a842668: All Nodes Distance K in Binary Tree -> methodName: distanceK
+Γ£ô Fixed ID 69922a979a3c1e8d9a84266a: Smallest Subtree with all the Deepest Nodes -> methodName: subtreeWithAllDeepest
+Γ£ô Fixed ID 69922a979a3c1e8d9a842671: Leaf-Similar Trees -> methodName: leafSimilar
+Γ£ô Fixed ID 69922a979a3c1e8d9a842675: Middle of the Linked List -> methodName: middleNode
+Γ£ô Fixed ID 69922a979a3c1e8d9a842682: Construct Binary Tree from Preorder and Postorder Traversal -> methodName: constructFromPrePost
+Γ£ô Fixed ID 69922a979a3c1e8d9a842687: All Possible Full Binary Trees -> methodName: allPossibleFBT
+Γ£ô Fixed ID 69922a979a3c1e8d9a842688: Maximum Frequency Stack -> methodName: push
+Γ£ô Fixed ID 69922a979a3c1e8d9a84268a: Increasing Order Search Tree -> methodName: increasingBST
+Γ£ô Fixed ID 69922a979a3c1e8d9a84268d: RLE Iterator -> methodName: next
+Γ£ô Fixed ID 69922a979a3c1e8d9a84268e: Online Stock Span -> methodName: next
+Γ£ô Fixed ID 69922a979a3c1e8d9a842698: Online Election -> methodName: q
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426a0: Complete Binary Tree Inserter -> methodName: insert
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426ae: Number of Recent Calls -> methodName: ping
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426b3: Range Sum of BST -> methodName: rangeSumBST
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426c0: Flip Equivalent Binary Trees -> methodName: flipEquiv
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426c7: Check Completeness of a Binary Tree -> methodName: isCompleteTree
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426ce: Univalued Binary Tree -> methodName: isUnivalTree
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426d1: Binary Tree Cameras -> methodName: minCameraCover
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426d4: Flip Binary Tree To Match Preorder Traversal -> methodName: flipMatchVoyage
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426dc: Distribute Coins in Binary Tree -> methodName: distributeCoins
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426de: Time Based Key-Value Store -> methodName: set
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426e4: Vertical Order Traversal of a Binary Tree -> methodName: verticalTraversal
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426e5: Smallest String Starting From Leaf -> methodName: smallestFromLeaf
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426ea: Cousins in Binary Tree -> methodName: isCousins
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426ef: Maximum Binary Tree II -> methodName: insertIntoMaxTree
+Γ£ô Fixed ID 69922a979a3c1e8d9a8426f9: Construct Binary Search Tree from Preorder Traversal -> methodName: bstFromPreorder
+Γ£ô Fixed ID 69922a979a3c1e8d9a842704: Next Greater Node In Linked List -> methodName: nextLargerNodes
+Γ£ô Fixed ID 69922a979a3c1e8d9a842707: Sum of Root To Leaf Binary Numbers -> methodName: sumRootToLeaf
+Γ£ô Fixed ID 69922a979a3c1e8d9a84270b: Maximum Difference Between Node and Ancestor -> methodName: maxAncestorDiff
+Γ£ô Fixed ID 69922a979a3c1e8d9a84270d: Recover a Tree From Preorder Traversal -> methodName: recoverFromPreorder
+Γ£ô Fixed ID 69922a979a3c1e8d9a842711: Stream of Characters -> methodName: query
+Γ£ô Fixed ID 69922a979a3c1e8d9a842717: Binary Search Tree to Greater Sum Tree -> methodName: bstToGst
+Γ£ô Fixed ID 69922a979a3c1e8d9a842732: Insufficient Nodes in Root to Leaf Paths -> methodName: sufficientSubset
+Γ£ô Fixed ID 69922a979a3c1e8d9a842743: Delete Nodes And Return Forest -> methodName: delNodes
+Γ£ô Fixed ID 69922a979a3c1e8d9a842745: Print in Order -> methodName: first
+Γ£ô Fixed ID 69922a979a3c1e8d9a842746: Print FooBar Alternately -> methodName: foo
+Γ£ô Fixed ID 69922a979a3c1e8d9a842747: Print Zero Even Odd -> methodName: zero
+Γ£ô Fixed ID 69922a979a3c1e8d9a842748: Building H2O -> methodName: hydrogen
+Γ£ô Fixed ID 69922a979a3c1e8d9a84274a: Lowest Common Ancestor of Deepest Leaves -> methodName: lcaDeepestLeaves
+Γ£ô Fixed ID 69922a979a3c1e8d9a842758: Binary Tree Coloring Game -> methodName: btreeGameWinningMove
+Γ£ô Fixed ID 69922a979a3c1e8d9a842759: Snapshot Array -> methodName: set
+Γ£ô Fixed ID 69922a979a3c1e8d9a84275f: Online Majority Element In Subarray -> methodName: query
+Γ£ô Fixed ID 69922a979a3c1e8d9a842762: Maximum Level Sum of a Binary Tree -> methodName: maxLevelSum
+Γ£ô Fixed ID 69922a979a3c1e8d9a842768: Remove Zero Sum Consecutive Nodes from Linked List -> methodName: removeZeroSumSublists
+Γ£ô Fixed ID 69922a979a3c1e8d9a842769: Dinner Plate Stacks -> methodName: push
+Γ£ô Fixed ID 69922a979a3c1e8d9a842778: Fizz Buzz Multithreaded -> methodName: fizz
+Γ£ô Fixed ID 69922a979a3c1e8d9a84277e: Design Skiplist -> methodName: search
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427a0: Find Elements in a Contaminated Binary Tree -> methodName: find
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427b0: Iterator for Combination -> methodName: next
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427b4: Convert Binary Number in a Linked List to Integer -> methodName: getDecimalValue
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427bf: Deepest Leaves Sum -> methodName: deepestLeavesSum
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427c1: All Elements in Two Binary Search Trees -> methodName: getAllElements
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427ca: Sum of Nodes with Even-Valued Grandparent -> methodName: sumEvenGrandparent
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427d3: Delete Leaves With a Given Value -> methodName: removeLeafNodes
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427e0: Maximum Product of Splitted Binary Tree -> methodName: maxProduct
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427e9: Tweet Counts Per Frequency -> methodName: recordTweet
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427ec: Product of the Last K Numbers -> methodName: add
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427f0: Apply Discount Every n Orders -> methodName: getBill
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427f9: Linked List in Binary Tree -> methodName: isSubPath
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427fd: Longest ZigZag Path in a Binary Tree -> methodName: longestZigZag
+Γ£ô Fixed ID 69922a989a3c1e8d9a8427fe: Maximum Sum BST in Binary Tree -> methodName: maxSumBST
+Γ£ô Fixed ID 69922a989a3c1e8d9a842804: Find a Corresponding Node of a Binary Tree in a Clone of That Tree -> methodName: getTargetCopy
+Γ£ô Fixed ID 69922a989a3c1e8d9a842806: Design a Stack With Increment Operation -> methodName: push
+Γ£ô Fixed ID 69922a989a3c1e8d9a842807: Balance a Binary Search Tree -> methodName: balanceBST
+Γ£ô Fixed ID 69922a989a3c1e8d9a842814: Design Underground System -> methodName: checkIn
+Γ£ô Fixed ID 69922a989a3c1e8d9a84283d: Count Good Nodes in Binary Tree -> methodName: goodNodes
+Γ£ô Fixed ID 69922a989a3c1e8d9a842845: Pseudo-Palindromic Paths in a Binary Tree -> methodName: pseudoPalindromicPaths
+Γ£ô Fixed ID 69922a989a3c1e8d9a842851: Design Browser History -> methodName: visit
+Γ£ô Fixed ID 69922a989a3c1e8d9a842854: Subrectangle Queries -> methodName: updateSubrectangle
+Γ£ô Fixed ID 69922a989a3c1e8d9a84285a: Kth Ancestor of a Tree Node -> methodName: getKthAncestor
+Γ£ô Fixed ID 69922a989a3c1e8d9a842880: Number of Good Leaf Nodes Pairs -> methodName: countPairs
+Γ£ô Fixed ID 69922a989a3c1e8d9a8428b6: Throne Inheritance -> methodName: birth
+Γ£ô Fixed ID 69922a989a3c1e8d9a8428b8: Design Parking System -> methodName: addCar
+Γ£ô Fixed ID 69922a989a3c1e8d9a8428bd: Even Odd Tree -> methodName: isEvenOddTree
+Γ£ô Fixed ID 69922a999a3c1e8d9a8428c7: Fancy Sequence -> methodName: append
+Γ£ô Fixed ID 69922a999a3c1e8d9a8428e1: Design an Ordered Stream -> methodName: insert
+Γ£ô Fixed ID 69922a999a3c1e8d9a8428ec: Merge In Between Linked Lists -> methodName: mergeInBetween
+Γ£ô Fixed ID 69922a999a3c1e8d9a8428ed: Design Front Middle Back Queue -> methodName: pushFront
+Γ£ô Fixed ID 69922a999a3c1e8d9a842916: Swapping Nodes in a Linked List -> methodName: swapNodes
+Γ£ô Fixed ID 69922a999a3c1e8d9a842954: Design Authentication Manager -> methodName: generate
+Γ£ô Fixed ID 69922a999a3c1e8d9a84296a: Finding MK Average -> methodName: addElement
+Γ£ô Fixed ID 69922a999a3c1e8d9a842978: Seat Reservation Manager -> methodName: reserve
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842989: Finding Pairs With a Certain Sum -> methodName: add
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a8429af: Design Movie Rental System -> methodName: search
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a8429bf: Merge BSTs to Create Single BST -> methodName: canMerge
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a8429ec: Operations on Tree -> methodName: lock
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a8429fb: Detect Squares -> methodName: add
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a0b: Stock Price Fluctuation  -> methodName: update
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a12: Simple Bank System -> methodName: transfer
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a1e: Find the Minimum and Maximum Number of Nodes Between Critical Points -> methodName: nodesBetweenCriticalPoints
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a26: Walking Robot Simulation II -> methodName: step
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a2a: Reverse Nodes in Even Length Groups -> methodName: reverseEvenLengthGroups
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a2f: Range Frequency Queries -> methodName: query
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a3a: Delete the Middle Node of a Linked List -> methodName: deleteMiddle
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a3b: Step-By-Step Directions From a Binary Tree Node to Another -> methodName: getDirections
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a40: Sequentially Ordinal Rank Tracker -> methodName: add
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a56: Maximum Twin Sum of a Linked List -> methodName: pairSum
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a73: Design Bitset -> methodName: fix
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a7e: Merge Nodes in Between Zeros -> methodName: mergeNodes
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842a8b: Create Binary Tree From Descriptions -> methodName: createBinaryTree
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842aa4: Encrypt and Decrypt Strings -> methodName: encrypt
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842aaa: Root Equals Sum of Children -> methodName: checkTree
+Γ£ô Fixed ID 69922a9a9a3c1e8d9a842aad: Design an ATM Machine -> methodName: deposit
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842ac0: Count Nodes Equal to Average of Subtree -> methodName: averageOfSubtree
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842aca: Count Integers in Intervals -> methodName: add
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842ad2: Booking Concert Tickets in Groups -> methodName: gather
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842ada: Design a Text Editor -> methodName: addText
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842af0: Spiral Matrix IV -> methodName: spiralMatrix
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842af3: Evaluate Boolean Binary Tree -> methodName: evaluateTree
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842af8: Smallest Number in Infinite Set -> methodName: popSmallest
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b01: Design a Number Container System -> methodName: change
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b05: Design a Food Rating System -> methodName: changeRating
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b1e: Amount of Time for Binary Tree to Be Infected -> methodName: amountOfTime
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b36: Reverse Odd Levels of Binary Tree -> methodName: reverseOddLevels
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b3d: Longest Uploaded Prefix -> methodName: upload
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b5a: Height of Binary Tree After Subtree Removal Queries -> methodName: treeQueries
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b65: Minimum Number of Operations to Sort a Binary Tree by Level -> methodName: minimumOperations
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b68: Closest Nodes Queries in a Binary Search Tree -> methodName: closestNodes
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b71: Remove Nodes From Linked List -> methodName: removeNodes
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b7d: Design Memory Allocator -> methodName: allocate
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842b8f: Find Consecutive Integers from a Data Stream -> methodName: consec
+Γ£ô Fixed ID 69922a9b9a3c1e8d9a842bc2: Kth Largest Sum in a Binary Tree -> methodName: kthLargestLevelSum
+Γ£ô Fixed ID 69922a9c9a3c1e8d9a842bf2: Cousins in Binary Tree II -> methodName: replaceValueInTree
+Γ£ô Fixed ID 69922a9c9a3c1e8d9a842bf3: Design Graph With Shortest Path Calculator -> methodName: addEdge
+Γ£ô Fixed ID 69922a9c9a3c1e8d9a842c0b: Frequency Tracker -> methodName: add
+Γ£ô Fixed ID 69922a9d9a3c1e8d9a842c63: Insert Greatest Common Divisors in Linked List -> methodName: insertGreatestCommonDivisors
+Γ£ô Fixed ID 69922a9d9a3c1e8d9a842c6b: Double a Number Represented as a Linked List -> methodName: doubleIt
+Γ£ô Fixed ID 69922a9e9a3c1e8d9a842d9a: Delete Nodes From Linked List Present in Array -> methodName: modifiedList
+Γ£ô Fixed ID 69922a9e9a3c1e8d9a842dae: Design Neighbor Sum Service -> methodName: adjacentSum
+Γ£ô Fixed ID 69922a9e9a3c1e8d9a842dea: K-th Largest Perfect Subtree Size in Binary Tree -> methodName: kthLargestPerfectSubtree
+Γ£ô Fixed ID 69922a9e9a3c1e8d9a842e2d: Design Task Manager -> methodName: add
+Γ£ô Fixed ID 69922a9e9a3c1e8d9a842e6f: Design Spreadsheet -> methodName: setCell
+Γ£ô Fixed ID 69922a9e9a3c1e8d9a842e84: Implement Router -> methodName: addPacket
+
+
+=== SUMMARY ===
+Total problems: 268
+Fixed: 268
+Failed: 0

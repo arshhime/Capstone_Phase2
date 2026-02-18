@@ -10,6 +10,9 @@ import User from './models/User.js';
 import Interaction from './models/Interaction.js';
 import axios from "axios";
 import { GoogleGenerativeAI } from '@google/generative-ai'; // Added Gemini import
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import cookieSession from 'cookie-session';
 
 const app = express();
 const SECRET_KEY = process.env.SECRET_KEY || 'your-very-secret-key';
@@ -27,7 +30,117 @@ mongoose.connect(process.env.MONGO_URI)
 // --- Gemini Setup --- // Added Gemini Setup
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
 
-// --- API Routes ---
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+
+// --- Auth Middleware ---
+app.use(session({
+  secret: process.env.SECRET_KEY,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// --- Passport Config ---
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id).then(user => {
+    done(null, user);
+  });
+});
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/api/auth/google/callback",
+    scope: ["profile", "email"]
+  },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // Check if user exists by googleId
+        let user = await User.findOne({ googleId: profile.id });
+
+        if (!user) {
+          // Check if user exists by email (link accounts)
+          user = await User.findOne({ email: profile.emails[0].value });
+
+          if (user) {
+            user.googleId = profile.id;
+            if (!user.avatar) user.avatar = profile.photos[0].value;
+            await user.save();
+          } else {
+            // Create new user
+            // Generate 16-digit userId
+            let userId;
+            let isUnique = false;
+            while (!isUnique) {
+              userId = Math.floor(1000000000000000 + Math.random() * 9000000000000000).toString();
+              const existingId = await User.findOne({ userId });
+              if (!existingId) isUnique = true;
+            }
+
+            user = new User({
+              googleId: profile.id,
+              name: profile.displayName,
+              email: profile.emails[0].value,
+              username: profile.emails[0].value.split('@')[0],
+              avatar: profile.photos[0].value,
+              userId: userId,
+              recentActivity: [],
+              skillDistribution: [
+                { name: 'Arrays', level: 0 },
+                { name: 'Strings', level: 0 },
+                { name: 'DP', level: 0 },
+                { name: 'Trees', level: 0 }
+              ],
+              solvedProblems: 0,
+              correctProblems: 0,
+              accuracy: 0,
+              userRating: 1200,
+              experience: 'Beginner'
+            });
+            await user.save();
+          }
+        }
+        return done(null, user);
+      } catch (err) {
+        console.error("Google Auth Error:", err);
+        return done(err, null);
+      }
+    }
+  ));
+
+  // --- API Routes ---
+  app.get('/api/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+  app.get('/api/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    (req, res) => {
+      // Successful authentication
+      const token = jwt.sign({ id: req.user._id, email: req.user.email }, SECRET_KEY, { expiresIn: '1h' });
+
+      // Redirect to frontend with token
+      // Assuming frontend is running on port 5173 (Vite default)
+      // In production, this should be an env variable
+      res.redirect(`http://localhost:5173/auth/success?token=${token}`);
+    }
+  );
+} else {
+  console.warn("Google OAuth credentials missing. /api/auth/google route disabled.");
+  app.get('/api/auth/google', (req, res) => {
+    res.status(500).send("Google OAuth is not configured on the server. Please check .env file.");
+  });
+}
 app.post('/api/ai/hint', async (req, res) => {
   try {
     const { problemTitle, problemDescription, currentCode } = req.body;
@@ -92,6 +205,28 @@ const problemSchema = new mongoose.Schema({
 import Problem from './models/Problem.js';
 
 // --- API Routes ---
+// --- Middleware to verify token ---
+const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(403).json({ message: 'No token provided.' });
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) return res.status(500).json({ message: 'Failed to authenticate token.' });
+    req.userId = decoded.id;
+    next();
+  });
+};
+
+app.get('/api/auth/me', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error.' });
+  }
+});
+
 app.post('/api/signup', async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -201,7 +336,10 @@ app.post('/api/interactions', async (req, res) => {
     }
 
     // --- Advanced User Stats Update ---
-    const user = await User.findOne({ userId });
+    let user = await User.findOne({ userId });
+    if (!user && mongoose.Types.ObjectId.isValid(userId)) {
+      user = await User.findById(userId);
+    }
     const problem = await Problem.findOne({ id: problemId }); // Need problem for difficulty/tags
 
     if (user && problem) {
@@ -291,6 +429,48 @@ app.post('/api/interactions', async (req, res) => {
       // Clamp rating between 0 and 3000
       user.userRating = Math.max(0, Math.min(3000, user.userRating));
 
+      // 6. Update Preferred Companies (All Attempts)
+      if (problem.companies && problem.companies.length > 0) {
+        if (!user.preferredCompanies) user.preferredCompanies = new Map();
+        problem.companies.forEach(company => {
+          const safeKey = company.replace(/\./g, '_');
+          const currentCount = user.preferredCompanies.get(safeKey) || 0;
+          user.preferredCompanies.set(safeKey, currentCount + 1);
+        });
+      }
+
+      // 7. Update Topic Tags & Solved Counts (Only Correct Solutions)
+      if (submissionStatus === 1) {
+        // Initialize if missing
+        if (!user.solvedCountByDifficulty) {
+          user.solvedCountByDifficulty = { Easy: 0, Medium: 0, Hard: 0 };
+        }
+
+        // Update Solved Count by Difficulty
+        if (problem.difficulty && ['Easy', 'Medium', 'Hard'].includes(problem.difficulty)) {
+          user.solvedCountByDifficulty[problem.difficulty] = (user.solvedCountByDifficulty[problem.difficulty] || 0) + 1;
+        }
+
+        // Update Topic Tags Mastery
+        if (problem.tags && problem.tags.length > 0) {
+          if (!user.topicTags) user.topicTags = new Map();
+
+          problem.tags.forEach(tag => {
+            const safeTag = tag.replace(/\./g, '_');
+            let topicStats = user.topicTags.get(safeTag);
+            if (!topicStats) {
+              topicStats = { Easy: 0, Medium: 0, Hard: 0 };
+            }
+
+            if (problem.difficulty && ['Easy', 'Medium', 'Hard'].includes(problem.difficulty)) {
+              topicStats[problem.difficulty] = (topicStats[problem.difficulty] || 0) + 1;
+            }
+
+            user.topicTags.set(safeTag, topicStats);
+          });
+        }
+      }
+
       // 6. Update Experience
       if (user.correctProblems < 100) {
         user.experience = 'Beginner';
@@ -312,7 +492,10 @@ app.post('/api/interactions', async (req, res) => {
       submissionStatus, // 1 or 0
       timeTakenSeconds,
       runtimeMs,
-      memoryUsedKB
+      memoryUsedKB,
+      companies: problem ? problem.companies : [],
+      difficulty: problem ? problem.difficulty : undefined,
+      tags: problem ? problem.tags : []
     });
 
     await newInteraction.save();
@@ -323,13 +506,95 @@ app.post('/api/interactions', async (req, res) => {
   }
 });
 
+// Get Problem Metadata for Onboarding (Companies & Tags)
+app.get('/api/problems/metadata', async (req, res) => {
+  try {
+    const companies = await Problem.distinct('companies');
+    const tags = await Problem.distinct('tags');
+
+    // Filter out null/empty strings just in case
+    const safeCompanies = companies.filter(c => c).sort();
+    const safeTags = tags.filter(t => t).sort();
+
+    res.json({
+      companies: safeCompanies,
+      tags: safeTags
+    });
+  } catch (error) {
+    console.error("Metadata Error:", error);
+    res.status(500).json({ message: "Failed to fetch metadata." });
+  }
+});
+
+// Onboard New User
+app.post('/api/users/onboard', async (req, res) => {
+  try {
+    const { userId, preferredCompany, preferredCompanies, experience, topics } = req.body;
+
+    if (!userId) return res.status(400).json({ message: "UserId required" });
+
+    let user = await User.findOne({ userId });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // 1. Set Preferred Companies
+    if (!user.preferredCompanies) user.preferredCompanies = new Map();
+
+    if (preferredCompanies && Array.isArray(preferredCompanies)) {
+      preferredCompanies.forEach(company => {
+        if (typeof company === 'string') {
+          const safeKey = company.replace(/\./g, '_');
+          user.preferredCompanies.set(safeKey, 3);
+        }
+      });
+    } else if (preferredCompany) {
+      const safeKey = preferredCompany.replace(/\./g, '_');
+      user.preferredCompanies.set(safeKey, 3);
+    }
+
+    // 2. Set Experience
+    if (experience && ['Beginner', 'Intermediate', 'Advanced'].includes(experience)) {
+      user.experience = experience;
+    }
+
+    // 3. Set Skill Distribution (Topics)
+    if (topics && Array.isArray(topics) && topics.length > 0) {
+      // Calculate factor
+      const expMap = { 'Beginner': 1, 'Intermediate': 2, 'Advanced': 3 };
+      const factor = expMap[experience] || 1; // Default to Beginner if invalid/missing
+      const score = 0.05 * factor;
+
+      topics.forEach(tag => {
+        // Find existing or create (likely create for new user)
+        let skillIndex = user.skillDistribution.findIndex(s => s.name === tag);
+        if (skillIndex === -1) {
+          user.skillDistribution.push({ name: tag, level: 0 });
+          skillIndex = user.skillDistribution.length - 1;
+        }
+        // Add score (clamped to 1.0 ideally, but init is small)
+        const currentLevel = user.skillDistribution[skillIndex].level;
+        user.skillDistribution[skillIndex].level = Math.min(1.0, currentLevel + score);
+      });
+    }
+
+    await user.save();
+    res.json({ message: "User onboarded successfully", user });
+
+  } catch (error) {
+    console.error("Onboarding Error:", error);
+    res.status(500).json({ message: "Failed to onboard user." });
+  }
+});
+
 // Get User Stats for Dashboard
 app.get('/api/users/:userId/stats', async (req, res) => {
   try {
     const { userId } = req.params;
 
     // Fetch user
-    const user = await User.findOne({ userId });
+    let user = await User.findOne({ userId });
+    if (!user && mongoose.Types.ObjectId.isValid(userId)) {
+      user = await User.findById(userId);
+    }
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     // Fetch all interactions for this user
@@ -432,7 +697,9 @@ app.get('/api/users/:userId/stats', async (req, res) => {
         correctProblems: user.correctProblems,
         accuracy: Math.round(user.accuracy * 100), // Convert to percentage
         userRating: user.userRating,
-        totalInteractions: user.totalInteractions
+        totalInteractions: user.totalInteractions,
+        preferredCompanies: user.preferredCompanies ? Object.fromEntries(user.preferredCompanies) : {},
+
       },
       stats: {
         avgTime: avgTimeFormatted,

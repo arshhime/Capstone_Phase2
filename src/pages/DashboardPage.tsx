@@ -5,6 +5,23 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useProblem } from '../contexts/ProblemContext';
 import Navigation from '../components/Navigation';
+import RadarChart from '../components/RadarChart';
+import OnboardingModal from '../components/OnboardingModal';
+
+// Define color palettes for skills
+const SKILL_COLORS = [
+    'rgb(34, 197, 94)',   // Green
+    'rgb(59, 130, 246)',  // Blue  
+    'rgb(168, 85, 247)',  // Purple
+    'rgb(236, 72, 153)',  // Pink
+    'rgb(251, 146, 60)',  // Orange
+    'rgb(234, 179, 8)',   // Yellow
+    'rgb(20, 184, 166)',  // Teal
+    'rgb(239, 68, 68)',   // Red
+    'rgb(99, 102, 241)',  // Indigo
+    'rgb(217, 70, 239)',  // Fuchsia
+];
+
 
 const Dashboard: React.FC = () => {
     const { user } = useAuth();
@@ -14,6 +31,7 @@ const Dashboard: React.FC = () => {
     const [isFetching, setIsFetching] = React.useState(false);
     const [userStats, setUserStats] = React.useState<any>(null);
     const [loading, setLoading] = React.useState(true);
+    const [showOnboarding, setShowOnboarding] = React.useState(false);
 
     // Fetch user stats on mount
     React.useEffect(() => {
@@ -39,6 +57,27 @@ const Dashboard: React.FC = () => {
         fetchUserStats();
     }, [user?.id]);
 
+    React.useEffect(() => {
+        if (userStats?.user) {
+            const u = userStats.user;
+            // Check if new user: 0 interactions AND no preferred companies
+            const hasInteractions = u.totalInteractions > 0;
+            const hasPreferred = u.preferredCompanies && Object.keys(u.preferredCompanies).length > 0;
+
+            if (!hasInteractions && !hasPreferred) {
+                setShowOnboarding(true);
+            }
+        }
+    }, [userStats]);
+
+    const handleOnboardingComplete = () => {
+        setShowOnboarding(false);
+        // Refresh stats to reflect new skills/preferences
+        // window.location.reload(); // Simple refresh or re-fetch
+        // Re-fetching is better but reload ensures full state sync
+        window.location.reload();
+    };
+
     const handleProblemClick = (id: string) => {
         selectProblem(id);
         navigate('/ide');
@@ -52,6 +91,31 @@ const Dashboard: React.FC = () => {
         setTitleSlug('');
         navigate('/ide');
     };
+
+    // Shuffle skills for Radar Chart
+    const shuffledSkills = React.useMemo(() => {
+        const skills = userStats?.stats?.top10Skills?.length
+            ? [...userStats.stats.top10Skills]
+            : [
+                { name: 'Arrays', level: 0 },
+                { name: 'Strings', level: 0 },
+                { name: 'Hash Tables', level: 0 },
+                { name: 'Sorting', level: 0 },
+                { name: 'Trees', level: 0 },
+                { name: 'Graphs', level: 0 },
+                { name: 'DP', level: 0 },
+                { name: 'Greedy', level: 0 },
+                { name: 'Backtrack', level: 0 },
+                { name: 'Math', level: 0 },
+            ];
+
+        // Randomize order (Fisher-Yates)
+        for (let i = skills.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [skills[i], skills[j]] = [skills[j], skills[i]];
+        }
+        return skills;
+    }, [userStats?.stats?.top10Skills]);
 
     const stats = [
         { label: 'Problems Solved', value: userStats?.user?.solvedProblems || user?.solvedProblems || 0, icon: Trophy, color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
@@ -89,7 +153,7 @@ const Dashboard: React.FC = () => {
                             animate={{ opacity: 1, x: 0 }}
                             className="text-4xl font-bold tracking-tight"
                         >
-                            Developer <span className="text-violet-500">Console</span>
+                            {user?.name || 'User'}'s <span className="text-violet-500">Dashboard</span>
                         </motion.h1>
                         <p className="text-zinc-500 mt-2">Welcome back, {user?.name || 'User'}. Here's your performance overview.</p>
                     </div>
@@ -131,65 +195,33 @@ const Dashboard: React.FC = () => {
                         <section className="glass-panel rounded-3xl border border-white/5 bg-white/[0.02] overflow-hidden">
                             <div className="p-6 border-b border-white/5 flex items-center justify-between">
                                 <h2 className="text-xl font-bold flex items-center gap-2">
-                                    <BookOpen className="w-5 h-5 text-violet-500" />
-                                    Rating
+                                    <Star className="w-5 h-5 text-yellow-500" />
+                                    Skill Distribution
                                 </h2>
-                                <button className="text-sm text-violet-500 font-medium hover:text-violet-400">View Path</button>
                             </div>
-                            <div className="p-8 bg-gradient-to-br from-violet-600/20 to-fuchsia-600/10 flex flex-col md:flex-row items-center gap-8">
-                                {(() => {
-                                    const rating = Math.floor(userStats?.user?.userRating || user?.userRating || 1200);
-                                    // Calculate progress: 0 = 0%, 3000 = 100% (linear scale)
-                                    const minRating = 0;
-                                    const maxRating = 3000;
-                                    const progress = Math.min(100, Math.max(0, ((rating - minRating) / (maxRating - minRating)) * 100));
-                                    const circumference = 2 * Math.PI * 50; // radius = 50
-                                    const strokeDashoffset = circumference - (progress / 100) * circumference;
+                            <div className="p-6 bg-zinc-900/40 w-full mx-auto rounded-2xl">
+                                <div className="flex flex-row items-center justify-between gap-0 relative">
+                                    {/* Chart */}
+                                    <div className="flex-1 -ml-12 h-[350px] flex items-center justify-center">
+                                        <RadarChart skills={shuffledSkills} colors={SKILL_COLORS} size={450} />
+                                    </div>
 
-                                    return (
-                                        <>
-                                            <div className="relative w-32 h-32">
-                                                <svg className="w-32 h-32 transform -rotate-90">
-                                                    {/* Background circle */}
-                                                    <circle
-                                                        cx="64"
-                                                        cy="64"
-                                                        r="50"
-                                                        stroke="rgba(139, 92, 246, 0.2)"
-                                                        strokeWidth="8"
-                                                        fill="none"
-                                                    />
-                                                    {/* Progress circle */}
-                                                    <circle
-                                                        cx="64"
-                                                        cy="64"
-                                                        r="50"
-                                                        stroke="rgb(139, 92, 246)"
-                                                        strokeWidth="8"
-                                                        fill="none"
-                                                        strokeDasharray={circumference}
-                                                        strokeDashoffset={strokeDashoffset}
-                                                        strokeLinecap="round"
-                                                        className="transition-all duration-1000 ease-out"
-                                                    />
-                                                </svg>
-                                                <div className="absolute inset-0 flex items-center justify-center">
-                                                    <span className="text-2xl font-bold">{rating}</span>
+                                    {/* Legend */}
+                                    <div className="flex-shrink-0 w-48 space-y-3 z-10 bg-zinc-950/50 p-4 rounded-xl backdrop-blur-sm border border-white/5">
+                                        <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Skill Breakdown</h4>
+                                        {shuffledSkills.map((skill: any, i: number) => {
+                                            const color = SKILL_COLORS[i % SKILL_COLORS.length];
+                                            return (
+                                                <div key={i} className="flex items-center gap-3">
+                                                    <div className="w-2.5 h-2.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] flex-shrink-0" style={{ backgroundColor: color, boxShadow: `0 0 5px ${color}` }}></div>
+                                                    <div className="flex items-center gap-2 w-full">
+                                                        <span className="text-xs font-bold truncate" style={{ color }}>{skill.name}</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="flex-1 space-y-4 text-center md:text-left">
-                                                <h3 className="text-2xl font-bold">Data Structures & Algorithms</h3>
-                                                <p className="text-zinc-400 max-w-md">You're making great progress on Hash Tables. Up next: Graph Theory foundations.</p>
-                                                <button
-                                                    onClick={() => handleProblemClick('1')}
-                                                    className="px-6 py-3 bg-white text-zinc-950 rounded-xl font-bold hover:bg-zinc-200 transition-all flex items-center gap-2 mx-auto md:mx-0"
-                                                >
-                                                    Continue Learning <ArrowRight className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        </>
-                                    );
-                                })()}
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
                         </section>
 
@@ -239,34 +271,51 @@ const Dashboard: React.FC = () => {
                     <div className="space-y-8">
                         <section className="glass-panel p-6 rounded-3xl border border-white/5 bg-white/[0.02] space-y-6">
                             <h3 className="text-lg font-bold flex items-center gap-2">
-                                <Star className="w-5 h-5 text-yellow-500" />
-                                Skill Distribution
+                                <BookOpen className="w-5 h-5 text-violet-500" />
+                                Rating
                             </h3>
-                            <div className="space-y-4">
-                                {(userStats?.stats?.top10Skills?.length ? userStats.stats.top10Skills : [
-                                    { name: 'Arrays', level: 0 },
-                                    { name: 'Strings', level: 0 },
-                                    { name: 'Hash Tables', level: 0 },
-                                    { name: 'Sorting', level: 0 }
-                                ]).map((skill: any, index: number) => {
-                                    const colors = ['bg-green-500', 'bg-blue-500', 'bg-violet-500', 'bg-fuchsia-500'];
-                                    const color = colors[index % colors.length];
+                            <div className="flex flex-col items-center py-4">
+                                {(() => {
+                                    const rating = Math.floor(userStats?.user?.userRating || user?.userRating || 1200);
+                                    // Calculate progress: 0 = 0%, 3000 = 100% (linear scale)
+                                    const minRating = 0;
+                                    const maxRating = 3000;
+                                    const progress = Math.min(100, Math.max(0, ((rating - minRating) / (maxRating - minRating)) * 100));
+                                    const circumference = 2 * Math.PI * 50; // radius = 50
+                                    const strokeDashoffset = circumference - (progress / 100) * circumference;
+
                                     return (
-                                        <div key={skill.name} className="space-y-1.5">
-                                            <div className="flex justify-between text-xs font-medium">
-                                                <span className="text-zinc-400">{skill.name}</span>
-                                                <span>{skill.level}%</span>
-                                            </div>
-                                            <div className="h-1.5 w-full bg-zinc-900 rounded-full overflow-hidden border border-white/5">
-                                                <motion.div
-                                                    initial={{ width: 0 }}
-                                                    animate={{ width: `${skill.level}%` }}
-                                                    className={`h-full ${color}`}
-                                                ></motion.div>
+                                        <div className="relative w-32 h-32">
+                                            <svg className="w-32 h-32 transform -rotate-90">
+                                                {/* Background circle */}
+                                                <circle
+                                                    cx="64"
+                                                    cy="64"
+                                                    r="50"
+                                                    stroke="rgba(139, 92, 246, 0.2)"
+                                                    strokeWidth="8"
+                                                    fill="none"
+                                                />
+                                                {/* Progress circle */}
+                                                <circle
+                                                    cx="64"
+                                                    cy="64"
+                                                    r="50"
+                                                    stroke="rgb(139, 92, 246)"
+                                                    strokeWidth="8"
+                                                    fill="none"
+                                                    strokeDasharray={circumference}
+                                                    strokeDashoffset={strokeDashoffset}
+                                                    strokeLinecap="round"
+                                                    className="transition-all duration-1000 ease-out"
+                                                />
+                                            </svg>
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <span className="text-2xl font-bold">{rating}</span>
                                             </div>
                                         </div>
                                     );
-                                })}
+                                })()}
                             </div>
                         </section>
 
@@ -275,7 +324,7 @@ const Dashboard: React.FC = () => {
                             <div className="space-y-6">
                                 {(userStats?.stats?.last5Activities?.length ? userStats.stats.last5Activities : []).map((activity: any, i: number) => (
                                     <div key={i} className="flex gap-4">
-                                        <div className={`w-2 h-2 rounded-full mt-2 shadow-[0_0_10px_rgba(139,92,246,0.5)] ${activity.status === 'Solved' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                                        <div className={`w-2 h-2 rounded-full mt-2 shadow-[0_0_10px_rgba(139,92,246,0.5)] ${activity.status === 'Solved' ? 'bg-green-500' : 'bg-red-500'}`}></div>
                                         <div>
                                             <p className="text-sm font-medium">{activity.status} "{activity.title}" in {activity.timeTaken}</p>
                                             <p className="text-xs text-zinc-500 mt-1">{activity.timeAgo}</p>
@@ -290,6 +339,10 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
             </div>
+
+            {showOnboarding && user?.id && (
+                <OnboardingModal userId={user.id} onComplete={handleOnboardingComplete} />
+            )}
         </div>
     );
 };

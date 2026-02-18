@@ -11,6 +11,8 @@ import PracticePage from './pages/PracticePage';
 import ProblemSolver from './components/ProblemSolver';
 import ProblemPage from "./pages/ProblemPage";
 
+import AuthSuccessPage from './pages/AuthSuccessPage';
+
 function App() {
   return (
     <AuthProvider>
@@ -20,6 +22,7 @@ function App() {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/auth/success" element={<AuthSuccessPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/practice" element={<PracticePage />} />
               <Route path="/chat" element={<ChatPage />} />

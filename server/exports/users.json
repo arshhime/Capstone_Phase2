@@ -1,0 +1,920 @@
+[
+  {
+    "_id": "6992efd25f3fca9bdd232a3d",
+    "name": "Kshitij Dalvi",
+    "email": "ksitijdalvi2022@vitbhopal.ac.in",
+    "username": "ksitijdalvi2022",
+    "userId": "8907443241427236",
+    "password": "$2a$10$PjktPBoFrB94dwfOrZo1KOnzpedaBPWNSC8wPelN8.wJ6GLBCJFvq",
+    "avatar": "https://i.pravatar.cc/150?u=ksitijdalvi2022@vitbhopal.ac.in",
+    "experience": "Beginner",
+    "solvedProblems": 5,
+    "accuracy": 0.42857142857142855,
+    "recentActivity": [
+      {
+        "problemId": "198",
+        "title": "House Robber",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-16T11:57:08.774Z",
+        "timeTaken": "2s",
+        "hoursAgo": 0,
+        "_id": "699306143c9bea08e9c0ff14"
+      },
+      {
+        "problemId": "8",
+        "title": "String to Integer (atoi)",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-16T11:58:40.972Z",
+        "timeTaken": "3s",
+        "hoursAgo": 0,
+        "_id": "699306703c9bea08e9c0ff32"
+      },
+      {
+        "problemId": "2",
+        "title": "Add Two Numbers",
+        "difficulty": "Medium",
+        "status": "Attempted",
+        "timestamp": "2026-02-16T12:04:13.354Z",
+        "timeTaken": "2s",
+        "hoursAgo": 0,
+        "_id": "699307bd3c9bea08e9c0ff9c"
+      },
+      {
+        "problemId": "10",
+        "title": "Regular Expression Matching",
+        "difficulty": "Hard",
+        "status": "Attempted",
+        "timestamp": "2026-02-16T12:04:26.090Z",
+        "timeTaken": "1s",
+        "hoursAgo": 0,
+        "_id": "699307ca3c9bea08e9c0ffc1"
+      },
+      {
+        "problemId": "198",
+        "title": "House Robber",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-16T12:11:33.558Z",
+        "timeTaken": "2s",
+        "hoursAgo": 0,
+        "_id": "69930975c74fe2cacb0e4e6d"
+      },
+      {
+        "problemId": "213",
+        "title": "House Robber II",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-16T12:12:11.867Z",
+        "timeTaken": "28s",
+        "hoursAgo": 0,
+        "_id": "6993099bc74fe2cacb0e4e8f"
+      },
+      {
+        "problemId": "2",
+        "title": "Add Two Numbers",
+        "difficulty": "Medium",
+        "status": "Attempted",
+        "timestamp": "2026-02-16T12:12:46.476Z",
+        "timeTaken": "25s",
+        "hoursAgo": 0,
+        "_id": "699309bec74fe2cacb0e4eae"
+      }
+    ],
+    "skillDistribution": [
+      {
+        "name": "Arrays",
+        "level": 0,
+        "_id": "6992efd25f3fca9bdd232a3e"
+      },
+      {
+        "name": "Strings",
+        "level": 0,
+        "_id": "6992efd25f3fca9bdd232a3f"
+      },
+      {
+        "name": "DP",
+        "level": 0,
+        "_id": "6992efd25f3fca9bdd232a40"
+      },
+      {
+        "name": "Trees",
+        "level": 0,
+        "_id": "6992efd25f3fca9bdd232a41"
+      },
+      {
+        "name": "Array",
+        "level": 0.342,
+        "_id": "699306143c9bea08e9c0ff15"
+      },
+      {
+        "name": "Dynamic Programming",
+        "level": 0.40599999999999997,
+        "_id": "699306143c9bea08e9c0ff16"
+      },
+      {
+        "name": "String",
+        "level": 0.1,
+        "_id": "699306703c9bea08e9c0ff33"
+      },
+      {
+        "name": "Linked List",
+        "level": 0.034999999999999996,
+        "_id": "699307bd3c9bea08e9c0ff9d"
+      },
+      {
+        "name": "Math",
+        "level": 0.034999999999999996,
+        "_id": "699307bd3c9bea08e9c0ff9e"
+      },
+      {
+        "name": "Recursion",
+        "level": 0.13,
+        "_id": "699307bd3c9bea08e9c0ff9f"
+      }
+    ],
+    "__v": 7,
+    "correctProblems": 3,
+    "totalInteractions": 7,
+    "uniqueAttemptedIds": [
+      "198",
+      "8",
+      "2",
+      "10",
+      "213"
+    ],
+    "uniqueSolvedIds": [
+      "198",
+      "8",
+      "213"
+    ],
+    "userRating": 1208.66
+  },
+  {
+    "_id": "6992f0be5f3fca9bdd232a5c",
+    "name": "Delaine Kendall",
+    "email": "delainekendall07@gmail.com",
+    "username": "delainekendall07",
+    "userId": "6883662374019648",
+    "password": "$2a$10$6hXXDxjUFrKM8AiF960TCuERWXs8zqq/HMk/8BXHdq5tiEgti3Qsa",
+    "avatar": "https://i.pravatar.cc/150?u=delainekendall07@gmail.com",
+    "experience": "Beginner",
+    "solvedProblems": 16,
+    "accuracy": 0.5,
+    "recentActivity": [
+      {
+        "problemId": "8",
+        "title": "String to Integer (atoi)",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-16T11:55:38.083Z",
+        "timeTaken": "6s",
+        "hoursAgo": 0,
+        "_id": "699305ba3c9bea08e9c0fed2"
+      },
+      {
+        "problemId": "198",
+        "title": "House Robber",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-16T11:56:29.353Z",
+        "timeTaken": "19s",
+        "hoursAgo": 0,
+        "_id": "699305ed3c9bea08e9c0feee"
+      },
+      {
+        "problemId": "198",
+        "title": "House Robber",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-16T12:13:32.097Z",
+        "timeTaken": "2s",
+        "hoursAgo": 0,
+        "_id": "699309ecc74fe2cacb0e4ed6"
+      },
+      {
+        "problemId": "213",
+        "title": "House Robber II",
+        "difficulty": "Medium",
+        "status": "Attempted",
+        "timestamp": "2026-02-16T12:13:39.148Z",
+        "timeTaken": "3s",
+        "hoursAgo": 0,
+        "_id": "699309f3c74fe2cacb0e4ef3"
+      },
+      {
+        "problemId": "6",
+        "title": "Zigzag Conversion",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-16T12:23:04.891Z",
+        "timeTaken": "8s",
+        "hoursAgo": 0,
+        "_id": "69930c28c74fe2cacb0e4f43"
+      },
+      {
+        "problemId": "41",
+        "title": "First Missing Positive",
+        "difficulty": "Hard",
+        "status": "Solved",
+        "timestamp": "2026-02-16T12:55:47.102Z",
+        "timeTaken": "43s",
+        "hoursAgo": 0,
+        "_id": "699313d38dd13bec6ca38f18"
+      },
+      {
+        "problemId": "500",
+        "title": "Keyboard Row",
+        "difficulty": "Easy",
+        "status": "Solved",
+        "timestamp": "2026-02-16T13:26:40.154Z",
+        "timeTaken": "42s",
+        "hoursAgo": 0,
+        "_id": "69931b10b3cdb2b3f5584743"
+      },
+      {
+        "problemId": "500",
+        "title": "Keyboard Row",
+        "difficulty": "Easy",
+        "status": "Solved",
+        "timestamp": "2026-02-16T13:27:08.948Z",
+        "timeTaken": "3s",
+        "hoursAgo": 0,
+        "_id": "69931b2cb3cdb2b3f558477f"
+      },
+      {
+        "problemId": "500",
+        "title": "Keyboard Row",
+        "difficulty": "Easy",
+        "status": "Solved",
+        "timestamp": "2026-02-16T13:42:19.176Z",
+        "timeTaken": "2s",
+        "hoursAgo": 0,
+        "_id": "69931ebbb3cdb2b3f558479a"
+      },
+      {
+        "problemId": "2",
+        "title": "Add Two Numbers",
+        "difficulty": "Medium",
+        "status": "Attempted",
+        "timestamp": "2026-02-17T12:19:10.603Z",
+        "timeTaken": "8s",
+        "hoursAgo": 0,
+        "_id": "69945cbe8854c33098fb7003"
+      },
+      {
+        "problemId": "3",
+        "title": "Longest Substring Without Repeating Characters",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T12:28:57.269Z",
+        "timeTaken": "43s",
+        "hoursAgo": 0,
+        "_id": "69945f098854c33098fb7044"
+      },
+      {
+        "problemId": "2",
+        "title": "Add Two Numbers",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T12:30:32.222Z",
+        "timeTaken": "90s",
+        "hoursAgo": 0,
+        "_id": "69945f688854c33098fb706f"
+      },
+      {
+        "problemId": "94",
+        "title": "Binary Tree Inorder Traversal",
+        "difficulty": "Easy",
+        "status": "Solved",
+        "timestamp": "2026-02-17T12:31:40.453Z",
+        "timeTaken": "20s",
+        "hoursAgo": 0,
+        "_id": "69945fac8854c33098fb70a0"
+      },
+      {
+        "problemId": "145",
+        "title": "Binary Tree Postorder Traversal",
+        "difficulty": "Easy",
+        "status": "Solved",
+        "timestamp": "2026-02-17T12:33:18.155Z",
+        "timeTaken": "24s",
+        "hoursAgo": 0,
+        "_id": "6994600e8854c33098fb7121"
+      },
+      {
+        "problemId": "169",
+        "title": "Majority Element",
+        "difficulty": "Easy",
+        "status": "Solved",
+        "timestamp": "2026-02-17T12:41:16.511Z",
+        "timeTaken": "5s",
+        "hoursAgo": 0,
+        "_id": "699461ec8854c33098fb7198"
+      },
+      {
+        "problemId": "675",
+        "title": "Cut Off Trees for Golf Event",
+        "difficulty": "Hard",
+        "status": "Solved",
+        "timestamp": "2026-02-17T12:42:34.839Z",
+        "timeTaken": "45s",
+        "hoursAgo": 0,
+        "_id": "6994623a8854c33098fb71ef"
+      },
+      {
+        "problemId": "386",
+        "title": "Lexicographical Numbers",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T13:25:33.152Z",
+        "timeTaken": "45s",
+        "hoursAgo": 0,
+        "_id": "69946c4d8854c33098fb7295"
+      },
+      {
+        "problemId": "1",
+        "title": "Two Sum",
+        "difficulty": "Easy",
+        "status": "Attempted",
+        "timestamp": "2026-02-17T14:21:01.607Z",
+        "timeTaken": "1s",
+        "hoursAgo": 0,
+        "_id": "6994794d8854c33098fb7651"
+      },
+      {
+        "problemId": "1",
+        "title": "Two Sum",
+        "difficulty": "Easy",
+        "status": "Attempted",
+        "timestamp": "2026-02-17T14:56:54.672Z",
+        "timeTaken": "2s",
+        "hoursAgo": 0,
+        "_id": "699481b68854c33098fb7b2b"
+      },
+      {
+        "problemId": "2",
+        "title": "Add Two Numbers",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T16:18:46.413Z",
+        "timeTaken": "33s",
+        "hoursAgo": 0,
+        "_id": "699494e641de74dfb86b3c0a"
+      },
+      {
+        "problemId": "2",
+        "title": "Add Two Numbers",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T16:18:58.448Z",
+        "timeTaken": "4s",
+        "hoursAgo": 0,
+        "_id": "699494f241de74dfb86b3c40"
+      },
+      {
+        "problemId": "5",
+        "title": "Longest Palindromic Substring",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T16:20:27.828Z",
+        "timeTaken": "6s",
+        "hoursAgo": 0,
+        "_id": "6994954b41de74dfb86b3c87"
+      },
+      {
+        "problemId": "1",
+        "title": "Two Sum",
+        "difficulty": "Easy",
+        "status": "Attempted",
+        "timestamp": "2026-02-17T16:26:32.977Z",
+        "timeTaken": "1s",
+        "hoursAgo": 0,
+        "_id": "699496b841de74dfb86b3e84"
+      },
+      {
+        "problemId": "1",
+        "title": "Two Sum",
+        "difficulty": "Easy",
+        "status": "Attempted",
+        "timestamp": "2026-02-17T16:29:35.903Z",
+        "timeTaken": "1s",
+        "hoursAgo": 0,
+        "_id": "6994976f41de74dfb86b3f20"
+      },
+      {
+        "problemId": "198",
+        "title": "House Robber",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T16:46:31.544Z",
+        "timeTaken": "5s",
+        "hoursAgo": 0,
+        "_id": "69949b6741de74dfb86b400b"
+      },
+      {
+        "problemId": "676",
+        "title": "Implement Magic Dictionary",
+        "difficulty": "Medium",
+        "status": "Attempted",
+        "timestamp": "2026-02-17T16:50:50.215Z",
+        "timeTaken": "171s",
+        "hoursAgo": 0,
+        "_id": "69949c6a41de74dfb86b40f8"
+      }
+    ],
+    "skillDistribution": [
+      {
+        "name": "Arrays",
+        "level": 0,
+        "_id": "6992f0be5f3fca9bdd232a5d"
+      },
+      {
+        "name": "Strings",
+        "level": 0,
+        "_id": "6992f0be5f3fca9bdd232a5e"
+      },
+      {
+        "name": "DP",
+        "level": 0,
+        "_id": "6992f0be5f3fca9bdd232a5f"
+      },
+      {
+        "name": "Trees",
+        "level": 0,
+        "_id": "6992f0be5f3fca9bdd232a60"
+      },
+      {
+        "name": "String",
+        "level": 0.5542168000000001,
+        "_id": "699305ba3c9bea08e9c0fed3"
+      },
+      {
+        "name": "Array",
+        "level": 0.6176101116000001,
+        "_id": "699305ed3c9bea08e9c0feef"
+      },
+      {
+        "name": "Dynamic Programming",
+        "level": 0.47991999999999996,
+        "_id": "699305ed3c9bea08e9c0fef0"
+      },
+      {
+        "name": "Hash Table",
+        "level": 0.40103033977499997,
+        "_id": "699313d38dd13bec6ca38f19"
+      },
+      {
+        "name": "Linked List",
+        "level": 0.46359999999999996,
+        "_id": "69945cbe8854c33098fb7004"
+      },
+      {
+        "name": "Math",
+        "level": 0.46359999999999996,
+        "_id": "69945cbe8854c33098fb7005"
+      },
+      {
+        "name": "Recursion",
+        "level": 0.46359999999999996,
+        "_id": "69945cbe8854c33098fb7006"
+      },
+      {
+        "name": "Sliding Window",
+        "level": 0,
+        "_id": "69945f098854c33098fb7045"
+      },
+      {
+        "name": "Stack",
+        "level": 0.11,
+        "_id": "69945fac8854c33098fb70a1"
+      },
+      {
+        "name": "Tree",
+        "level": 0.11,
+        "_id": "69945fac8854c33098fb70a2"
+      },
+      {
+        "name": "Depth-First Search",
+        "level": 0.2990999999999999,
+        "_id": "69945fac8854c33098fb70a3"
+      },
+      {
+        "name": "Binary Tree",
+        "level": 0.11,
+        "_id": "69945fac8854c33098fb70a4"
+      },
+      {
+        "name": "Divide and Conquer",
+        "level": 0,
+        "_id": "699461ec8854c33098fb7199"
+      },
+      {
+        "name": "Sorting",
+        "level": 0,
+        "_id": "699461ec8854c33098fb719a"
+      },
+      {
+        "name": "Counting",
+        "level": 0,
+        "_id": "699461ec8854c33098fb719b"
+      },
+      {
+        "name": "Breadth-First Search",
+        "level": 0,
+        "_id": "6994623a8854c33098fb71f0"
+      },
+      {
+        "name": "Heap (Priority Queue)",
+        "level": 0,
+        "_id": "6994623a8854c33098fb71f1"
+      },
+      {
+        "name": "Matrix",
+        "level": 0,
+        "_id": "6994623a8854c33098fb71f2"
+      },
+      {
+        "name": "Trie",
+        "level": 0.034999999999999996,
+        "_id": "69946c4d8854c33098fb7296"
+      },
+      {
+        "name": "Two Pointers",
+        "level": 0,
+        "_id": "6994954b41de74dfb86b3c88"
+      },
+      {
+        "name": "Design",
+        "level": 0,
+        "_id": "69949c6a41de74dfb86b40f9"
+      }
+    ],
+    "__v": 26,
+    "correctProblems": 13,
+    "totalInteractions": 26,
+    "uniqueAttemptedIds": [
+      "8",
+      "198",
+      "213",
+      "6",
+      "41",
+      "500",
+      "2",
+      "3",
+      "94",
+      "145",
+      "169",
+      "675",
+      "386",
+      "1",
+      "5",
+      "676"
+    ],
+    "uniqueSolvedIds": [
+      "8",
+      "198",
+      "6",
+      "41",
+      "500",
+      "3",
+      "2",
+      "94",
+      "145",
+      "169",
+      "675",
+      "386",
+      "5"
+    ],
+    "userRating": 1244.4,
+    "googleId": "105393499902741421093"
+  },
+  {
+    "_id": "699311b48dd13bec6ca38dcc",
+    "name": "Ujjwal Rai",
+    "email": "ujjwalrai1234@gmail.com",
+    "username": "ujjwalrai1234",
+    "userId": "2030889377246123",
+    "password": "$2a$10$v5vSVuJon/GHRs7ZjJ2L6O5FzsniB.TKQwTpuc.qoq3F5c9TP8yGS",
+    "avatar": "https://i.pravatar.cc/150?u=ujjwalrai1234@gmail.com",
+    "experience": "Beginner",
+    "solvedProblems": 1,
+    "correctProblems": 1,
+    "accuracy": 1,
+    "userRating": 1203,
+    "totalInteractions": 1,
+    "uniqueSolvedIds": [
+      "1"
+    ],
+    "uniqueAttemptedIds": [
+      "1"
+    ],
+    "recentActivity": [
+      {
+        "problemId": "1",
+        "title": "Two Sum",
+        "difficulty": "Easy",
+        "status": "Solved",
+        "timestamp": "2026-02-16T12:47:41.670Z",
+        "timeTaken": "41s",
+        "hoursAgo": 0,
+        "_id": "699311ed8dd13bec6ca38de9"
+      }
+    ],
+    "skillDistribution": [
+      {
+        "name": "Arrays",
+        "level": 0,
+        "_id": "699311b48dd13bec6ca38dcd"
+      },
+      {
+        "name": "Strings",
+        "level": 0,
+        "_id": "699311b48dd13bec6ca38dce"
+      },
+      {
+        "name": "DP",
+        "level": 0,
+        "_id": "699311b48dd13bec6ca38dcf"
+      },
+      {
+        "name": "Trees",
+        "level": 0,
+        "_id": "699311b48dd13bec6ca38dd0"
+      },
+      {
+        "name": "Array",
+        "level": 0,
+        "_id": "699311ed8dd13bec6ca38dea"
+      },
+      {
+        "name": "Hash Table",
+        "level": 0,
+        "_id": "699311ed8dd13bec6ca38deb"
+      }
+    ],
+    "__v": 1
+  },
+  {
+    "_id": "699461526a1d654e4ca657f0",
+    "name": "Kshitij",
+    "email": "kshitijdalvi22@gmail.com",
+    "username": "kshitijdalvi22",
+    "userId": "9091991250963904",
+    "password": "$2a$10$xq0PtNOWQA27mCwBvd60J.EdTGlUE7icGwhOThYeetL8pcCcJKChm",
+    "avatar": "https://i.pravatar.cc/150?u=kshitijdalvi22@gmail.com",
+    "experience": "Beginner",
+    "solvedProblems": 3,
+    "correctProblems": 1,
+    "accuracy": 0.25,
+    "userRating": 1198,
+    "totalInteractions": 4,
+    "uniqueSolvedIds": [
+      "8"
+    ],
+    "uniqueAttemptedIds": [
+      "2",
+      "8",
+      "1"
+    ],
+    "recentActivity": [
+      {
+        "problemId": "2",
+        "title": "Add Two Numbers",
+        "difficulty": "Medium",
+        "status": "Attempted",
+        "timestamp": "2026-02-17T13:43:40.512Z",
+        "timeTaken": "430s",
+        "hoursAgo": 0,
+        "_id": "6994708c68482a2feac05760"
+      },
+      {
+        "problemId": "8",
+        "title": "String to Integer (atoi)",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T15:45:51.176Z",
+        "timeTaken": "4s",
+        "hoursAgo": 0,
+        "_id": "69948d2f839990d859e47498"
+      },
+      {
+        "problemId": "8",
+        "title": "String to Integer (atoi)",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T16:23:40.671Z",
+        "timeTaken": "7s",
+        "hoursAgo": 0,
+        "_id": "6994960c41de74dfb86b3d14"
+      },
+      {
+        "problemId": "1",
+        "title": "Two Sum",
+        "difficulty": "Easy",
+        "status": "Attempted",
+        "timestamp": "2026-02-17T16:23:53.691Z",
+        "timeTaken": "6s",
+        "hoursAgo": 0,
+        "_id": "6994961941de74dfb86b3d2c"
+      }
+    ],
+    "skillDistribution": [
+      {
+        "name": "Arrays",
+        "level": 0,
+        "_id": "699461526a1d654e4ca657f1"
+      },
+      {
+        "name": "Strings",
+        "level": 0,
+        "_id": "699461526a1d654e4ca657f2"
+      },
+      {
+        "name": "DP",
+        "level": 0,
+        "_id": "699461526a1d654e4ca657f3"
+      },
+      {
+        "name": "Trees",
+        "level": 0,
+        "_id": "699461526a1d654e4ca657f4"
+      },
+      {
+        "name": "Linked List",
+        "level": 0,
+        "_id": "6994708c68482a2feac05761"
+      },
+      {
+        "name": "Math",
+        "level": 0,
+        "_id": "6994708c68482a2feac05762"
+      },
+      {
+        "name": "Recursion",
+        "level": 0,
+        "_id": "6994708c68482a2feac05763"
+      },
+      {
+        "name": "String",
+        "level": 0.19,
+        "_id": "69948d2f839990d859e47499"
+      },
+      {
+        "name": "Array",
+        "level": 0,
+        "_id": "6994961941de74dfb86b3d2d"
+      },
+      {
+        "name": "Hash Table",
+        "level": 0,
+        "_id": "6994961941de74dfb86b3d2e"
+      }
+    ],
+    "__v": 4
+  },
+  {
+    "_id": "69948999880a1b3182d7fbde",
+    "name": "darth eddie",
+    "email": "dartheddie666@gmail.com",
+    "username": "dartheddie666",
+    "userId": "6132459953796826",
+    "googleId": "111770489024101539403",
+    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIg7suo-aVsvlSJhkoDP0xEUZ2Z0q8PLcChxDk7jLkUMmJGxQ=s96-c",
+    "experience": "Beginner",
+    "solvedProblems": 2,
+    "correctProblems": 1,
+    "accuracy": 0.3333333333333333,
+    "userRating": 1204,
+    "totalInteractions": 3,
+    "uniqueSolvedIds": [
+      "2"
+    ],
+    "uniqueAttemptedIds": [
+      "2",
+      "1"
+    ],
+    "recentActivity": [
+      {
+        "problemId": "2",
+        "title": "Add Two Numbers",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T16:07:52.436Z",
+        "timeTaken": "2s",
+        "hoursAgo": 0,
+        "_id": "69949258748696d641393998"
+      },
+      {
+        "problemId": "1",
+        "title": "Two Sum",
+        "difficulty": "Easy",
+        "status": "Attempted",
+        "timestamp": "2026-02-17T16:13:52.308Z",
+        "timeTaken": "5s",
+        "hoursAgo": 0,
+        "_id": "699493c041de74dfb86b3ad1"
+      },
+      {
+        "problemId": "2",
+        "title": "Add Two Numbers",
+        "difficulty": "Medium",
+        "status": "Solved",
+        "timestamp": "2026-02-17T16:13:57.764Z",
+        "timeTaken": "1s",
+        "hoursAgo": 0,
+        "_id": "699493c541de74dfb86b3af2"
+      }
+    ],
+    "skillDistribution": [
+      {
+        "name": "Arrays",
+        "level": 0,
+        "_id": "69948999880a1b3182d7fbdf"
+      },
+      {
+        "name": "Strings",
+        "level": 0,
+        "_id": "69948999880a1b3182d7fbe0"
+      },
+      {
+        "name": "DP",
+        "level": 0,
+        "_id": "69948999880a1b3182d7fbe1"
+      },
+      {
+        "name": "Trees",
+        "level": 0,
+        "_id": "69948999880a1b3182d7fbe2"
+      },
+      {
+        "name": "Linked List",
+        "level": 0.19,
+        "_id": "69949258748696d641393999"
+      },
+      {
+        "name": "Math",
+        "level": 0.19,
+        "_id": "69949258748696d64139399a"
+      },
+      {
+        "name": "Recursion",
+        "level": 0.19,
+        "_id": "69949258748696d64139399b"
+      },
+      {
+        "name": "Array",
+        "level": 0,
+        "_id": "699493c041de74dfb86b3ad2"
+      },
+      {
+        "name": "Hash Table",
+        "level": 0,
+        "_id": "699493c041de74dfb86b3ad3"
+      }
+    ],
+    "__v": 3
+  },
+  {
+    "_id": "69948b678b2655dfcf1cf89c",
+    "name": "Aria Montanna",
+    "email": "theariamontanna@gmail.com",
+    "username": "theariamontanna",
+    "userId": "7092151283220763",
+    "googleId": "108148947470537869489",
+    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLo2xufWZZjBwxsfZMPyR3wPOAp8_iP_HieJ-X2e8iw1rw1TQ=s96-c",
+    "experience": "Beginner",
+    "solvedProblems": 0,
+    "correctProblems": 0,
+    "accuracy": 0,
+    "userRating": 1200,
+    "totalInteractions": 0,
+    "uniqueSolvedIds": [],
+    "uniqueAttemptedIds": [],
+    "recentActivity": [],
+    "skillDistribution": [
+      {
+        "name": "Arrays",
+        "level": 0,
+        "_id": "69948b678b2655dfcf1cf89d"
+      },
+      {
+        "name": "Strings",
+        "level": 0,
+        "_id": "69948b678b2655dfcf1cf89e"
+      },
+      {
+        "name": "DP",
+        "level": 0,
+        "_id": "69948b678b2655dfcf1cf89f"
+      },
+      {
+        "name": "Trees",
+        "level": 0,
+        "_id": "69948b678b2655dfcf1cf8a0"
+      }
+    ],
+    "__v": 0
+  }
+]
