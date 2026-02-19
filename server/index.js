@@ -13,6 +13,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'; // Added Gemini impo
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import cookieSession from 'cookie-session';
+import { updateUserRecommendations } from './utils/recommendationEngine.js';
 
 const app = express();
 const SECRET_KEY = process.env.SECRET_KEY || 'your-very-secret-key';
@@ -499,6 +500,14 @@ app.post('/api/interactions', async (req, res) => {
     });
 
     await newInteraction.save();
+
+    // Trigger Recommendation Update (Await to ensure dashboard is fresh)
+    try {
+      await updateUserRecommendations(userId);
+    } catch (recErr) {
+      console.error("Rec update failed:", recErr);
+    }
+
     res.status(201).json({ message: "Interaction recorded successfully." });
   } catch (error) {
     console.error("Interaction Error:", error);
@@ -801,6 +810,64 @@ app.get("/api/problems/:id", async (req, res) => {
     res.json(problem);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/api/users/:userId/recommendations", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log(`GET /recommendations for ${userId}`);
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      console.log("User not found via ID");
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // If no scores, triggger calc
+    // Check if recommendationScores is missing or has 0 keys
+    const scoreSize = user.recommendationScores ? user.recommendationScores.size : 0;
+    console.log(`Scores present? ${!!user.recommendationScores}. Size: ${scoreSize}`);
+
+    if (!user.recommendationScores || scoreSize === 0) {
+      console.log("Triggering update...");
+      await updateUserRecommendations(userId);
+      const updatedUser = await User.findOne({ userId }); // re-fetch
+      if (updatedUser) {
+        user.recommendationScores = updatedUser.recommendationScores;
+        console.log(`Update done. New size: ${user.recommendationScores ? user.recommendationScores.size : 0}`);
+      }
+    }
+
+    if (!user.recommendationScores) return res.json([]);
+
+    const top5Ids = Array.from(user.recommendationScores.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(e => e[0]);
+
+    if (top5Ids.length === 0) return res.json([]);
+
+    const problems = await Problem.find({ id: { $in: top5Ids } });
+
+    // Map back to maintain sort order
+    const recommendations = top5Ids.map(id => {
+      const p = problems.find(prob => prob.id === id);
+      if (!p) return null;
+      return {
+        id: p.id,
+        title: p.title,
+        difficulty: p.difficulty,
+        tags: p.tags,
+        companies: p.companies,
+        score: user.recommendationScores.get(id)
+      };
+    }).filter(p => p);
+
+    res.json(recommendations);
+  } catch (err) {
+    console.error("Rec Error:", err);
+    res.status(500).json({ error: "Failed to fetch recommendations" });
   }
 });
 

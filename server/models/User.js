@@ -48,6 +48,11 @@ const userSchema = new mongoose.Schema({
     Easy: { type: Number, default: 0 },
     Medium: { type: Number, default: 0 },
     Hard: { type: Number, default: 0 }
+  },
+  recommendationScores: {
+    type: Map,
+    of: Number,
+    default: {}
   }
 });
 

@@ -69,12 +69,11 @@ const LandingPage: React.FC = () => {
             Next Generation AI Architecture
           </div>
           <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-white mb-6">
-            Build Intelligent <br />
-            <span className="text-gradient">Agentic Systems</span>
+            Your Personalized <br />
+            <span className="text-gradient">Coding Journey</span>
           </h1>
           <p className="text-xl text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Deploy autonomous agents powered by LangGraph and RAG.
-            Experience strict reasoning and grounded answers.
+            Learn and skill up to get your favourite roles at your dream companies.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -32,6 +32,7 @@ const Dashboard: React.FC = () => {
     const [userStats, setUserStats] = React.useState<any>(null);
     const [loading, setLoading] = React.useState(true);
     const [showOnboarding, setShowOnboarding] = React.useState(false);
+    const [recommendations, setRecommendations] = React.useState<any[]>([]);
 
     // Fetch user stats on mount
     React.useEffect(() => {
@@ -42,13 +43,23 @@ const Dashboard: React.FC = () => {
             }
 
             try {
-                const response = await fetch(`http://localhost:5001/api/users/${user.id}/stats`);
-                if (response.ok) {
-                    const data = await response.json();
+                // Fetch Stats
+                const statsResponse = await fetch(`http://localhost:5001/api/users/${user.id}/stats`);
+                if (statsResponse.ok) {
+                    const data = await statsResponse.json();
                     setUserStats(data);
                 }
+
+                // Fetch Recommendations
+                const recResponse = await fetch(`http://localhost:5001/api/users/${user.id}/recommendations`);
+                if (recResponse.ok) {
+                    const recData = await recResponse.json();
+                    if (Array.isArray(recData)) {
+                        setRecommendations(recData);
+                    }
+                }
             } catch (error) {
-                console.error('Error fetching user stats:', error);
+                console.error('Error fetching dashboard data:', error);
             } finally {
                 setLoading(false);
             }
@@ -124,7 +135,7 @@ const Dashboard: React.FC = () => {
         { label: 'Streak', value: `${userStats?.stats?.streak || 0} days`, icon: TrendingUp, color: 'text-violet-400', bg: 'bg-violet-400/10' }
     ];
 
-    const recommendedProblems = allProblems.slice(0, 5); // Use first 5 from our dynamic list
+    const recommendedProblems = recommendations.length > 0 ? recommendations : allProblems.slice(0, 5); // Fallback to context if empty
 
     const quickImportSlugs = [
         "two-sum", "palindrome-number", "roman-to-integer", "longest-common-prefix",
@@ -229,7 +240,7 @@ const Dashboard: React.FC = () => {
 
                         <section className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h2 className="text-xl font-bold">Recommended for You</h2>
+                                <h2 className="text-xl font-bold">Top Picks for You</h2>
                             </div>
                             <div className="grid gap-4">
                                 {recommendedProblems.map((prob: any) => (
