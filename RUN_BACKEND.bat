@@ -17,6 +17,6 @@ echo 📍 URL: http://localhost:8000
 echo 📄 Docs: http://localhost:8000/docs
 echo.
 cd /d "%~dp0backend_rag"
-python main.py
+"..\.venv\Scripts\python.exe" main.py
 
 pause

@@ -10,8 +10,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # --- Config ---
-CHROMA_PATH = "chroma_db"
-# Use the same embedding model as ingestion
+# Use Absolute Path to avoid CWD issues
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CHROMA_PATH = os.path.join(BASE_DIR, "chroma_db")
+# Use models/gemini-embedding-001 (Match ingestion model)
 EMBEDDING_MODEL = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
 # --- State ---
@@ -46,13 +48,18 @@ def generate(state: GraphState):
         return {"answer": "I couldn't find any relevant information in the training data to answer your question."}
 
     # RAG Prompt
-    template = """You are a helpful AI agent. Answer the question based ONLY on the following context.
+    template = """You are a helpful AI assistant. 
+    Use the following pieces of context to answer the question at the end.
+    If the answer is simple (like "True" or "False"), explain WHY based on the context.
+    Paraphrase the answer to be more natural and conversational.
+    If you don't know the answer, just say that you don't know, don't try to make up an answer.
     
     Context:
     {context}
 
     Question: {question}
-    """
+    
+    Helpful Answer:"""
     prompt = ChatPromptTemplate.from_template(template)
     
     # Use Gemini 2.5 Flash
