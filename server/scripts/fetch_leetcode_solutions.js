@@ -12,23 +12,22 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 const MONGO_URI = process.env.MONGO_URI;
 
 const problemSchema = new mongoose.Schema({
-    id: Number,
+    id: String, // Adjusted to String as per MongoDB inspection
     title: String,
     optimalSolution: String
-}, { collection: 'display-problems' });
+}, { collection: 'display-problems', strict: false });
 
 const Problem = mongoose.model('Problem', problemSchema);
 
 const BASE_URL = 'https://raw.githubusercontent.com/doocs/leetcode/main/solution';
 
-// Helper to pad ID with zeros (e.g., 1 -> "0001")
 function padId(id) {
     return id.toString().padStart(4, '0');
 }
 
-// Helper to determine the range folder (e.g., 1 -> "0000-0099")
 function getRangeFolder(id) {
-    const startNum = Math.floor(id / 100) * 100;
+    const num = parseInt(id);
+    const startNum = Math.floor(num / 100) * 100;
     const endNum = startNum + 99;
     return `${startNum.toString().padStart(4, '0')}-${endNum.toString().padStart(4, '0')}`;
 }
@@ -36,10 +35,6 @@ function getRangeFolder(id) {
 async function fetchSolution(id, title) {
     const paddedId = padId(id);
     const rangeFolder = getRangeFolder(id);
-
-    // Encode title: Spaces to %20, special chars maybe?
-    // Doocs seems to just use spaces encoded.
-    // Example: "Add Two Numbers" -> "Add%20Two%20Numbers"
     const encodedTitle = encodeURIComponent(title).replace(/'/g, '%27');
 
     const url = `${BASE_URL}/${rangeFolder}/${paddedId}.${encodedTitle}/Solution.py`;
@@ -48,7 +43,6 @@ async function fetchSolution(id, title) {
         const response = await axios.get(url);
         return response.data;
     } catch (error) {
-        // Retry with slightly different ID logic if needed or return null
         return null;
     }
 }
@@ -58,16 +52,21 @@ async function main() {
         await mongoose.connect(MONGO_URI);
         console.log("Connected to MongoDB.");
 
-        // Find problems that don't have a proper solution yet (or just update all)
-        const cursor = Problem.find({}).sort({ id: 1 }).cursor();
+        const query = { optimalSolution: "AI will generate this..." };
+        const total = await Problem.countDocuments(query);
+        console.log(`Found ${total} placeholders to attempt with GitHub sync.`);
 
+        const cursor = Problem.find(query).cursor();
         let successCount = 0;
         let failCount = 0;
+        let count = 0;
 
         for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
-            if (!doc.id) continue;
-
-            process.stdout.write(`Processing ID ${doc.id}: ${doc.title}... `);
+            count++;
+            if (!doc.id) {
+                console.log(`[${count}/${total}] Skipping: Missing ID for ${doc.title}`);
+                continue;
+            }
 
             const solution = await fetchSolution(doc.id, doc.title);
 
@@ -75,16 +74,14 @@ async function main() {
                 doc.optimalSolution = solution;
                 await doc.save();
                 successCount++;
+                console.log(`[${count}/${total}] ✅ SUCCESS: ${doc.title}`);
             } else {
-                console.log(`Failed to fetch ID ${doc.id}: ${doc.title}`);
+                console.log(`[${count}/${total}] ❌ FAILED: ${doc.title}`);
                 failCount++;
             }
-
-            // Small delay to be nice to GitHub if needed
-            // await new Promise(r => setTimeout(r, 100)); 
         }
 
-        console.log(`\nResults: ${successCount} updated, ${failCount} failed.`);
+        console.log(`\nPhase 1 Results: ${successCount} updated via GitHub, ${failCount} still need Gemini.`);
 
     } catch (error) {
         console.error("Error:", error);

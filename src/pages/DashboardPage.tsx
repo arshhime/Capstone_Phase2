@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { useProblem } from '../contexts/ProblemContext';
 import Navigation from '../components/Navigation';
 import RadarChart from '../components/RadarChart';
-import OnboardingModal from '../components/OnboardingModal';
 
 // Define color palettes for skills
 const SKILL_COLORS = [
@@ -23,6 +22,18 @@ const SKILL_COLORS = [
 ];
 
 
+// Converts a raw seconds string (e.g. "180s") to a readable format (e.g. "3m 0s")
+const formatTimeTaken = (raw: string): string => {
+    const s = parseInt(raw, 10);
+    if (isNaN(s)) return raw;
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = s % 60;
+    if (h > 0) return `${h}h ${m}m ${sec}s`;
+    if (m > 0) return `${m}m ${sec}s`;
+    return `${sec}s`;
+};
+
 const Dashboard: React.FC = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -31,8 +42,9 @@ const Dashboard: React.FC = () => {
     const [isFetching, setIsFetching] = React.useState(false);
     const [userStats, setUserStats] = React.useState<any>(null);
     const [loading, setLoading] = React.useState(true);
-    const [showOnboarding, setShowOnboarding] = React.useState(false);
     const [recommendations, setRecommendations] = React.useState<any[]>([]);
+
+    const [revisions, setRevisions] = React.useState<any[]>([]);
 
     // Fetch user stats on mount
     React.useEffect(() => {
@@ -58,6 +70,15 @@ const Dashboard: React.FC = () => {
                         setRecommendations(recData);
                     }
                 }
+
+                // Fetch Revisions
+                const revResponse = await fetch(`http://localhost:5001/api/users/${user.id}/revisions`);
+                if (revResponse.ok) {
+                    const revData = await revResponse.json();
+                    if (Array.isArray(revData)) {
+                        setRevisions(revData);
+                    }
+                }
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
             } finally {
@@ -67,27 +88,6 @@ const Dashboard: React.FC = () => {
 
         fetchUserStats();
     }, [user?.id]);
-
-    React.useEffect(() => {
-        if (userStats?.user) {
-            const u = userStats.user;
-            // Check if new user: 0 interactions AND no preferred companies
-            const hasInteractions = u.totalInteractions > 0;
-            const hasPreferred = u.preferredCompanies && Object.keys(u.preferredCompanies).length > 0;
-
-            if (!hasInteractions && !hasPreferred) {
-                setShowOnboarding(true);
-            }
-        }
-    }, [userStats]);
-
-    const handleOnboardingComplete = () => {
-        setShowOnboarding(false);
-        // Refresh stats to reflect new skills/preferences
-        // window.location.reload(); // Simple refresh or re-fetch
-        // Re-fetching is better but reload ensures full state sync
-        window.location.reload();
-    };
 
     const handleProblemClick = (id: string) => {
         selectProblem(id);
@@ -236,8 +236,7 @@ const Dashboard: React.FC = () => {
                             </div>
                         </section>
 
-
-
+                        {/* Top Picks Section */}
                         <section className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold">Top Picks for You</h2>
@@ -256,10 +255,15 @@ const Dashboard: React.FC = () => {
                                             </div>
                                             <div>
                                                 <h4 className="font-bold">{prob.title}</h4>
-                                                <div className="flex gap-2 mt-1">
-                                                    {(prob.tags || []).map((tag: any) => (
-                                                        <span key={tag} className="text-[10px] uppercase tracking-wider font-bold text-zinc-500">{tag}</span>
+                                                <div className="flex flex-wrap gap-2 mt-1 min-h-[1.25rem]">
+                                                    {(prob.tags || []).slice(0, 3).map((tag: any) => (
+                                                        <span key={tag} className="text-[10px] uppercase tracking-wider font-bold text-zinc-500">#{tag}</span>
                                                     ))}
+                                                    <span className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                        {(prob.companies || []).slice(0, 2).map((company: any) => (
+                                                            <span key={company} className="text-[10px] uppercase tracking-wider font-bold text-violet-400">@{company}</span>
+                                                        ))}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -337,7 +341,7 @@ const Dashboard: React.FC = () => {
                                     <div key={i} className="flex gap-4">
                                         <div className={`w-2 h-2 rounded-full mt-2 shadow-[0_0_10px_rgba(139,92,246,0.5)] ${activity.status === 'Solved' ? 'bg-green-500' : 'bg-red-500'}`}></div>
                                         <div>
-                                            <p className="text-sm font-medium">{activity.status} "{activity.title}" in {activity.timeTaken}</p>
+                                            <p className="text-sm font-medium">{activity.status} "{activity.title}" in {formatTimeTaken(activity.timeTaken)}</p>
                                             <p className="text-xs text-zinc-500 mt-1">{activity.timeAgo}</p>
                                         </div>
                                     </div>
@@ -347,13 +351,54 @@ const Dashboard: React.FC = () => {
                                 )}
                             </div>
                         </section>
+
+                        {/* Revision List Section */}
+                        {revisions.length > 0 && (
+                            <section className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-lg font-bold flex items-center gap-2">
+                                        <Zap className="w-5 h-5 text-orange-500" />
+                                        Revision List
+                                    </h2>
+                                    <span className="text-xs text-zinc-500 uppercase tracking-wider">Based on Skill Decay</span>
+                                </div>
+                                <div className="grid gap-4">
+                                    {revisions.map((prob: any) => (
+                                        <motion.div
+                                            key={prob.id}
+                                            whileHover={{ x: 10 }}
+                                            onClick={() => handleProblemClick(prob.id)}
+                                            className="glass-panel p-5 rounded-2xl border border-red-500/10 bg-red-500/[0.02] flex items-center justify-between group cursor-pointer"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center border border-zinc-800 group-hover:border-orange-500/50 transition-colors">
+                                                    <Zap className="w-5 h-5 text-orange-400" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="text-sm font-bold">{prob.title}</h4>
+                                                    <div className="flex gap-2 mt-1 h-4">
+                                                        <span className="text-xs uppercase tracking-wider font-bold text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                            Retention: {(prob.retention * 100).toFixed(2)}%
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-6">
+                                                <div className="hidden md:block text-right">
+                                                    <div className="text-xs font-bold text-orange-500">Review</div>
+                                                </div>
+                                                <div className="w-10 h-10 rounded-xl border border-white/5 flex items-center justify-center group-hover:bg-orange-600 transition-all">
+                                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
                     </div>
                 </div>
             </div>
-
-            {showOnboarding && user?.id && (
-                <OnboardingModal userId={user.id} onComplete={handleOnboardingComplete} />
-            )}
         </div>
     );
 };

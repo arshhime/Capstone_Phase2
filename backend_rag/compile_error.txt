@@ -1,0 +1,6 @@
+debug_cpp.cpp:40:58: error: stray '\' in program
+ void print_res(const string& v) { cout << "\\"" << v << "\\""; }
+                                                          ^
+debug_cpp.cpp:40:59: error: stray '\' in program
+ void print_res(const string& v) { cout << "\\"" << v << "\\""; }
+                                                           ^

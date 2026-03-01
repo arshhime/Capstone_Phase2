@@ -46,7 +46,7 @@ const PracticePage: React.FC = () => {
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 className="glass-panel rounded-3xl border border-white/5 bg-white/[0.02] shadow-2xl"
                             >
-                                <MCQSection onComplete={handleComplete} />
+                                <MCQSection onComplete={handleComplete} forceTheme="vs-dark" />
                             </motion.div>
                         ) : (
                             <motion.div

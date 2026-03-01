@@ -72,14 +72,26 @@ class LeetCodeService:
         template = snippets.get('python', "")
         method_name = "solution"
         if template:
-            match = re.search(r'def\s+(\w+)\(', template)
+            # Find the first 'def' that is NOT on a commented line
+            plain_lines = [line for line in template.split('\n') if not line.strip().startswith('#')]
+            clean_template = '\n'.join(plain_lines)
+            match = re.search(r'def\s+(\w+)\(', clean_template)
             if match:
                 method_name = match.group(1)
+            elif "class Solution" in clean_template:
+                # If no def found in non-comments, try a broader search or fallback
+                pass
 
-        # Basic test cases parsing (can be improved by AI later)
+        # Refined test cases parsing (Handle Design and Multi-line)
         test_cases = []
-        examples = re.findall(r'Input: (.*?)\nOutput: (.*?)\n(?:Explanation: (.*?)\n)?', description, re.DOTALL)
-        for inp, outp, expl in examples:
+        
+        # Look for Example blocks
+        # Pattern handles "Input" or "Input:" and captures until the next "Output" or "Example"
+        # Then captures Output until "Explanation" or next "Example" or "Constraints"
+        example_pattern = r"Example \d+:.*?(?:Input:?)\s*(.*?)\s*(?:Output:?)\s*(.*?)(?:\s*(?:Explanation:?)\s*(.*?))?\s*(?=Example|Constraints|$)"
+        matches = re.findall(example_pattern, description, re.DOTALL | re.IGNORECASE)
+        
+        for inp, outp, expl in matches:
             test_cases.append({
                 "input": inp.strip(),
                 "output": outp.strip(),

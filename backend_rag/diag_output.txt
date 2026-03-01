@@ -1,0 +1,23 @@
+
+--- Testing C++ Executor ---
+Standard Problem - Passed: False, Output: , Error: temp_f0d7a0bb575f4351b0c3c6bc4aecc14a.cpp: In function 'int main()':
+temp_f0d7a0bb575f4351b0c3c6bc4aecc14a.cpp:95:63: error: invalid initialization of non-const reference of type 'std::vector<int>&' from an rvalue of type 'std::vector<int>'
+ int main() { Solution sol; print_res(sol.twoSum({2,7,11,15}, 9)); return 0; }
+                                                               ^
+In file included from c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\vector:64:0,
+                 from temp_f0d7a0bb575f4351b0c3c6bc4aecc14a.cpp:3:
+c:\mingw\lib\gcc\mingw32\6.3.0\include\c++\bits\stl_vector.h:375:7: note:   after user-defined conversion: std::vector<_Tp, _Alloc>::vector(std::initializer_list<_Tp>, const allocator_type&) [with _Tp = int; _Alloc = std::allocator<int>; std::vector<_Tp, _Alloc>::allocator_type = std::allocator<int>]
+       vector(initializer_list<value_type> __l,
+       ^~~~~~
+temp_f0d7a0bb575f4351b0c3c6bc4aecc14a.cpp:85:17: note:   initializing argument 1 of 'std::vector<int> Solution::twoSum(std::vector<int>&, int)'
+     vector<int> twoSum(vector<int>& nums, int target) {
+                 ^~~~~~
+
+Design Problem - Passed: True, Output: [null,null,null,2,2,false], Error: 
+
+--- Testing Java Executor ---
+Standard Problem - Passed: False, Output: , Error: Main.java:71: error: class, interface, enum, or record expected
+import java.util.*;
+^
+1 error
+

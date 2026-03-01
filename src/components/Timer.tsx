@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Clock, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useUserPreferences } from '../contexts/UserPreferencesContext';
 
 interface TimerProps {
   running: boolean;
@@ -8,6 +9,7 @@ interface TimerProps {
 
 export default function Timer({ running }: TimerProps) {
   const [time, setTime] = useState(0);
+  const { theme, fontSize } = useUserPreferences();
 
   useEffect(() => {
     let interval: any;
@@ -32,16 +34,19 @@ export default function Timer({ running }: TimerProps) {
   };
 
   return (
-    <div className="flex items-center gap-3 bg-zinc-900/80 px-4 py-2 rounded-xl border border-white/5 shadow-inner backdrop-blur-sm group hover:border-violet-500/20 transition-all">
+    <div className={`flex items-center gap-3 px-4 py-2 rounded-xl border p-2 transition-all shadow-sm ${theme === 'vs-dark' ? 'bg-zinc-900/80 border-white/5 shadow-black/20 backdrop-blur-sm hover:border-violet-500/20' : 'bg-white border-zinc-200 shadow-zinc-200/50 hover:border-violet-500/30'
+      }`}
+      style={{ fontSize: `${Math.min(fontSize * 0.9, 14)}px` }}
+    >
       <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${running
-          ? 'bg-violet-600/20 text-violet-400 shadow-[0_0_15px_rgba(139,92,246,0.2)] animate-pulse'
-          : 'bg-zinc-950 text-zinc-600'
+        ? 'bg-violet-600/20 text-violet-400 shadow-[0_0_15px_rgba(139,92,246,0.2)] animate-pulse'
+        : theme === 'vs-dark' ? 'bg-zinc-950 text-zinc-600' : 'bg-zinc-100 text-zinc-400'
         }`}>
         <Clock className="h-4 w-4" />
       </div>
       <div>
-        <div className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest leading-none mb-1">Elapsed Time</div>
-        <span className="text-white font-mono text-lg font-bold tracking-tight group-hover:text-violet-300 transition-colors">
+        <div className={`text-[9px] font-bold uppercase tracking-widest leading-none mb-1 ${theme === 'vs-dark' ? 'text-zinc-600' : 'text-zinc-400'}`}>Elapsed Time</div>
+        <span className={`font-mono text-lg font-bold tracking-tight transition-colors ${theme === 'vs-dark' ? 'text-white group-hover:text-violet-300' : 'text-zinc-900 group-hover:text-violet-600'}`}>
           {formatTime(time)}
         </span>
       </div>

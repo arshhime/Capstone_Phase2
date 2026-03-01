@@ -1,6 +1,8 @@
-
 import User from '../models/User.js';
 import Problem from '../models/Problem.js';
+import { spawn } from 'child_process';
+import path from 'path';
+import Interaction from '../models/Interaction.js';
 
 // Constants for Scoring
 const WEIGHTS = {
@@ -39,6 +41,62 @@ async function getProblems() {
     return cachedProblems;
 }
 
+// Function to call Python script
+const calculateRetention = async (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const interactions = await Interaction.find({ userId }).lean();
+            if (!interactions || interactions.length === 0) {
+                return resolve({});
+            }
+
+            const scriptPath = path.resolve('..', 'skill_decay_model', 'calculate_retention.py');
+            const pythonProcess = spawn('python', [scriptPath]);
+
+            let dataString = '';
+            let errorString = '';
+
+            pythonProcess.stdout.on('data', (data) => {
+                dataString += data.toString();
+            });
+
+            pythonProcess.stderr.on('data', (data) => {
+                errorString += data.toString();
+            });
+
+            pythonProcess.on('error', (err) => {
+                console.error(`[RecEngine] Failed to start python process: ${err}`);
+                reject(err);
+            });
+
+            pythonProcess.on('close', (code) => {
+                if (code !== 0) {
+                    console.error(`Python script exited with code ${code}: ${errorString}`);
+                    // Fallback: Return empty map if script fails
+                    resolve({});
+                } else {
+                    try {
+                        const results = JSON.parse(dataString);
+                        resolve(results);
+                    } catch (e) {
+                        console.error("Failed to parse Python output:", e);
+                        resolve({}); // Fallback
+                    }
+                }
+            });
+
+            // Send interactions to Python stdin
+            const payload = JSON.stringify({ interactions });
+            pythonProcess.stdin.write(payload);
+            pythonProcess.stdin.end();
+
+        } catch (error) {
+            console.error("Error executing Python script:", error);
+            resolve({});
+        }
+    });
+};
+
 export const updateUserRecommendations = async (userId) => {
     try {
         console.log(`[RecEngine] Starting update for ${userId}`);
@@ -50,6 +108,9 @@ export const updateUserRecommendations = async (userId) => {
 
         const problems = await getProblems();
         const userRating = user.userRating || 1200;
+
+        // 0. Calculate Retention for Solved Problems
+        const retentionMap = await calculateRetention(userId);
 
         // 1. Prepare User Profile Data
 
@@ -68,15 +129,7 @@ export const updateUserRecommendations = async (userId) => {
         // Recent Activity Context
         const recentTags = new Set();
         const recentCompanies = new Set();
-        // Since recentActivity stores minimal info, we might not have tags directly.
-        // But we have companies/tags from interactions implicitly? 
-        // We'll skip recent tags if not available in recentActivity, or maybe infer from problemId if we had a map.
-        // For efficiency, let's look at user.uniqueAttemptedIds? No.
-        // Implementation: We'll skip deep recent tag lookup for now to keep it fast, 
-        // OR we can check if the problem ID is in recentActivity. 
-        // User asked for "recentActivity Qs skills/companyTags".
-        // To do this strictly, we need to know the tags of recent Qs. 
-        // We can do a quick lookup in our cachedProblems map.
+
         const problemMap = new Map(problems.map(p => [p.id, p]));
 
         (user.recentActivity || []).slice(0, 5).forEach(activity => {
@@ -93,45 +146,46 @@ export const updateUserRecommendations = async (userId) => {
         for (const problem of problems) {
             let score = 0;
 
-            // A. User Rating Match (0.25)
-            const probDiffVal = DIFFICULTY_MAP[problem.difficulty] || 1500;
-            const diff = Math.abs(userRating - probDiffVal);
-            // Normalize: 0 diff = 1. 1000 diff = 0.
-            const ratingScore = Math.max(0, 1 - (diff / 1000));
-            score += WEIGHTS.RATING * ratingScore;
+            // Check if solved
+            const isSolved = user.uniqueSolvedIds && user.uniqueSolvedIds.includes(problem.id);
 
-            // B. Strongest Skills (0.15)
-            const hasStrongest = problem.tags && problem.tags.some(t => strongestTags.has(t));
-            if (hasStrongest) score += WEIGHTS.STRONGEST;
+            if (isSolved) {
+                // Determine retention score
+                // Logic: score = -1 * retention
+                // Default retention to 1.0 (fully remembered) if not found in map
+                const retention = retentionMap[problem.id] !== undefined ? retentionMap[problem.id] : 1.0;
+                score = -1 * retention;
+            } else {
+                // Standard Recommendation Logic (Positive Scores)
 
-            // C. Weakest Skills (0.15)
-            const hasWeakest = problem.tags && problem.tags.some(t => weakestTags.has(t));
-            if (hasWeakest) score += WEIGHTS.WEAKEST;
+                // A. User Rating Match (0.25)
+                const probDiffVal = DIFFICULTY_MAP[problem.difficulty] || 1500;
+                const diff = Math.abs(userRating - probDiffVal);
+                const ratingScore = Math.max(0, 1 - (diff / 1000));
+                score += WEIGHTS.RATING * ratingScore;
 
-            // D. Preferred Companies (0.20)
-            const hasCompany = problem.companies && problem.companies.some(c => topCompanies.has(c));
-            if (hasCompany) score += WEIGHTS.COMPANY;
+                // B. Strongest Skills (0.15)
+                const hasStrongest = problem.tags && problem.tags.some(t => strongestTags.has(t));
+                if (hasStrongest) score += WEIGHTS.STRONGEST;
 
-            // E. Missing Skills (0.15)
-            // Present in problem but NOT in user skillDistribution (level 0/undefined)
-            const hasMissing = problem.tags && problem.tags.some(t => !knownTags.has(t));
-            if (hasMissing) score += WEIGHTS.MISSING;
+                // C. Weakest Skills (0.15)
+                const hasWeakest = problem.tags && problem.tags.some(t => weakestTags.has(t));
+                if (hasWeakest) score += WEIGHTS.WEAKEST;
 
-            // F. Recent Activity (0.10)
-            const matchesRecent = (
-                (problem.tags && problem.tags.some(t => recentTags.has(t))) ||
-                (problem.companies && problem.companies.some(c => recentCompanies.has(c)))
-            );
-            if (matchesRecent) score += WEIGHTS.RECENT;
+                // D. Preferred Companies (0.20)
+                const hasCompany = problem.companies && problem.companies.some(c => topCompanies.has(c));
+                if (hasCompany) score += WEIGHTS.COMPANY;
 
-            // Optionally: Don't recommend solved problems?
-            // "Updated after every interaction". Usually you don't recommend solved Qs.
-            // But user didn't explicitly say "Filter solved". They said "Top 5 recommendations".
-            // I'll filter solved problems out of the *display* logic, but maybe store scores for all.
-            // Or score solved problems as -1?
-            // Let's set score to -1 if solved.
-            if (user.uniqueSolvedIds && user.uniqueSolvedIds.includes(problem.id)) {
-                score = -1;
+                // E. Missing Skills (0.15)
+                const hasMissing = problem.tags && problem.tags.some(t => !knownTags.has(t));
+                if (hasMissing) score += WEIGHTS.MISSING;
+
+                // F. Recent Activity (0.10)
+                const matchesRecent = (
+                    (problem.tags && problem.tags.some(t => recentTags.has(t))) ||
+                    (problem.companies && problem.companies.some(c => recentCompanies.has(c)))
+                );
+                if (matchesRecent) score += WEIGHTS.RECENT;
             }
 
             scores.set(problem.id, parseFloat(score.toFixed(4)));

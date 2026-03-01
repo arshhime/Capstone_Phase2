@@ -108,7 +108,8 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
               correctProblems: 0,
               accuracy: 0,
               userRating: 1200,
-              experience: 'Beginner'
+              experience: 'Beginner',
+              isOnboarded: false
             });
             await user.save();
           }
@@ -264,7 +265,8 @@ app.post('/api/signup', async (req, res) => {
         { name: 'Strings', level: 0 },
         { name: 'DP', level: 0 },
         { name: 'Trees', level: 0 }
-      ]
+      ],
+      isOnboarded: false
     });
     await newUser.save();
     const token = jwt.sign({ id: newUser._id, email: newUser.email }, SECRET_KEY, { expiresIn: '1h' });
@@ -585,6 +587,7 @@ app.post('/api/users/onboard', async (req, res) => {
       });
     }
 
+    user.isOnboarded = true;
     await user.save();
     res.json({ message: "User onboarded successfully", user });
 
@@ -724,6 +727,71 @@ app.get('/api/users/:userId/stats', async (req, res) => {
   }
 });
 
+// Get User Revisions (Top 5 forgotten solved problems)
+app.get('/api/users/:userId/revisions', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Force update recommendations to calculate fresh retention scores (decay over time)
+    await updateUserRecommendations(userId);
+
+    const user = await User.findOne({ userId });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Get recommendation scores
+    const scores = user.recommendationScores ? Object.fromEntries(user.recommendationScores) : {};
+    const solvedIds = user.uniqueSolvedIds || [];
+
+    // Filter solved problems with negative scores
+    let revisions = solvedIds
+      .filter(id => scores[id] !== undefined && scores[id] < 0)
+      .map(id => ({
+        id,
+        score: scores[id],
+        retention: Math.abs(scores[id])
+      }));
+
+    // Sort by Score DESCENDING (Closer to 0 is better/worse retention?)
+    // Requirement: "Top 5 recommendations... score incremented from -1 until 0"
+    // Meaning closer to 0 = Needs revision MORE?
+    // Wait, "recommendation scores will always go towards 0".
+    // Usually higher recommendation score = better recommendation.
+    // -0.1 > -0.9.
+    // So yes, sort DESCENDING (-0.1 is top, -0.9 is bottom).
+    // -0.1 means Retention 0.1 (10%). Forgot almost everything.
+    // -0.9 means Retention 0.9 (90%). Remembered well.
+    // So we want closer to 0.
+
+    revisions.sort((a, b) => b.score - a.score);
+
+    // Take top 5
+    const top5Revisions = revisions.slice(0, 5);
+
+    // Hydrate with Problem Details
+    const problemIds = top5Revisions.map(r => r.id);
+    const problems = await Problem.find({ id: { $in: problemIds } });
+    const problemMap = new Map(problems.map(p => [p.id, p]));
+
+    const detailedRevisions = top5Revisions.map(r => {
+      const p = problemMap.get(r.id);
+      return {
+        id: r.id,
+        title: p ? p.title : `Problem ${r.id}`,
+        difficulty: p ? p.difficulty : 'Medium',
+        tags: p ? p.tags : [],
+        retention: r.retention,
+        score: r.score
+      };
+    });
+
+    res.json(detailedRevisions);
+
+  } catch (error) {
+    console.error("Error fetching revisions:", error);
+    res.status(500).json({ message: "Failed to fetch revisions" });
+  }
+});
+
 app.get("/api/leetcode/:slug", async (req, res) => {
   // Deprecated: Fetching from LeetCode directly. 
   // Kept for fallback if needed, but we should use our own DB now.
@@ -760,6 +828,18 @@ app.get("/api/leetcode/:slug", async (req, res) => {
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Failed to fetch question" });
+  }
+});
+
+
+app.get("/api/companies", async (req, res) => {
+  try {
+    const companies = await Problem.distinct("companies");
+    // Filter out empty or null values and sort alphabetically
+    const cleanCompanies = companies.filter(c => c).sort();
+    res.json(cleanCompanies);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

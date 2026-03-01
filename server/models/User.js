@@ -53,19 +53,19 @@ const userSchema = new mongoose.Schema({
     type: Map,
     of: Number,
     default: {}
-  }
+  },
+  isOnboarded: { type: Boolean, default: false }
 });
 
 // Ensure virtual fields are serialized
-userSchema.set('toJSON', {
-  virtuals: true,
-  versionKey: false,
-  transform: function (doc, ret) {
-    ret.id = ret.userId; // Use 16-digit userId as the primary id for frontend
-    delete ret._id;
-    delete ret.password;
-  }
-});
+const transform = function (doc, ret) {
+  ret.id = ret.userId; // Use 16-digit userId as the primary id for frontend
+  delete ret._id;
+  delete ret.password;
+};
+
+userSchema.set('toJSON', { virtuals: true, versionKey: false, transform });
+userSchema.set('toObject', { virtuals: true, versionKey: false, transform });
 
 const User = mongoose.model('User', userSchema);
 

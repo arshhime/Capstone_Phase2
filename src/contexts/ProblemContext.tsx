@@ -56,11 +56,13 @@ export function ProblemProvider({ children }: { children: ReactNode }) {
   };
 
   const selectProblem = async (id: string) => {
-    // Check if we already have the full details (e.g. description is present)
-    // The list API returns lightweight objects, so description might be missing.
+    // Check if we already have the full details 
+    // We check for description AND that optimalSolution is not the placeholder string
     const existing = allProblems.find(p => p.id === id);
 
-    if (existing && existing.description) {
+    if (existing &&
+      existing.description &&
+      Array.isArray(existing.optimalSolution)) {
       setCurrentProblem(existing);
       setCurrentMCQIndex(0);
       return;

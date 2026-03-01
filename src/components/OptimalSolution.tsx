@@ -1,131 +1,32 @@
-import React, { useState } from 'react';
-import { CheckCircle, XCircle, Code2, BookOpen, Lightbulb, RotateCcw, Zap, Target, ArrowRight, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { XCircle, Code2, BookOpen, RotateCcw, Zap, Target, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useUserPreferences } from '../contexts/UserPreferencesContext';
 
-interface Problem {
-  id: string;
-  title: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  optimalSolution?: string;
-  timeComplexity?: string;
-  spaceComplexity?: string;
-  bruteForceTimeComplexity?: string;
-  bruteForceSpaceComplexity?: string;
-  optimalTimeComplexity?: string;
-  optimalSpaceComplexity?: string;
-}
+import { Problem } from '../data/problems';
 
 interface OptimalSolutionProps {
   problem: Problem;
   onSolutionFeedback: (worked: boolean) => void;
   solutionWorked: boolean | null;
   executionError?: string | null;
+  initialLanguage?: string;
 }
 
-export default function OptimalSolution({ problem, onSolutionFeedback, solutionWorked, executionError }: OptimalSolutionProps) {
-  const [language, setLanguage] = useState('python');
-
-  const optimalSolutions = {
-    python: `def twoSum(nums, target):
-    """
-    Optimal Solution using Hash Map
-    Time Complexity: O(n)
-    Space Complexity: O(n)
-    """
-    num_map = {}
-    
-    for i, num in enumerate(nums):
-        complement = target - num
-        
-        # Check if complement exists in hash map
-        if complement in num_map:
-            return [num_map[complement], i]
-        
-        # Store current number and its index
-        num_map[num] = i
-    
-    return []  # No solution found`,
-
-    javascript: `function twoSum(nums, target) {
-    /**
-     * Optimal Solution using Hash Map
-     * Time Complexity: O(n)
-     * Space Complexity: O(n)
-     */
-    const numMap = new Map();
-    
-    for (let i = 0; i < nums.length; i++) {
-        const complement = target - nums[i];
-        
-        // Check if complement exists in hash map
-        if (numMap.has(complement)) {
-            return [numMap.get(complement), i];
-        }
-        
-        // Store current number and its index
-        numMap.set(nums[i], i);
-    }
-    
-    return []; // No solution found
-}`,
-
-    java: `class Solution {
-    /**
-     * Optimal Solution using HashMap
-     * Time Complexity: O(n)
-     * Space Complexity: O(n)
-     */
-    public int[] twoSum(int[] nums, int target) {
-        Map<Integer, Integer> numMap = new HashMap<>();
-        
-        for (int i = 0; i < nums.length; i++) {
-            int complement = target - nums[i];
-            
-            // Check if complement exists in hash map
-            if (numMap.containsKey(complement)) {
-                return new int[]{numMap.get(complement), i};
-            }
-            
-            // Store current number and its index
-            numMap.put(nums[i], i);
-        }
-        
-        return new int[]{}; // No solution found
-    }
-}`,
-
-    cpp: `class Solution {
-    /**
-     * Optimal Solution using unordered_map
-     * Time Complexity: O(n)
-     * Space Complexity: O(n)
-     */
-    public:
-    vector<int> twoSum(vector<int>& nums, int target) {
-        unordered_map<int, int> numMap;
-        
-        for (int i = 0; i < nums.size(); i++) {
-            int complement = target - nums[i];
-            
-            // Check if complement exists in hash map
-            if (numMap.find(complement) != numMap.end()) {
-                return {numMap[complement], i};
-            }
-            
-            // Store current number and its index
-            numMap[nums[i]] = i;
-        }
-        
-        return {}; // No solution found
-    }
-};`
-  };
+export default function OptimalSolution({
+  problem,
+  onSolutionFeedback,
+  solutionWorked,
+  executionError,
+  initialLanguage = 'python'
+}: OptimalSolutionProps) {
+  const [language, setLanguage] = useState(initialLanguage);
+  const { theme, fontSize } = useUserPreferences();
 
   const languages = [
     { id: 'python', name: 'Python' },
-    { id: 'javascript', name: 'JavaScript' },
-    { id: 'java', name: 'Java' },
-    { id: 'cpp', name: 'C++' }
+    { id: 'cpp', name: 'C++' },
+    { id: 'java', name: 'Java' }
   ];
 
   const approaches = [
@@ -147,27 +48,49 @@ export default function OptimalSolution({ problem, onSolutionFeedback, solutionW
     }
   ];
 
-  // Use dynamic optimal solution if available
-  const currentCode = problem.optimalSolution && language === 'python'
-    ? problem.optimalSolution
-    : optimalSolutions[language as keyof typeof optimalSolutions] || '// Solution not available for this language';
+  // Use dynamic optimal solution from MongoDB
+  const getDynamicCode = () => {
+    if (!problem.optimalSolution || problem.optimalSolution === "AI will generate this...") {
+      return '// Optimal solution is being prepared by AI. Please check back in a moment.';
+    }
+
+    if (Array.isArray(problem.optimalSolution)) {
+      const solution = problem.optimalSolution.find(s => s.language === language);
+      if (!solution) return `// Solution not available for ${language}`;
+      return solution.code || '// Solution being prepared';
+    }
+
+    // Fallback for legacy string format (only for python)
+    if (typeof problem.optimalSolution === 'string') {
+      return problem.optimalSolution;
+    }
+
+    return '// Solution not available';
+  };
+
+  const currentCode = getDynamicCode();
 
   return (
-    <div className="h-full flex flex-col bg-zinc-950">
+    <div className={`h-full flex flex-col transition-colors duration-300 ${theme === 'vs-dark' ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'
+      }`}
+      style={{ fontSize: `${fontSize}px` }}
+    >
       {/* Header Station */}
-      <div className="bg-zinc-900 border-b border-zinc-800 p-6 flex-shrink-0">
+      <div className={`p-6 flex-shrink-0 border-b transition-colors ${theme === 'vs-dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200'
+        }`}>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center">
               <BookOpen className="h-6 w-6 text-violet-400" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white tracking-tight">Post-Solve Engine</h3>
+              <h3 className={`text-xl font-bold tracking-tight ${theme === 'vs-dark' ? 'text-white' : 'text-zinc-900'}`}>Post-Solve Engine</h3>
               <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-0.5">Performance Analysis & Optimization</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 bg-zinc-950 p-1.5 rounded-xl border border-white/5">
+          <div className={`p-1.5 rounded-xl border transition-colors ${theme === 'vs-dark' ? 'bg-zinc-950 border-white/5' : 'bg-zinc-100 border-zinc-200 shadow-inner'
+            }`}>
             {languages.map((lang) => (
               <button
                 key={lang.id}
@@ -273,13 +196,17 @@ export default function OptimalSolution({ problem, onSolutionFeedback, solutionW
         <section>
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1.5 h-6 bg-violet-600 rounded-full"></div>
-            <h3 className="text-lg font-bold text-white tracking-tight">Solution Architectures</h3>
+            <h3 className={`text-lg font-bold tracking-tight ${theme === 'vs-dark' ? 'text-white' : 'text-zinc-900'}`}>Solution Architectures</h3>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             {approaches.map((approach, index) => (
               <div key={index} className={`p-6 rounded-3xl border relative transition-all group hover:scale-[1.02] ${approach.name.includes('Optimal')
-                ? 'bg-violet-600/10 border-violet-500/30 shadow-[0_0_30px_rgba(139,92,246,0.1)]'
-                : 'bg-zinc-900 border-white/5'
+                ? theme === 'vs-dark'
+                  ? 'bg-violet-600/10 border-violet-500/30 shadow-[0_0_30px_rgba(139,92,246,0.1)]'
+                  : 'bg-violet-50 border-violet-200 shadow-sm'
+                : theme === 'vs-dark'
+                  ? 'bg-zinc-900 border-white/5'
+                  : 'bg-white border-zinc-200 shadow-sm'
                 }`}>
                 {approach.name.includes('Optimal') && (
                   <div className="absolute -top-3 left-6 px-3 py-1 bg-violet-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-full shadow-lg">
@@ -287,7 +214,7 @@ export default function OptimalSolution({ problem, onSolutionFeedback, solutionW
                   </div>
                 )}
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-bold text-white text-lg">{approach.name}</h4>
+                  <h4 className={`font-bold text-lg ${theme === 'vs-dark' ? 'text-white' : 'text-zinc-900'}`}>{approach.name}</h4>
                   <div className="flex items-center gap-4">
                     <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex flex-col items-end">
                       <span className="text-violet-400 font-mono">T: {approach.timeComplexity}</span>
@@ -298,7 +225,7 @@ export default function OptimalSolution({ problem, onSolutionFeedback, solutionW
                 <p className="text-zinc-400 text-sm leading-relaxed mb-6 font-medium">{approach.description}</p>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-zinc-950/40 p-4 rounded-xl border border-white/5">
+                    <div className={`p-4 rounded-xl border transition-colors ${theme === 'vs-dark' ? 'bg-zinc-950/40 border-white/5' : 'bg-white border-zinc-200'}`}>
                       <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-[0.2em] block mb-2">Capabilities</span>
                       <ul className="space-y-1.5">
                         {approach.pros.map((pro, i) => (
@@ -309,7 +236,7 @@ export default function OptimalSolution({ problem, onSolutionFeedback, solutionW
                         ))}
                       </ul>
                     </div>
-                    <div className="bg-zinc-950/40 p-4 rounded-xl border border-white/5">
+                    <div className={`p-4 rounded-xl border transition-colors ${theme === 'vs-dark' ? 'bg-zinc-950/40 border-white/5' : 'bg-white border-zinc-200'}`}>
                       <span className="text-[10px] font-bold text-rose-500 uppercase tracking-[0.2em] block mb-2">Trade-offs</span>
                       <ul className="space-y-1.5">
                         {approach.cons.map((con, i) => (
@@ -332,9 +259,10 @@ export default function OptimalSolution({ problem, onSolutionFeedback, solutionW
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <div className="w-1.5 h-6 bg-fuchsia-600 rounded-full"></div>
-              <h3 className="text-lg font-bold text-white tracking-tight">Technical Blueprint</h3>
+              <h3 className={`text-lg font-bold tracking-tight ${theme === 'vs-dark' ? 'text-white' : 'text-zinc-900'}`}>Technical Blueprint</h3>
             </div>
-            <div className="bg-zinc-900 border border-white/5 rounded-lg px-3 py-1 flex items-center gap-2">
+            <div className={`border rounded-lg px-3 py-1 flex items-center gap-2 transition-colors ${theme === 'vs-dark' ? 'bg-zinc-900 border-white/5' : 'bg-zinc-100 border-zinc-200'
+              }`}>
               <Code2 className="w-3.5 h-3.5 text-zinc-500" />
               <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Read Only</span>
             </div>
@@ -345,8 +273,9 @@ export default function OptimalSolution({ problem, onSolutionFeedback, solutionW
                 <Zap className="w-4 h-4" />
               </button>
             </div>
-            <div className="bg-zinc-900 rounded-[32px] p-8 border border-white/5 overflow-hidden shadow-inner">
-              <pre className="text-zinc-100 font-mono text-sm leading-relaxed overflow-x-auto scroll-none">
+            <div className={`rounded-[32px] p-8 border overflow-hidden shadow-inner transition-colors ${theme === 'vs-dark' ? 'bg-zinc-900 border-white/5' : 'bg-white border-zinc-200 shadow-zinc-200'
+              }`}>
+              <pre className={`font-mono text-sm leading-relaxed overflow-x-auto scroll-none transition-colors ${theme === 'vs-dark' ? 'text-zinc-100' : 'text-zinc-800'}`}>
                 <code className="block py-4">{currentCode}</code>
               </pre>
             </div>
@@ -357,17 +286,19 @@ export default function OptimalSolution({ problem, onSolutionFeedback, solutionW
         <section>
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1.5 h-6 bg-emerald-600 rounded-full"></div>
-            <h3 className="text-lg font-bold text-white tracking-tight">Intelligence Summary</h3>
+            <h3 className={`text-lg font-bold tracking-tight ${theme === 'vs-dark' ? 'text-white' : 'text-zinc-900'}`}>Intelligence Summary</h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              "The hash map approach reduces time complexity from O(n²) to O(n) by trading space for time.",
-              "We store each number and its index as we iterate, checking if the complement exists.",
-              "This ensures we don't use the same element twice and find the solution in a single pass.",
-              "Hash map lookups are O(1) on average, making this the most efficient solution."
+              `Optimal Time Complexity: ${problem.optimalTimeComplexity || problem.timeComplexity || 'O(n)'} for efficient processing of input data.`,
+              `Optimal Space Complexity: ${problem.optimalSpaceComplexity || problem.spaceComplexity || 'O(n)'} to balance memory usage and performance.`,
+              "This solution uses industry-standard patterns to ensure reliability and scalability.",
+              "The implementation handles edge cases and large input sizes according to the problem constraints."
             ].map((insight, idx) => (
-              <div key={idx} className="bg-zinc-900/40 p-5 rounded-2xl border border-white/5 flex gap-4 hover:border-violet-500/20 transition-colors">
-                <div className="w-6 h-6 rounded-lg bg-zinc-950 flex items-center justify-center shrink-0 mt-0.5">
+              <div key={idx} className={`p-5 rounded-2xl border flex gap-4 transition-colors ${theme === 'vs-dark' ? 'bg-zinc-900/40 border-white/5 hover:border-violet-500/20' : 'bg-white border-zinc-200 hover:border-violet-500/30 shadow-sm'
+                }`}>
+                <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${theme === 'vs-dark' ? 'bg-zinc-950' : 'bg-zinc-100'
+                  }`}>
                   <span className="text-[10px] font-bold text-violet-500">{idx + 1}</span>
                 </div>
                 <p className="text-zinc-400 text-xs font-medium leading-relaxed">{insight}</p>
