@@ -14,6 +14,8 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import cookieSession from 'cookie-session';
 import { updateUserRecommendations } from './utils/recommendationEngine.js';
+import { updateSuccessScores } from './utils/successPredictor.js';
+import { calculateUserRetentionScores } from './utils/skillDecay.js';
 
 const app = express();
 const SECRET_KEY = process.env.SECRET_KEY || 'your-very-secret-key';
@@ -24,9 +26,26 @@ app.use(cors()); // Changed cors configuration
 app.use(express.json());
 
 // --- MongoDB Connection ---
+import fs from 'fs';
+const errorLog = (msg) => {
+  const timestamp = new Date().toISOString();
+  fs.appendFileSync('global_errors.txt', `[${timestamp}] ${msg}\n`);
+};
+
+process.on('uncaughtException', (err) => {
+  errorLog(`Uncaught Exception: ${err.message}\n${err.stack}`);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  errorLog(`Unhandled Rejection at: ${promise} reason: ${reason}`);
+});
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected')) // Updated success message
-  .catch(err => console.error('MongoDB connection error:', err)); // Updated error handling
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    errorLog(`MongoDB connection error: ${err.message}`);
+  });
 
 // --- Gemini Setup --- // Added Gemini Setup
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
@@ -483,6 +502,16 @@ app.post('/api/interactions', async (req, res) => {
         user.experience = 'Advanced';
       }
 
+      // 8. Update Recommendation Scores (Direct Ebbinghaus Forgetting Curve Logic)
+      const retentionScores = await calculateUserRetentionScores(userId);
+      if (retentionScores && Object.keys(retentionScores).length > 0) {
+        if (!user.recommendationScores) user.recommendationScores = new Map();
+        for (const [pid, retention] of Object.entries(retentionScores)) {
+          // Store retention as a negative recommendation score to prioritize solved problems for review
+          user.recommendationScores.set(pid, parseFloat(retention.toFixed(4)));
+        }
+      }
+
       await user.save();
     }
 
@@ -506,8 +535,10 @@ app.post('/api/interactions', async (req, res) => {
     // Trigger Recommendation Update (Await to ensure dashboard is fresh)
     try {
       await updateUserRecommendations(userId);
+      // Trigger Success Score Update
+      await updateSuccessScores(userId);
     } catch (recErr) {
-      console.error("Rec update failed:", recErr);
+      console.error("Rec/Success update failed:", recErr);
     }
 
     res.status(201).json({ message: "Interaction recorded successfully." });
@@ -711,6 +742,7 @@ app.get('/api/users/:userId/stats', async (req, res) => {
         userRating: user.userRating,
         totalInteractions: user.totalInteractions,
         preferredCompanies: user.preferredCompanies ? Object.fromEntries(user.preferredCompanies) : {},
+        successScores: user.successScores ? Object.fromEntries(user.successScores) : {},
 
       },
       stats: {
@@ -910,12 +942,22 @@ app.get("/api/users/:userId/recommendations", async (req, res) => {
     console.log(`Scores present? ${!!user.recommendationScores}. Size: ${scoreSize}`);
 
     if (!user.recommendationScores || scoreSize === 0) {
-      console.log("Triggering update...");
+      console.log("Triggering recommendation update...");
       await updateUserRecommendations(userId);
       const updatedUser = await User.findOne({ userId }); // re-fetch
       if (updatedUser) {
         user.recommendationScores = updatedUser.recommendationScores;
         console.log(`Update done. New size: ${user.recommendationScores ? user.recommendationScores.size : 0}`);
+      }
+    }
+
+    // Also trigger Success Scores if missing
+    if (!user.successScores || user.successScores.size === 0) {
+      console.log("Triggering Success Scores update...");
+      await updateSuccessScores(userId);
+      const updatedUserAfterSuccess = await User.findOne({ userId });
+      if (updatedUserAfterSuccess) {
+        user.successScores = updatedUserAfterSuccess.successScores;
       }
     }
 
@@ -940,7 +982,8 @@ app.get("/api/users/:userId/recommendations", async (req, res) => {
         difficulty: p.difficulty,
         tags: p.tags,
         companies: p.companies,
-        score: user.recommendationScores.get(id)
+        score: user.recommendationScores.get(id),
+        successScore: user.successScores && user.successScores.get(id) !== undefined ? Number(user.successScores.get(id)) : null
       };
     }).filter(p => p);
 

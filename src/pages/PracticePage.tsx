@@ -4,6 +4,7 @@ import { Brain, ArrowLeft, Sparkles, Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MCQSection from '../components/MCQSection';
 import Navigation from '../components/Navigation';
+import { useProblem } from '../contexts/ProblemContext';
 
 const PracticePage: React.FC = () => {
     const navigate = useNavigate();
@@ -64,10 +65,10 @@ const PracticePage: React.FC = () => {
                                 </div>
                                 <div className="flex justify-center gap-4">
                                     <button
-                                        onClick={() => navigate('/dashboard')}
+                                        onClick={() => navigate('/ide')}
                                         className="px-8 py-3 bg-violet-600 hover:bg-violet-700 rounded-xl font-bold transition-all shadow-lg"
                                     >
-                                        Go to Dashboard
+                                        Solve In IDE
                                     </button>
                                     <button
                                         onClick={() => navigate('/chat')}

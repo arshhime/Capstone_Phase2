@@ -28,4 +28,5 @@ venv/
 ENV/
 env/
  
-.env
+ 
+# .env (unignored for masked push)

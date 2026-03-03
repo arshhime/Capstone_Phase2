@@ -79,10 +79,10 @@ const LandingPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {user ? (
               <button
-                onClick={() => navigate('/chat')}
+                onClick={() => navigate('/dashboard')}
                 className="px-8 py-4 bg-violet-600 hover:bg-violet-700 text-white rounded-full font-semibold text-lg transition-all shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_40px_rgba(139,92,246,0.6)] flex items-center gap-2"
               >
-                Launch Console <ArrowRight className="w-5 h-5" />
+                Continue <ArrowRight className="w-5 h-5" />
               </button>
             ) : (
               <button

@@ -23,6 +23,7 @@ interface User {
     level: number;
   }[];
   isOnboarded: boolean;
+  successScores?: Record<string, number>;
 }
 
 interface AuthContextType {

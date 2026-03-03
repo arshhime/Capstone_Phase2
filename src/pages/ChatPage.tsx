@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, User, Bot, Menu, Plus } from 'lucide-react';
+import { Send, User, Bot, Menu } from 'lucide-react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import Navigation from '../components/Navigation';
@@ -53,45 +53,6 @@ const ChatPage: React.FC = () => {
         <div className="flex flex-col h-screen bg-zinc-950 text-white overflow-hidden">
             <Navigation />
             <div className="flex flex-1 overflow-hidden">
-                {/* Sidebar */}
-                <aside className="w-64 bg-zinc-900 border-r border-zinc-800 hidden md:flex flex-col">
-                    <div className="p-4 border-b border-zinc-800 flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center">
-                            <Bot className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="font-bold text-lg">Agent Console</span>
-                    </div>
-
-                    <div className="p-4">
-                        <button className="w-full flex items-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-xl transition-colors text-sm font-medium border border-white/5">
-                            <Plus className="w-4 h-4" /> New Chat
-                        </button>
-                    </div>
-
-                    <div className="flex-1 overflow-y-auto px-4">
-                        <div className="text-xs font-semibold text-zinc-500 mb-3 uppercase tracking-wider">Recent</div>
-                        {/* Mock History */}
-                        <div className="space-y-1">
-                            <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-sm text-zinc-300 truncate">
-                                Hash Table Implementation
-                            </button>
-                            <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-sm text-zinc-300 truncate">
-                                React Hooks Explanation
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="p-4 border-t border-zinc-800">
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-500 to-fuchsia-500"></div>
-                            <div className="text-sm">
-                                <div className="font-medium">User</div>
-                                <div className="text-zinc-500 text-xs">Premium Plan</div>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-
                 {/* Main Chat Area */}
                 <main className="flex-1 flex flex-col relative bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-zinc-950">
 

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useMemo, useEffect, ReactNode } from 'react';
 import { Problem, MCQQuestion } from '../data/problems';
 import axios from 'axios';
+import { useAuth } from './AuthContext';
 
 interface ProblemContextType {
   currentProblem: Problem | null;
@@ -21,31 +22,71 @@ export function ProblemProvider({ children }: { children: ReactNode }) {
   const [allProblems, setAllProblems] = useState<Problem[]>([]);
   const [currentProblem, setCurrentProblem] = useState<Problem | null>(null);
   const [currentMCQIndex, setCurrentMCQIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const { user, loading: authLoading } = useAuth();
+  const [initialSelectDone, setInitialSelectDone] = useState(false);
+
+  // Reset selection flag when user changes (login/logout)
+  useEffect(() => {
+    setInitialSelectDone(false);
+  }, [user?.id]);
 
   const mcqQuestions = useMemo(() => currentProblem?.mcqs || [], [currentProblem]);
 
-  // Fetch problem list on mount
+  // 1. Fetch baseline problem list on mount
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api/problems?limit=100'); // Initial fetch
+        const response = await axios.get('http://localhost:5001/api/problems?limit=100');
         if (response.data && response.data.problems) {
           setAllProblems(response.data.problems);
-          // Optionally set the first problem as current, but we need full details
-          if (response.data.problems.length > 0) {
-            selectProblem(response.data.problems[0].id);
-          }
         }
       } catch (err) {
         console.error('Failed to fetch problems:', err);
-      } finally {
-        setLoading(false);
+      }
+    };
+    fetchProblems();
+  }, []);
+
+  // 2. Handle Initial Problem Selection (Guest vs. User Top Pick)
+  useEffect(() => {
+    // Wait for authentication state to resolve
+    if (authLoading) return;
+
+    const performInitialSelection = async () => {
+      // Avoid double-selection if already done for this session/user
+      if (initialSelectDone) return;
+
+      if (!user) {
+        // GUEST: Default to Two Sum (Index 0 in baseline list)
+        console.log("[ProblemContext] Guest mode: Defaulting to Two Sum");
+        selectProblem("1");
+        setInitialSelectDone(true);
+      } else {
+        // LOGGED IN: Prioritize Top Recommendation
+        try {
+          console.log(`[ProblemContext] User ${user.id} logged in. Fetching top pick...`);
+          const response = await axios.get(`http://localhost:5001/api/users/${user.id}/recommendations`);
+
+          if (response.data && response.data.length > 0) {
+            const topPickId = response.data[0].id;
+            console.log(`[ProblemContext] Auto-selecting top pick: ${topPickId}`);
+            selectProblem(topPickId);
+            setInitialSelectDone(true);
+          } else {
+            console.log("[ProblemContext] No recommendations yet. Defaulting to Two Sum.");
+            selectProblem("1");
+            setInitialSelectDone(true);
+          }
+        } catch (err) {
+          console.error("[ProblemContext] Failed to fetch top pick, falling back:", err);
+          selectProblem("1");
+          setInitialSelectDone(true);
+        }
       }
     };
 
-    fetchProblems();
-  }, []);
+    performInitialSelection();
+  }, [user?.id, authLoading, initialSelectDone]);
 
   const nextMCQ = () => {
     setCurrentMCQIndex(prev => Math.min(prev + 1, mcqQuestions.length - 1));

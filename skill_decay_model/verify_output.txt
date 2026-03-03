@@ -1,0 +1,13 @@
+=== Skill Decay ML Model Verification ===
+Scenario: Easy Q, solved recently, last time correct
+Predicted Probability of success today: 25.92%
+
+Scenario: Hard Q, solved 1 month ago, last time correct
+Predicted Probability of success today: 48.97%
+
+Scenario: Medium Q, failed recently
+Predicted Probability of success today: 87.57%
+
+Scenario: Easy Q, 2 weeks ago, last time correct
+Predicted Probability of success today: 88.35%
+

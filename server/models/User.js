@@ -54,6 +54,11 @@ const userSchema = new mongoose.Schema({
     of: Number,
     default: {}
   },
+  successScores: {
+    type: Map,
+    of: Number,
+    default: {}
+  },
   isOnboarded: { type: Boolean, default: false }
 });
 

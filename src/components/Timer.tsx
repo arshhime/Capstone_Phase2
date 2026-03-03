@@ -5,11 +5,20 @@ import { useUserPreferences } from '../contexts/UserPreferencesContext';
 
 interface TimerProps {
   running: boolean;
+  successProbability?: number | null;
+  acceptanceRate?: number | null;
 }
 
-export default function Timer({ running }: TimerProps) {
+export default function Timer({ running, successProbability, acceptanceRate }: TimerProps) {
   const [time, setTime] = useState(0);
   const { theme, fontSize } = useUserPreferences();
+
+  const displayValue = (acceptanceRate && acceptanceRate > 0) ? acceptanceRate / 100 : successProbability;
+  const displayLabel = (acceptanceRate && acceptanceRate > 0) ? "Acceptance" : "Success Prob.";
+  const displayColor = displayValue !== null && displayValue !== undefined ? (
+    displayValue >= 0.7 ? 'text-emerald-400' :
+      displayValue >= 0.4 ? 'text-amber-400' : 'text-rose-400'
+  ) : '';
 
   useEffect(() => {
     let interval: any;
@@ -50,6 +59,16 @@ export default function Timer({ running }: TimerProps) {
           {formatTime(time)}
         </span>
       </div>
+
+      {displayValue !== undefined && displayValue !== null && (
+        <div className={`ml-3 pl-3 border-l ${theme === 'vs-dark' ? 'border-zinc-800' : 'border-zinc-200'}`}>
+          <div className={`text-[9px] font-bold uppercase tracking-widest leading-none mb-1 ${theme === 'vs-dark' ? 'text-zinc-600' : 'text-zinc-400'}`}>{displayLabel}</div>
+          <span className={`font-mono text-lg font-bold tracking-tight ${displayColor}`}>
+            {(displayValue * 100).toFixed(2)}%
+          </span>
+        </div>
+      )}
+
       {running && (
         <motion.div
           animate={{ opacity: [0.4, 0.8, 0.4] }}

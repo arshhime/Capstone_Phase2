@@ -31,6 +31,8 @@ export default function ProblemSolver() {
   const [generatingHint, setGeneratingHint] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
   const [executionError, setExecutionError] = useState<string | null>(null);
+  const [successProbability, setSuccessProbability] = useState<number | null>(null);
+  const [isHoveringTitle, setIsHoveringTitle] = useState(false);
 
   const { id } = useParams();
   const [language, setLanguage] = useState('python');
@@ -53,7 +55,34 @@ export default function ProblemSolver() {
     setShowHint(false);
     setSolutionWorked(null);
     setExtraHints([]);
+    setSuccessProbability(null);
   }, [currentProblem?.id]);
+
+  // Fetch success probability
+  useEffect(() => {
+    const fetchPrediction = async () => {
+      if (user && currentProblem) {
+        try {
+          // Try to get from user.successScores first for speed
+          if (user.successScores && user.successScores[currentProblem.id]) {
+            setSuccessProbability(user.successScores[currentProblem.id]);
+          } else {
+            // Fallback to real-time prediction
+            const response = await axios.post('http://localhost:8000/api/predict-success', {
+              userId: user.id,
+              problemId: currentProblem.id
+            });
+            if (response.data.success) {
+              setSuccessProbability(response.data.probability);
+            }
+          }
+        } catch (error) {
+          console.error("Failed to fetch success prediction", error);
+        }
+      }
+    };
+    fetchPrediction();
+  }, [currentProblem?.id, user?.id]);
 
   // Combined hints
   const allHints = [...(currentProblem?.hints || []), ...extraHints];
@@ -304,7 +333,11 @@ export default function ProblemSolver() {
             </div>
 
             <div className="flex items-center gap-6 border-l border-zinc-800 pl-8">
-              <Timer running={timerRunning} />
+              <Timer
+                running={timerRunning}
+                successProbability={successProbability}
+                acceptanceRate={currentProblem?.acceptanceRate}
+              />
 
               <div className="hidden md:flex items-center gap-4">
                 <div className="flex items-center gap-2">
@@ -436,9 +469,61 @@ export default function ProblemSolver() {
               }`}>
               <div className="p-8 md:p-10 space-y-10">
                 <section>
-                  <div className="flex items-center gap-3 mb-6">
+                  <div className="flex items-center gap-3 mb-6 relative">
                     <div className="w-1.5 h-6 bg-violet-600 rounded-full"></div>
-                    <h1 className={`text-3xl font-bold tracking-tight transition-colors ${theme === 'vs-dark' ? 'text-white' : 'text-zinc-900'}`}>{currentProblem.title}</h1>
+                    <div
+                      className="relative"
+                      onMouseEnter={() => setIsHoveringTitle(true)}
+                      onMouseLeave={() => setIsHoveringTitle(false)}
+                    >
+                      <h1 className={`text-3xl font-bold tracking-tight transition-colors cursor-help ${theme === 'vs-dark' ? 'text-white' : 'text-zinc-900'}`}>
+                        {currentProblem.title}
+                      </h1>
+
+                      <AnimatePresence>
+                        {isHoveringTitle && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                            className={`absolute left-0 top-full mt-4 z-[60] w-80 p-5 rounded-2xl border backdrop-blur-xl shadow-2-xl ${theme === 'vs-dark'
+                              ? 'bg-zinc-900/90 border-white/10 shadow-black/40'
+                              : 'bg-white/90 border-zinc-200 shadow-zinc-200/50'
+                              }`}
+                          >
+                            <div className="flex items-center gap-2 mb-4">
+                              <div className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse"></div>
+                              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Target Companies</span>
+                            </div>
+
+                            {currentProblem.companies && currentProblem.companies.length > 0 ? (
+                              <div className="flex flex-wrap gap-2">
+                                {currentProblem.companies.map((company, i) => (
+                                  <motion.span
+                                    key={company}
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: i * 0.03 }}
+                                    className={`px-3 py-1 rounded-full text-[10px] font-bold border transition-all ${theme === 'vs-dark'
+                                      ? 'bg-white/5 border-white/10 text-zinc-300 hover:bg-violet-500/20 hover:border-violet-500/30'
+                                      : 'bg-zinc-100 border-zinc-200 text-zinc-600 hover:bg-violet-500/10 hover:border-violet-500/20'
+                                      }`}
+                                  >
+                                    {company}
+                                  </motion.span>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="text-xs text-zinc-500 italic">No specific company data available for this question.</div>
+                            )}
+
+                            {/* Decorative tail */}
+                            <div className={`absolute -top-1.5 left-6 w-3 h-3 rotate-45 border-l border-t ${theme === 'vs-dark' ? 'bg-zinc-900/90 border-white/10' : 'bg-white/90 border-zinc-200'
+                              }`}></div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </div>
 
                   <div className="flex flex-wrap gap-2 mb-8">

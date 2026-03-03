@@ -14,12 +14,12 @@ import numpy as np
 # Base paths (Assuming this script is run from project root)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DISPLAY_PROBLEMS_PATH = os.path.join(BASE_DIR, "display-problems.json")
-USERS_PATH = os.path.join(BASE_DIR, "users.json")
-INTERACTIONS_PATH = os.path.join(BASE_DIR, "interactions.json")
+USERS_PATH = os.path.join(BASE_DIR, "correct_users.json")
+INTERACTIONS_PATH = os.path.join(BASE_DIR, "correct_interactions.json")
 
 # Model Parameters
 # Ebbinghaus Forgetting Curve: R = e^(-t/S)
-RETENTION_THRESHOLD = 0.6 # [DEMO] Force notifications for everyone (even if they remember 98%)
+RETENTION_THRESHOLD = 0.6 # [DEMO] Set to 60% as per user request
 DEFAULT_STABILITY = 1.0    # Default stability for a new problem (in days)
 
 # Multipliers for successful recall based on difficulty
@@ -108,7 +108,16 @@ class SkillDecayModel:
 
     def _parse_time(self, time_str):
         try:
-            return datetime.fromisoformat(time_str.replace('Z', '+00:00'))
+            # Handle Z suffix and convert to aware UTC
+            if isinstance(time_str, str):
+                dt = datetime.fromisoformat(time_str.replace('Z', '+00:00'))
+            else:
+                dt = datetime.now(timezone.utc)
+            
+            # Ensure it's always aware
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt
         except:
             return datetime.now(timezone.utc)
 

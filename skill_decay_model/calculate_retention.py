@@ -41,26 +41,26 @@ def calculate_stability_boost(difficulty, time_taken_seconds):
     return base * performance_boost
 
 def calculate_retention(last_review_time, stability, current_time, problem_id, last_time_taken, last_outcome, model=None, difficulty_val=2):
-    if not last_review_time: return 0.0
+    if not last_review_time: return 1.0
+    
     elapsed_days = (current_time - last_review_time).total_seconds() / 86400.0
     if elapsed_days < 0: elapsed_days = 0 
-
-    # ML Prediction (Disabled to enforce Ebbinghaus Decay for consistent demo results)
-    # if model:
-    #     try:
-    #         features = pd.DataFrame([{
-    #             "days_since_last": elapsed_days,
-    #             "prev_time_taken": last_time_taken,
-    #             "difficulty": difficulty_val,
-    #             "prev_outcome": last_outcome
-    #         }])
-    #         return model.predict_proba(features)[0][1]
-    #     except:
-    #         pass
-            
-    # Heuristic Fallback
-    if stability <= 0: return 0.0
-    return math.exp(-elapsed_days / stability)
+    
+    # 1. Apply a "temporal penalty" for failures
+    # If the user failed, we act as if more time has passed (decaying the curve)
+    # This avoids hardcoding "0.1" while still logically dropping the score.
+    effective_elapsed = elapsed_days
+    if last_outcome == 0:
+        # Penalty: Act as if 1 full stability period has already passed
+        effective_elapsed += stability
+    
+    # 2. Force 1.0 retention for fresh SUCCESSFUL solves (within 1 hour)
+    if last_outcome == 1 and elapsed_days < 0.0417: 
+        return 1.0
+ 
+    # 3. Pure Ebbinghaus Forgetting Curve: R = e^(-t/S)
+    if stability <= 0: stability = 0.5
+    return math.exp(-effective_elapsed / stability)
 
 def main():
     try:
