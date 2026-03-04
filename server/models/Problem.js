@@ -15,7 +15,10 @@ const problemSchema = new mongoose.Schema({
     }],
     tags: [String],
     hints: [String],
-    optimalSolution: String,
+    optimalSolution: [{
+        language: { type: String, enum: ['python', 'cpp', 'java', 'javascript'] },
+        code: String
+    }],
     timeComplexity: String,
     spaceComplexity: String,
     bruteForceTimeComplexity: String,

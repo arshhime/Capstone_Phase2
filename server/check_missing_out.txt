@@ -1,0 +1,5 @@
+Example missing problem: undefined
+Available fields: _id, id, __v, acceptanceRate, companies, constraints, description, difficulty, frequency, hints, mcqs, methodName, optimalSolution, tags, templates, testCases, title, spaceComplexity, timeComplexity, bruteForceSpaceComplexity, bruteForceTimeComplexity, optimalSpaceComplexity, optimalTimeComplexity
+Example missing problem: undefined
+Available fields: _id, id, __v, acceptanceRate, companies, constraints, description, difficulty, frequency, hints, mcqs, methodName, optimalSolution, tags, templates, testCases, title, bruteForceSpaceComplexity, bruteForceTimeComplexity, optimalSpaceComplexity, optimalTimeComplexity
+Total missing optimalSolutions: 2811

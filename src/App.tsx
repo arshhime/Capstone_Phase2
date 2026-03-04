@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserPreferencesProvider } from './contexts/UserPreferencesContext';
 import { AuthProvider } from './contexts/AuthContext';
@@ -12,6 +11,7 @@ import ProblemSolver from './components/ProblemSolver';
 import ProblemPage from "./pages/ProblemPage";
 
 import AuthSuccessPage from './pages/AuthSuccessPage';
+import OnboardingGuardian from './components/OnboardingGuardian';
 
 function App() {
   return (
@@ -19,16 +19,18 @@ function App() {
       <UserPreferencesProvider>
         <ProblemProvider>
           <Router>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/auth/success" element={<AuthSuccessPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/practice" element={<PracticePage />} />
-              <Route path="/chat" element={<ChatPage />} />
-              <Route path="/ide" element={<ProblemSolver />} />
-              <Route path="/problem/:slug" element={<ProblemPage />} />
-            </Routes>
+            <OnboardingGuardian>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/auth/success" element={<AuthSuccessPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/practice" element={<PracticePage />} />
+                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/ide" element={<ProblemSolver />} />
+                <Route path="/problem/:slug" element={<ProblemPage />} />
+              </Routes>
+            </OnboardingGuardian>
           </Router>
         </ProblemProvider>
       </UserPreferencesProvider>

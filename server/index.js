@@ -14,6 +14,8 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import cookieSession from 'cookie-session';
 import { updateUserRecommendations } from './utils/recommendationEngine.js';
+import { updateSuccessScores } from './utils/successPredictor.js';
+import { calculateUserRetentionScores } from './utils/skillDecay.js';
 
 const app = express();
 const SECRET_KEY = process.env.SECRET_KEY || 'your-very-secret-key';
@@ -24,11 +26,28 @@ app.use(cors()); // Changed cors configuration
 app.use(express.json());
 
 // --- MongoDB Connection ---
+import fs from 'fs';
+const errorLog = (msg) => {
+  const timestamp = new Date().toISOString();
+  fs.appendFileSync('global_errors.txt', `[${timestamp}] ${msg}\n`);
+};
+
+process.on('uncaughtException', (err) => {
+  errorLog(`Uncaught Exception: ${err.message}\n${err.stack}`);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  errorLog(`Unhandled Rejection at: ${promise} reason: ${reason}`);
+});
+
 mongoose.connect(process.env.MONGO_URI, {
   tlsAllowInvalidCertificates: true
 })
   .then(() => console.log('MongoDB connected')) // Updated success message
-  .catch(err => console.error('MongoDB connection error:', err)); // Updated error handling
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    errorLog(`MongoDB connection error: ${err.message}`);
+  });
 
 // --- Gemini Setup --- // Added Gemini Setup
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
@@ -110,7 +129,8 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
               correctProblems: 0,
               accuracy: 0,
               userRating: 1200,
-              experience: 'Beginner'
+              experience: 'Beginner',
+              isOnboarded: false
             });
             await user.save();
           }
@@ -266,7 +286,8 @@ app.post('/api/signup', async (req, res) => {
         { name: 'Strings', level: 0 },
         { name: 'DP', level: 0 },
         { name: 'Trees', level: 0 }
-      ]
+      ],
+      isOnboarded: false
     });
     await newUser.save();
     const token = jwt.sign({ id: newUser._id, email: newUser.email }, SECRET_KEY, { expiresIn: '1h' });
@@ -483,6 +504,16 @@ app.post('/api/interactions', async (req, res) => {
         user.experience = 'Advanced';
       }
 
+      // 8. Update Recommendation Scores (Direct Ebbinghaus Forgetting Curve Logic)
+      const retentionScores = await calculateUserRetentionScores(userId);
+      if (retentionScores && Object.keys(retentionScores).length > 0) {
+        if (!user.recommendationScores) user.recommendationScores = new Map();
+        for (const [pid, retention] of Object.entries(retentionScores)) {
+          // Store retention as a negative recommendation score to prioritize solved problems for review
+          user.recommendationScores.set(pid, parseFloat(retention.toFixed(4)));
+        }
+      }
+
       await user.save();
     }
 
@@ -506,8 +537,10 @@ app.post('/api/interactions', async (req, res) => {
     // Trigger Recommendation Update (Await to ensure dashboard is fresh)
     try {
       await updateUserRecommendations(userId);
+      // Trigger Success Score Update
+      await updateSuccessScores(userId);
     } catch (recErr) {
-      console.error("Rec update failed:", recErr);
+      console.error("Rec/Success update failed:", recErr);
     }
 
     res.status(201).json({ message: "Interaction recorded successfully." });
@@ -587,6 +620,7 @@ app.post('/api/users/onboard', async (req, res) => {
       });
     }
 
+    user.isOnboarded = true;
     await user.save();
     res.json({ message: "User onboarded successfully", user });
 
@@ -710,6 +744,7 @@ app.get('/api/users/:userId/stats', async (req, res) => {
         userRating: user.userRating,
         totalInteractions: user.totalInteractions,
         preferredCompanies: user.preferredCompanies ? Object.fromEntries(user.preferredCompanies) : {},
+        successScores: user.successScores ? Object.fromEntries(user.successScores) : {},
 
       },
       stats: {
@@ -723,6 +758,71 @@ app.get('/api/users/:userId/stats', async (req, res) => {
   } catch (error) {
     console.error('Error fetching user stats:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get User Revisions (Top 5 forgotten solved problems)
+app.get('/api/users/:userId/revisions', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Force update recommendations to calculate fresh retention scores (decay over time)
+    await updateUserRecommendations(userId);
+
+    const user = await User.findOne({ userId });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Get recommendation scores
+    const scores = user.recommendationScores ? Object.fromEntries(user.recommendationScores) : {};
+    const solvedIds = user.uniqueSolvedIds || [];
+
+    // Filter solved problems with negative scores
+    let revisions = solvedIds
+      .filter(id => scores[id] !== undefined && scores[id] < 0)
+      .map(id => ({
+        id,
+        score: scores[id],
+        retention: Math.abs(scores[id])
+      }));
+
+    // Sort by Score DESCENDING (Closer to 0 is better/worse retention?)
+    // Requirement: "Top 5 recommendations... score incremented from -1 until 0"
+    // Meaning closer to 0 = Needs revision MORE?
+    // Wait, "recommendation scores will always go towards 0".
+    // Usually higher recommendation score = better recommendation.
+    // -0.1 > -0.9.
+    // So yes, sort DESCENDING (-0.1 is top, -0.9 is bottom).
+    // -0.1 means Retention 0.1 (10%). Forgot almost everything.
+    // -0.9 means Retention 0.9 (90%). Remembered well.
+    // So we want closer to 0.
+
+    revisions.sort((a, b) => b.score - a.score);
+
+    // Take top 5
+    const top5Revisions = revisions.slice(0, 5);
+
+    // Hydrate with Problem Details
+    const problemIds = top5Revisions.map(r => r.id);
+    const problems = await Problem.find({ id: { $in: problemIds } });
+    const problemMap = new Map(problems.map(p => [p.id, p]));
+
+    const detailedRevisions = top5Revisions.map(r => {
+      const p = problemMap.get(r.id);
+      return {
+        id: r.id,
+        title: p ? p.title : `Problem ${r.id}`,
+        difficulty: p ? p.difficulty : 'Medium',
+        tags: p ? p.tags : [],
+        retention: r.retention,
+        score: r.score
+      };
+    });
+
+    res.json(detailedRevisions);
+
+  } catch (error) {
+    console.error("Error fetching revisions:", error);
+    res.status(500).json({ message: "Failed to fetch revisions" });
   }
 });
 
@@ -762,6 +862,18 @@ app.get("/api/leetcode/:slug", async (req, res) => {
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Failed to fetch question" });
+  }
+});
+
+
+app.get("/api/companies", async (req, res) => {
+  try {
+    const companies = await Problem.distinct("companies");
+    // Filter out empty or null values and sort alphabetically
+    const cleanCompanies = companies.filter(c => c).sort();
+    res.json(cleanCompanies);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -832,12 +944,22 @@ app.get("/api/users/:userId/recommendations", async (req, res) => {
     console.log(`Scores present? ${!!user.recommendationScores}. Size: ${scoreSize}`);
 
     if (!user.recommendationScores || scoreSize === 0) {
-      console.log("Triggering update...");
+      console.log("Triggering recommendation update...");
       await updateUserRecommendations(userId);
       const updatedUser = await User.findOne({ userId }); // re-fetch
       if (updatedUser) {
         user.recommendationScores = updatedUser.recommendationScores;
         console.log(`Update done. New size: ${user.recommendationScores ? user.recommendationScores.size : 0}`);
+      }
+    }
+
+    // Also trigger Success Scores if missing
+    if (!user.successScores || user.successScores.size === 0) {
+      console.log("Triggering Success Scores update...");
+      await updateSuccessScores(userId);
+      const updatedUserAfterSuccess = await User.findOne({ userId });
+      if (updatedUserAfterSuccess) {
+        user.successScores = updatedUserAfterSuccess.successScores;
       }
     }
 
@@ -862,7 +984,8 @@ app.get("/api/users/:userId/recommendations", async (req, res) => {
         difficulty: p.difficulty,
         tags: p.tags,
         companies: p.companies,
-        score: user.recommendationScores.get(id)
+        score: user.recommendationScores.get(id),
+        successScore: user.successScores && user.successScores.get(id) !== undefined ? Number(user.successScores.get(id)) : null
       };
     }).filter(p => p);
 

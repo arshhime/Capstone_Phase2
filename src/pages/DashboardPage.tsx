@@ -1,13 +1,12 @@
 import React from 'react';
 import axios from 'axios';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Target, Clock, TrendingUp, Code2, Zap, ArrowRight, Star, BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useProblem } from '../contexts/ProblemContext';
 import Navigation from '../components/Navigation';
 import RadarChart from '../components/RadarChart';
-import OnboardingModal from '../components/OnboardingModal';
 
 interface PredictionResponse {
     success_probability: number;
@@ -31,17 +30,29 @@ const SKILL_COLORS = [
 ];
 
 
+// Converts a raw seconds string (e.g. "180s") to a readable format (e.g. "3m 0s")
+const formatTimeTaken = (raw: string): string => {
+    const s = parseInt(raw, 10);
+    if (isNaN(s)) return raw;
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = s % 60;
+    if (h > 0) return `${h}h ${m}m ${sec}s`;
+    if (m > 0) return `${m}m ${sec}s`;
+    return `${sec}s`;
+};
+
 const Dashboard: React.FC = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
-    const { selectProblem, fetchProblem, problems: allProblems } = useProblem();
-    const [titleSlug, setTitleSlug] = React.useState('');
-    const [isFetching, setIsFetching] = React.useState(false);
+    const { selectProblem, problems: allProblems } = useProblem();
     const [userStats, setUserStats] = React.useState<any>(null);
     const [loading, setLoading] = React.useState(true);
-    const [showOnboarding, setShowOnboarding] = React.useState(false);
     const [recommendations, setRecommendations] = React.useState<any[]>([]);
     const [predictions, setPredictions] = React.useState<Record<string, PredictionResponse>>({});
+
+    const [revisions, setRevisions] = React.useState<any[]>([]);
+    const [hoveredProblemId, setHoveredProblemId] = React.useState<string | null>(null);
 
     // Fetch user stats on mount
     React.useEffect(() => {
@@ -65,6 +76,15 @@ const Dashboard: React.FC = () => {
                     const recData = await recResponse.json();
                     if (Array.isArray(recData)) {
                         setRecommendations(recData);
+                    }
+                }
+
+                // Fetch Revisions
+                const revResponse = await fetch(`http://localhost:5001/api/users/${user.id}/revisions`);
+                if (revResponse.ok) {
+                    const revData = await revResponse.json();
+                    if (Array.isArray(revData)) {
+                        setRevisions(revData);
                     }
                 }
             } catch (error) {
@@ -102,39 +122,16 @@ const Dashboard: React.FC = () => {
     }, [recommendations, user?.id]);
 
     React.useEffect(() => {
-        if (userStats?.user) {
-            const u = userStats.user;
-            // Check if new user: 0 interactions AND no preferred companies
-            const hasInteractions = u.totalInteractions > 0;
-            const hasPreferred = u.preferredCompanies && Object.keys(u.preferredCompanies).length > 0;
-
-            if (!hasInteractions && !hasPreferred) {
-                setShowOnboarding(true);
-            }
+        if (recommendations.length > 0) {
+            console.log('Dashboard Recommendations:', recommendations.map(r => ({ id: r.id, success: r.successScore })));
         }
-    }, [userStats]);
-
-    const handleOnboardingComplete = () => {
-        setShowOnboarding(false);
-        // Refresh stats to reflect new skills/preferences
-        // window.location.reload(); // Simple refresh or re-fetch
-        // Re-fetching is better but reload ensures full state sync
-        window.location.reload();
-    };
+    }, [recommendations]);
 
     const handleProblemClick = (id: string) => {
         selectProblem(id);
         navigate('/ide');
     };
 
-    const handleFetchProblem = async () => {
-        if (!titleSlug.trim()) return;
-        setIsFetching(true);
-        await fetchProblem(titleSlug);
-        setIsFetching(false);
-        setTitleSlug('');
-        navigate('/ide');
-    };
 
     // Shuffle skills for Radar Chart
     const shuffledSkills = React.useMemo(() => {
@@ -170,16 +167,6 @@ const Dashboard: React.FC = () => {
 
     const recommendedProblems = recommendations.length > 0 ? recommendations : allProblems.slice(0, 5); // Fallback to context if empty
 
-    const quickImportSlugs = [
-        "two-sum", "palindrome-number", "roman-to-integer", "longest-common-prefix",
-        "valid-parentheses", "merge-two-sorted-lists", "remove-duplicates-from-sorted-array",
-        "remove-element", "find-the-index-of-the-first-occurrence-in-a-string",
-        "search-insert-position", "length-of-last-word", "plus-one", "add-binary",
-        "sqrtx", "climbing-stairs", "remove-duplicates-from-sorted-list",
-        "merge-sorted-array", "binary-tree-inorder-traversal", "same-tree",
-        "symmetric-tree", "maximum-depth-of-binary-tree", "convert-sorted-array-to-binary-search-tree",
-        "balanced-binary-tree", "minimum-depth-of-binary-tree", "path-sum"
-    ];
 
     return (
         <div className="min-h-screen bg-zinc-950 text-white relative overflow-hidden">
@@ -269,8 +256,7 @@ const Dashboard: React.FC = () => {
                             </div>
                         </section>
 
-
-
+                        {/* Top Picks Section */}
                         <section className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold">Top Picks for You</h2>
@@ -280,6 +266,8 @@ const Dashboard: React.FC = () => {
                                     <motion.div
                                         key={prob.id}
                                         whileHover={{ x: 10 }}
+                                        onMouseEnter={() => setHoveredProblemId(prob.id)}
+                                        onMouseLeave={() => setHoveredProblemId(null)}
                                         onClick={() => handleProblemClick(prob.id)}
                                         className="glass-panel p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between group cursor-pointer relative z-0 hover:z-50"
                                     >
@@ -294,27 +282,72 @@ const Dashboard: React.FC = () => {
                                                         <Target className="w-3.5 h-3.5 text-violet-400 opacity-60 group-hover:opacity-100" />
                                                     )}
                                                 </h4>
-                                                <div className="flex gap-2 mt-1">
+                                                <div className="flex flex-wrap gap-2 mt-1 min-h-[1.25rem]">
                                                     {(prob.tags || []).slice(0, 3).map((tag: any) => (
-                                                        <span key={tag} className="text-[10px] uppercase tracking-wider font-bold text-zinc-500">{tag}</span>
+                                                        <span key={tag} className="text-[10px] uppercase tracking-wider font-bold text-zinc-500">#{tag}</span>
                                                     ))}
+                                                    <span className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                        {(prob.companies || []).slice(0, 2).map((company: any) => (
+                                                            <span key={company} className="text-[10px] uppercase tracking-wider font-bold text-violet-400">@{company}</span>
+                                                        ))}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-6">
                                             <div className="hidden md:block text-right">
-                                                <div className={`text-xs font-bold ${prob.difficulty === 'Easy' ? 'text-green-500' :
-                                                        prob.difficulty === 'Medium' ? 'text-yellow-500' :
-                                                            'text-rose-500'
-                                                    }`}>{prob.difficulty}</div>
-                                                {predictions[prob.id] && !predictions[prob.id].error ? (
-                                                    <div className={`text-[10px] font-bold mt-0.5 ${predictions[prob.id].success_probability >= 70 ? 'text-emerald-400' :
-                                                            predictions[prob.id].success_probability >= 40 ? 'text-amber-400' :
-                                                                'text-rose-400'
-                                                        }`}>{predictions[prob.id].success_probability}% Success</div>
-                                                ) : (
-                                                    <div className="text-zinc-500 text-[10px] mt-0.5">Personalized Pick</div>
-                                                )}
+                                                <div className={`text-xs font-bold ${prob.difficulty === 'Easy' ? 'text-green-500' : prob.difficulty === 'Medium' ? 'text-yellow-500' : 'text-rose-500'}`}>{prob.difficulty}</div>
+                                                <div className="relative">
+                                                    <AnimatePresence>
+                                                        {hoveredProblemId === prob.id && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: 15, scale: 0.9, filter: 'blur(10px)' }}
+                                                                animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                                                                exit={{ opacity: 0, y: 15, scale: 0.9, filter: 'blur(10px)' }}
+                                                                className="absolute bottom-full right-0 mb-4 z-[100] w-64 p-6 rounded-[2.5rem] border border-white/30 bg-zinc-900 shadow-[0_30px_60px_-12px_rgba(0,0,0,0.9)] border-t-white/40 ring-1 ring-white/10"
+                                                            >
+                                                                <div className="flex items-center gap-2 mb-3">
+                                                                    <div className="w-2.5 h-2.5 rounded-full bg-violet-500 animate-pulse shadow-[0_0_12px_rgba(167,139,250,0.8)]"></div>
+                                                                    <span className="text-[11px] font-black text-zinc-300 uppercase tracking-[0.2em] leading-none">AI Analytics Cloud</span>
+                                                                </div>
+
+                                                                {(() => {
+                                                                    // Priority: 1. recommendation obj, 2. userStats fresh fetch, 3. auth context (fallback)
+                                                                    const rawScore = prob.successScore ?? userStats?.user?.successScores?.[prob.id] ?? user?.successScores?.[prob.id];
+                                                                    const hasScore = rawScore !== undefined && rawScore !== null && !isNaN(parseFloat(rawScore));
+                                                                    const score = hasScore ? parseFloat(rawScore) : null;
+                                                                    const displayScore = hasScore ? (score! * 100).toFixed(2) : "N/A";
+                                                                    const colorClass = !hasScore || score === null ? 'text-zinc-600' : (score >= 0.7 ? 'text-emerald-400' : score >= 0.4 ? 'text-amber-400' : 'text-rose-400');
+
+                                                                    return (
+                                                                        <div className="flex flex-col gap-1">
+                                                                            <div className="flex items-baseline gap-2">
+                                                                                <span className={`text-4xl font-black tracking-tighter ${colorClass} drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]`}>
+                                                                                    {hasScore ? `${displayScore}%` : <motion.span animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.5, repeat: Infinity }}>ANALYZING...</motion.span>}
+                                                                                </span>
+                                                                                {hasScore && <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Score</span>}
+                                                                            </div>
+                                                                            <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                                                                                {hasScore ? "Success Probability" : "Evaluating Skill Match"}
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                })()}
+
+                                                                <div className="mt-5 pt-3 border-t border-white/10">
+                                                                    <div className="flex justify-between items-center text-[9px] uppercase tracking-tighter font-black text-zinc-500">
+                                                                        <span>Model Integrity</span>
+                                                                        <span className="text-violet-500">VERIFIED</span>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Decorative tail */}
+                                                                <div className="absolute -bottom-2.5 right-12 w-5 h-5 rotate-45 bg-zinc-900 border-r border-b border-white/30 shadow-[5px_5px_15px_rgba(0,0,0,0.5)]"></div>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                    <div className={`text-zinc-500 text-[10px] mt-0.5 uppercase font-bold tracking-widest transition-opacity ${hoveredProblemId === prob.id ? 'opacity-0' : 'opacity-100'}`}>Community Favorite</div>
+                                                </div>
                                             </div>
                                             <div className="w-10 h-10 rounded-xl border border-white/5 flex items-center justify-center group-hover:bg-violet-600 transition-all">
                                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform group-hover:text-white" />
@@ -330,8 +363,8 @@ const Dashboard: React.FC = () => {
                                                         Success Chance
                                                     </span>
                                                     <span className={`text-sm font-bold ${predictions[prob.id].success_probability >= 70 ? 'text-emerald-400' :
-                                                            predictions[prob.id].success_probability >= 40 ? 'text-amber-400' :
-                                                                'text-rose-400'
+                                                        predictions[prob.id].success_probability >= 40 ? 'text-amber-400' :
+                                                            'text-rose-400'
                                                         }`}>{predictions[prob.id].success_probability}%</span>
                                                 </div>
                                                 <p className="text-xs text-zinc-300 leading-relaxed font-medium">
@@ -409,7 +442,7 @@ const Dashboard: React.FC = () => {
                                     <div key={i} className="flex gap-4">
                                         <div className={`w-2 h-2 rounded-full mt-2 shadow-[0_0_10px_rgba(139,92,246,0.5)] ${activity.status === 'Solved' ? 'bg-green-500' : 'bg-red-500'}`}></div>
                                         <div>
-                                            <p className="text-sm font-medium">{activity.status} "{activity.title}" in {activity.timeTaken}</p>
+                                            <p className="text-sm font-medium">{activity.status} "{activity.title}" in {formatTimeTaken(activity.timeTaken)}</p>
                                             <p className="text-xs text-zinc-500 mt-1">{activity.timeAgo}</p>
                                         </div>
                                     </div>
@@ -419,13 +452,54 @@ const Dashboard: React.FC = () => {
                                 )}
                             </div>
                         </section>
+
+                        {/* Revision List Section */}
+                        {revisions.length > 0 && (
+                            <section className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-lg font-bold flex items-center gap-2">
+                                        <Zap className="w-5 h-5 text-orange-500" />
+                                        Revision List
+                                    </h2>
+                                    <span className="text-xs text-zinc-500 uppercase tracking-wider">Based on Skill Decay</span>
+                                </div>
+                                <div className="grid gap-4">
+                                    {revisions.map((prob: any) => (
+                                        <motion.div
+                                            key={prob.id}
+                                            whileHover={{ x: 10 }}
+                                            onClick={() => handleProblemClick(prob.id)}
+                                            className="glass-panel p-5 rounded-2xl border border-red-500/10 bg-red-500/[0.02] flex items-center justify-between group cursor-pointer"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center border border-zinc-800 group-hover:border-orange-500/50 transition-colors">
+                                                    <Zap className="w-5 h-5 text-orange-400" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="text-sm font-bold">{prob.title}</h4>
+                                                    <div className="flex gap-2 mt-1 h-4">
+                                                        <span className="text-xs uppercase tracking-wider font-bold text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                            Retention: {(prob.retention * 100).toFixed(2)}%
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-6">
+                                                <div className="hidden md:block text-right">
+                                                    <div className="text-xs font-bold text-orange-500">Review</div>
+                                                </div>
+                                                <div className="w-10 h-10 rounded-xl border border-white/5 flex items-center justify-center group-hover:bg-orange-600 transition-all">
+                                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
                     </div>
                 </div>
             </div>
-
-            {showOnboarding && user?.id && (
-                <OnboardingModal userId={user.id} onComplete={handleOnboardingComplete} />
-            )}
         </div>
     );
 };

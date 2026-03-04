@@ -1,6 +1,13 @@
-
 import User from '../models/User.js';
 import Problem from '../models/Problem.js';
+import { spawn } from 'child_process';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Interaction from '../models/Interaction.js';
+import { calculateUserRetentionScores } from './skillDecay.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Constants for Scoring
 const WEIGHTS = {
@@ -39,112 +46,123 @@ async function getProblems() {
     return cachedProblems;
 }
 
+// (Removed Python calculateRetention - now using Node-native skillDecay.js)
+
+// Function to call NCF Recommendation Script
+const getNCFRecommendations = async (userId) => {
+    return new Promise((resolve, reject) => {
+        try {
+            const scriptPath = path.join(__dirname, '..', '..', 'recommendation_engine', 'recommend.py');
+            const pythonProcess = spawn('python', [scriptPath, userId]);
+
+            let dataString = '';
+            let errorString = '';
+
+            pythonProcess.stdout.on('data', (data) => {
+                dataString += data.toString();
+            });
+
+            pythonProcess.stderr.on('data', (data) => {
+                errorString += data.toString();
+            });
+
+            pythonProcess.on('close', (code) => {
+                if (code !== 0) {
+                    console.error(`NCF script exited with code ${code}: ${errorString}`);
+                    resolve({});
+                } else {
+                    try {
+                        const results = JSON.parse(dataString);
+                        resolve(results);
+                    } catch (e) {
+                        console.error("Failed to parse NCF output:", e);
+                        resolve({});
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Error executing NCF script:", error);
+            resolve({});
+        }
+    });
+};
+
 export const updateUserRecommendations = async (userId) => {
     try {
-        console.log(`[RecEngine] Starting update for ${userId}`);
+        console.log(`[RecEngine] Starting intelligent NCF update for ${userId}`);
         const user = await User.findOne({ userId });
         if (!user) {
             console.error(`User ${userId} not found for recommendation update.`);
             return;
         }
 
-        const problems = await getProblems();
-        const userRating = user.userRating || 1200;
+        // 0. Calculate Retention for Solved Problems (Spaced Repetition)
+        const retentionMap = await calculateUserRetentionScores(userId);
 
-        // 1. Prepare User Profile Data
+        // 1. Get Neural Collaborative Filtering (NCF) Scores
+        const ncfScores = await getNCFRecommendations(userId);
 
-        // Skills (Sorted by level)
+        // 2. Prepare User Profile for Heuristic Scoring (Rules)
         const sortedSkills = [...(user.skillDistribution || [])].sort((a, b) => b.level - a.level);
         const strongestTags = new Set(sortedSkills.slice(0, 3).map(s => s.name));
         const weakestTags = new Set(sortedSkills.filter(s => s.level > 0).slice(-3).map(s => s.name));
         const knownTags = new Set(sortedSkills.map(s => s.name));
+        const userRating = user.userRating || 1200;
 
-        // Preferred Companies (Top 5)
         const companyEntries = user.preferredCompanies ? Array.from(user.preferredCompanies.entries()) : [];
         const topCompanies = new Set(
-            companyEntries.sort((a, b) => b[1] - a[1]).slice(0, 5).map(e => e[0].replace(/_/g, '.')) // Revert safe key to match problem data
+            companyEntries.sort((a, b) => b[1] - a[1]).slice(0, 5).map(e => e[0].replace(/_/g, '.'))
         );
 
-        // Recent Activity Context
-        const recentTags = new Set();
-        const recentCompanies = new Set();
-        // Since recentActivity stores minimal info, we might not have tags directly.
-        // But we have companies/tags from interactions implicitly? 
-        // We'll skip recent tags if not available in recentActivity, or maybe infer from problemId if we had a map.
-        // For efficiency, let's look at user.uniqueAttemptedIds? No.
-        // Implementation: We'll skip deep recent tag lookup for now to keep it fast, 
-        // OR we can check if the problem ID is in recentActivity. 
-        // User asked for "recentActivity Qs skills/companyTags".
-        // To do this strictly, we need to know the tags of recent Qs. 
-        // We can do a quick lookup in our cachedProblems map.
-        const problemMap = new Map(problems.map(p => [p.id, p]));
-
-        (user.recentActivity || []).slice(0, 5).forEach(activity => {
-            const p = problemMap.get(activity.problemId);
-            if (p) {
-                if (p.tags) p.tags.forEach(t => recentTags.add(t));
-                if (p.companies) p.companies.forEach(c => recentCompanies.add(c));
-            }
-        });
-
-        // 2. Score Every Problem
-        const scores = new Map();
+        // 3. Map and Combine Scores (Hybrid)
+        const finalScores = new Map();
+        const problems = await getProblems();
 
         for (const problem of problems) {
-            let score = 0;
+            const isSolved = user.uniqueSolvedIds && user.uniqueSolvedIds.includes(problem.id);
 
-            // A. User Rating Match (0.25)
-            const probDiffVal = DIFFICULTY_MAP[problem.difficulty] || 1500;
-            const diff = Math.abs(userRating - probDiffVal);
-            // Normalize: 0 diff = 1. 1000 diff = 0.
-            const ratingScore = Math.max(0, 1 - (diff / 1000));
-            score += WEIGHTS.RATING * ratingScore;
+            if (isSolved) {
+                // Determine retention for solved problems (Already negative from skillDecay.js)
+                const retention = retentionMap[problem.id] !== undefined ? retentionMap[problem.id] : -1.0;
+                finalScores.set(problem.id, parseFloat(retention.toFixed(4)));
+            } else {
+                // --- A. Discovery Score (NCF Neural Prob) ---
+                const ncfProb = ncfScores[problem.id] !== undefined ? ncfScores[problem.id] : 0.1;
 
-            // B. Strongest Skills (0.15)
-            const hasStrongest = problem.tags && problem.tags.some(t => strongestTags.has(t));
-            if (hasStrongest) score += WEIGHTS.STRONGEST;
+                // --- B. Preference Score (Rule-Based Heuristic) ---
+                let ruleScore = 0;
 
-            // C. Weakest Skills (0.15)
-            const hasWeakest = problem.tags && problem.tags.some(t => weakestTags.has(t));
-            if (hasWeakest) score += WEIGHTS.WEAKEST;
+                // User Rating Match (0.25)
+                const probDiffVal = DIFFICULTY_MAP[problem.difficulty] || 1500;
+                const diff = Math.abs(userRating - probDiffVal);
+                ruleScore += WEIGHTS.RATING * Math.max(0, 1 - (diff / 1000));
 
-            // D. Preferred Companies (0.20)
-            const hasCompany = problem.companies && problem.companies.some(c => topCompanies.has(c));
-            if (hasCompany) score += WEIGHTS.COMPANY;
+                // Strongest Skills (0.15)
+                if (problem.tags && problem.tags.some(t => strongestTags.has(t))) ruleScore += WEIGHTS.STRONGEST;
 
-            // E. Missing Skills (0.15)
-            // Present in problem but NOT in user skillDistribution (level 0/undefined)
-            const hasMissing = problem.tags && problem.tags.some(t => !knownTags.has(t));
-            if (hasMissing) score += WEIGHTS.MISSING;
+                // Weakest Skills (0.15)
+                if (problem.tags && problem.tags.some(t => weakestTags.has(t))) ruleScore += WEIGHTS.WEAKEST;
 
-            // F. Recent Activity (0.10)
-            const matchesRecent = (
-                (problem.tags && problem.tags.some(t => recentTags.has(t))) ||
-                (problem.companies && problem.companies.some(c => recentCompanies.has(c)))
-            );
-            if (matchesRecent) score += WEIGHTS.RECENT;
+                // Preferred Companies (0.20)
+                if (problem.companies && problem.companies.some(c => topCompanies.has(c))) ruleScore += WEIGHTS.COMPANY;
 
-            // Optionally: Don't recommend solved problems?
-            // "Updated after every interaction". Usually you don't recommend solved Qs.
-            // But user didn't explicitly say "Filter solved". They said "Top 5 recommendations".
-            // I'll filter solved problems out of the *display* logic, but maybe store scores for all.
-            // Or score solved problems as -1?
-            // Let's set score to -1 if solved.
-            if (user.uniqueSolvedIds && user.uniqueSolvedIds.includes(problem.id)) {
-                score = -1;
+                // Missing Skills (0.15)
+                if (problem.tags && problem.tags.some(t => !knownTags.has(t))) ruleScore += WEIGHTS.MISSING;
+
+                // --- C. Blend (50/50) ---
+                // We normalize ncfProb (0-1) and ruleScore (scaled by WEIGHTS total ~1.0)
+                const hybridScore = (ncfProb * 0.5) + (ruleScore * 0.5);
+
+                finalScores.set(problem.id, parseFloat(hybridScore.toFixed(4)));
             }
-
-            scores.set(problem.id, parseFloat(score.toFixed(4)));
         }
 
         // 3. Save to User
-        user.recommendationScores = scores;
-
-        // Since Mongoose Maps update tracking can be tricky, explicitly mark modified
+        user.recommendationScores = finalScores;
         user.markModified('recommendationScores');
-
         await user.save();
-        console.log(`[RecEngine] Updated recommendations for user ${user.username} (UserId: ${userId})`);
+
+        console.log(`[RecEngine] Successfully updated NCF recommendations for ${user.username}`);
 
     } catch (error) {
         console.error("[RecEngine] Error updating recommendations:", error);

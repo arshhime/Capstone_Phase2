@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\VSCODE_CAPSTONE\Capstone_Phase2\backend_rag\diagnose_executors.py", line 3, in <module>
+    from executor import PythonExecutor, CppExecutor, JavaExecutor
+  File "C:\VSCODE_CAPSTONE\Capstone_Phase2\backend_rag\executor.py", line 715
+    """
+       ^
+SyntaxError: f-string: single '}' is not allowed
