@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Trophy, Target, Clock, TrendingUp, Code2, Zap, ArrowRight, Star, BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,6 +8,13 @@ import { useProblem } from '../contexts/ProblemContext';
 import Navigation from '../components/Navigation';
 import RadarChart from '../components/RadarChart';
 import OnboardingModal from '../components/OnboardingModal';
+
+interface PredictionResponse {
+    success_probability: number;
+    recommendation: string;
+    confidence: string;
+    error?: string;
+}
 
 // Define color palettes for skills
 const SKILL_COLORS = [
@@ -33,6 +41,7 @@ const Dashboard: React.FC = () => {
     const [loading, setLoading] = React.useState(true);
     const [showOnboarding, setShowOnboarding] = React.useState(false);
     const [recommendations, setRecommendations] = React.useState<any[]>([]);
+    const [predictions, setPredictions] = React.useState<Record<string, PredictionResponse>>({});
 
     // Fetch user stats on mount
     React.useEffect(() => {
@@ -67,6 +76,30 @@ const Dashboard: React.FC = () => {
 
         fetchUserStats();
     }, [user?.id]);
+
+    // Fetch AI predictions once recommendations load
+    React.useEffect(() => {
+        if (recommendations.length === 0) return;
+        const userId = user?.id ?? 'default_user';
+
+        const fetchPredictions = async () => {
+            const newPredictions: Record<string, PredictionResponse> = {};
+            await Promise.all(recommendations.map(async (prob: any) => {
+                try {
+                    const res = await axios.post('http://localhost:5002/api/predict', {
+                        userId,
+                        problemId: prob.id
+                    });
+                    newPredictions[prob.id] = res.data;
+                } catch (e) {
+                    console.error(`Prediction failed for problem ${prob.id}`, e);
+                }
+            }));
+            setPredictions(prev => ({ ...prev, ...newPredictions }));
+        };
+
+        fetchPredictions();
+    }, [recommendations, user?.id]);
 
     React.useEffect(() => {
         if (userStats?.user) {
@@ -248,16 +281,21 @@ const Dashboard: React.FC = () => {
                                         key={prob.id}
                                         whileHover={{ x: 10 }}
                                         onClick={() => handleProblemClick(prob.id)}
-                                        className="glass-panel p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between group cursor-pointer"
+                                        className="glass-panel p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between group cursor-pointer relative z-0 hover:z-50"
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center border border-zinc-800 group-hover:border-violet-500/50 transition-colors">
-                                                <Code2 className="w-5 h-5 text-zinc-400" />
+                                                <Code2 className="w-5 h-5 text-zinc-400 group-hover:text-violet-400 transition-colors" />
                                             </div>
                                             <div>
-                                                <h4 className="font-bold">{prob.title}</h4>
+                                                <h4 className="font-bold group-hover:text-violet-300 transition-colors flex items-center gap-2">
+                                                    {prob.title}
+                                                    {predictions[prob.id] && !predictions[prob.id].error && (
+                                                        <Target className="w-3.5 h-3.5 text-violet-400 opacity-60 group-hover:opacity-100" />
+                                                    )}
+                                                </h4>
                                                 <div className="flex gap-2 mt-1">
-                                                    {(prob.tags || []).map((tag: any) => (
+                                                    {(prob.tags || []).slice(0, 3).map((tag: any) => (
                                                         <span key={tag} className="text-[10px] uppercase tracking-wider font-bold text-zinc-500">{tag}</span>
                                                     ))}
                                                 </div>
@@ -265,13 +303,47 @@ const Dashboard: React.FC = () => {
                                         </div>
                                         <div className="flex items-center gap-6">
                                             <div className="hidden md:block text-right">
-                                                <div className={`text-xs font-bold ${prob.difficulty === 'Easy' ? 'text-green-500' : prob.difficulty === 'Medium' ? 'text-yellow-500' : 'text-rose-500'}`}>{prob.difficulty}</div>
-                                                <div className="text-zinc-500 text-[10px] mt-0.5">Community Favorite</div>
+                                                <div className={`text-xs font-bold ${prob.difficulty === 'Easy' ? 'text-green-500' :
+                                                        prob.difficulty === 'Medium' ? 'text-yellow-500' :
+                                                            'text-rose-500'
+                                                    }`}>{prob.difficulty}</div>
+                                                {predictions[prob.id] && !predictions[prob.id].error ? (
+                                                    <div className={`text-[10px] font-bold mt-0.5 ${predictions[prob.id].success_probability >= 70 ? 'text-emerald-400' :
+                                                            predictions[prob.id].success_probability >= 40 ? 'text-amber-400' :
+                                                                'text-rose-400'
+                                                        }`}>{predictions[prob.id].success_probability}% Success</div>
+                                                ) : (
+                                                    <div className="text-zinc-500 text-[10px] mt-0.5">Personalized Pick</div>
+                                                )}
                                             </div>
                                             <div className="w-10 h-10 rounded-xl border border-white/5 flex items-center justify-center group-hover:bg-violet-600 transition-all">
-                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform group-hover:text-white" />
                                             </div>
                                         </div>
+
+                                        {/* AI Prediction Tooltip */}
+                                        {predictions[prob.id] && !predictions[prob.id].error && (
+                                            <div className="absolute right-0 bottom-full mb-2 w-64 p-4 bg-zinc-950/95 backdrop-blur-xl border border-zinc-700 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999] pointer-events-none">
+                                                <div className="flex justify-between items-center mb-2 border-b border-zinc-800 pb-2">
+                                                    <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider flex items-center gap-1">
+                                                        <Target className="w-3 h-3" />
+                                                        Success Chance
+                                                    </span>
+                                                    <span className={`text-sm font-bold ${predictions[prob.id].success_probability >= 70 ? 'text-emerald-400' :
+                                                            predictions[prob.id].success_probability >= 40 ? 'text-amber-400' :
+                                                                'text-rose-400'
+                                                        }`}>{predictions[prob.id].success_probability}%</span>
+                                                </div>
+                                                <p className="text-xs text-zinc-300 leading-relaxed font-medium">
+                                                    {predictions[prob.id].recommendation}
+                                                </p>
+                                                <div className="mt-2 flex items-center gap-1 text-[10px] text-zinc-600">
+                                                    <Zap className="w-3 h-3 text-violet-500" />
+                                                    <span>AI Confidence: <span className="text-zinc-400">{predictions[prob.id].confidence}</span></span>
+                                                </div>
+                                                <div className="absolute right-6 -bottom-1 w-2 h-2 bg-zinc-800 rotate-45"></div>
+                                            </div>
+                                        )}
                                     </motion.div>
                                 ))}
                             </div>

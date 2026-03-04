@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, ChevronLeft, ChevronRight, Filter, CheckCircle, Circle, Brain } from 'lucide-react';
+import { Search, X, ChevronLeft, ChevronRight, Filter, Circle, Brain } from 'lucide-react';
 import axios from 'axios';
 import { Problem } from '../data/problems';
 import { useProblem } from '../contexts/ProblemContext';
+
 
 interface ProblemListModalProps {
     isOpen: boolean;
@@ -25,7 +26,6 @@ export default function ProblemListModal({ isOpen, onClose }: ProblemListModalPr
     const [totalPages, setTotalPages] = useState(1);
     const [difficulty, setDifficulty] = useState<string>('');
     const [debounceSearch, setDebounceSearch] = useState('');
-
     // Debounce search input
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -61,6 +61,8 @@ export default function ProblemListModal({ isOpen, onClose }: ProblemListModalPr
 
         fetchProblems();
     }, [isOpen, page, debounceSearch, difficulty]);
+
+
 
     const handleSelect = (id: string) => {
         selectProblem(id);

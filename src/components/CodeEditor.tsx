@@ -94,7 +94,7 @@ export default function CodeEditor({ onStartCoding, phase, language, onLanguageC
         expected_output: tc.output,
       }));
 
-      const response = await axios.post('http://127.0.0.1:8000/execute', {
+      const response = await axios.post('http://127.0.0.1:5002/execute', {
         code: code,
         language: language, // Using the state language
         method_name: currentProblem.methodName,

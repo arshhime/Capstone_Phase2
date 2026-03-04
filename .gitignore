@@ -29,3 +29,13 @@ ENV/
 env/
  
 .env
+
+# Vector Databases
+chroma_db_problems/
+*chroma.sqlite3
+
+# Test Scripts & Ad-hoc logs
+backend_rag/test_*.py
+backend_rag/*.txt
+backend_rag/*.json
+!backend_rag/requirements.txt

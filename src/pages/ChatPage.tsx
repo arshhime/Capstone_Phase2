@@ -3,6 +3,7 @@ import { Send, User, Bot, Menu, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import Navigation from '../components/Navigation';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -35,8 +36,9 @@ const ChatPage: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:8000/chat', {
-                query: userMessage.content
+            const response = await axios.post('http://localhost:5002/chat', {
+                query: userMessage.content,
+                chat_history: messages // Pass existing messages
             });
 
             const botMessage: Message = { role: 'assistant', content: response.data.answer };
@@ -126,7 +128,10 @@ const ChatPage: React.FC = () => {
                                             : 'bg-zinc-800/50 border border-zinc-700/50 text-zinc-200 rounded-bl-sm'
                                             }`}
                                     >
-                                        <p className="leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                                        {msg.role === 'user'
+                                            ? <p className="leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                                            : <div className="leading-relaxed"><MarkdownRenderer content={msg.content} /></div>
+                                        }
                                     </div>
 
                                     {msg.role === 'user' && (

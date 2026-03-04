@@ -158,8 +158,7 @@ export default function ProblemSolver() {
 
       // Call Execution API
       // Call Execution API
-      // Call Execution API
-      const response = await axios.post('http://127.0.0.1:8000/execute', {
+      const response = await axios.post('http://127.0.0.1:5002/execute', {
         language: language,
         code: code,
         test_cases: testCases,

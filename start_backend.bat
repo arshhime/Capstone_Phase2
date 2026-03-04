@@ -6,7 +6,7 @@ echo.
 
 REM Kill any existing Python processes on port 8000
 echo [1/3] Stopping any existing backend servers...
-for /f "tokens=5" %%a in ('netstat -aon ^| find ":8000" ^| find "LISTENING"') do (
+for /f "tokens=5" %%a in ('netstat -aon ^| find ":5002" ^| find "LISTENING"') do (
     echo Killing process %%a
     taskkill /F /PID %%a >nul 2>&1
 )
@@ -19,8 +19,8 @@ REM Start the server (packages are already installed globally)
 echo.
 echo [2/3] Starting FastAPI backend...
 echo.
-echo Server will be available at: http://localhost:8000
-echo API Documentation: http://localhost:8000/docs
+echo Server will be available at: http://localhost:5002
+echo API Documentation: http://localhost:5002/docs
 echo.
 echo [3/3] Press Ctrl+C to stop the server
 echo ========================================

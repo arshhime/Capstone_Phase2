@@ -80,7 +80,10 @@ async def login(credentials: UserLogin):
 @app.post("/chat", response_model=QueryResponse)
 async def chat(request: QueryRequest):
     try:
-        inputs = {"question": request.query}
+        inputs = {
+            "question": request.query,
+            "chat_history": request.chat_history
+        }
         result = app_graph.invoke(inputs)
         return QueryResponse(answer=result["answer"])
     except Exception as e:
@@ -142,5 +145,20 @@ async def fetch_leetcode_problem(request: dict):
     
     return {"success": True, "problem": transformed_problem}
 
+# Prediction Endpoint
+from prediction_service import prediction_service
+from models import PredictionRequest, PredictionResponse
+
+@app.post("/api/predict", response_model=PredictionResponse)
+async def predict_success(request: PredictionRequest):
+    """Predict user success probability for a problem."""
+    result = await prediction_service.predict_success(request.userId, request.problemId)
+    return PredictionResponse(
+        success_probability=result.get("success_probability", 0.0),
+        recommendation=result.get("recommendation", "No recommendation available."),
+        confidence=result.get("confidence", "Low"),
+        error=result.get("error")
+    )
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=5002, reload=True)

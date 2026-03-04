@@ -65,3 +65,13 @@ class LeetCodeResponse(BaseModel):
     success: bool
     problem: Optional[dict] = None
     error: Optional[str] = None
+
+class PredictionRequest(BaseModel):
+    userId: str
+    problemId: str
+
+class PredictionResponse(BaseModel):
+    success_probability: float
+    recommendation: str
+    confidence: str
+    error: Optional[str] = None

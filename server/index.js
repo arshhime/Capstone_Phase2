@@ -24,7 +24,9 @@ app.use(cors()); // Changed cors configuration
 app.use(express.json());
 
 // --- MongoDB Connection ---
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, {
+  tlsAllowInvalidCertificates: true
+})
   .then(() => console.log('MongoDB connected')) // Updated success message
   .catch(err => console.error('MongoDB connection error:', err)); // Updated error handling
 

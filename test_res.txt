@@ -1,0 +1,15 @@
+Your provided code `def twoSum(nums, target): return []` simply returns an empty list. This operation takes constant time, so its time complexity is **O(1)**.
+
+For the "Two Sum" problem, the optimal solution has a time complexity of **O(n)**. This is typically achieved by using a Hash Map (or dictionary in Python) to store numbers and their indices, allowing for O(1) average-time lookups for the complement.
+
+Here is the optimal solution code in Python:
+
+```python
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        d = {}
+        for i, x in enumerate(nums):
+            if (y := target - x) in d:
+                return [d[y], i]
+            d[x] = i
+```
