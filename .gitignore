@@ -28,7 +28,9 @@ venv/
 ENV/
 env/
  
-# .env (unignored for masked push)
+# Env files
+.env
+**/.env
 
 # Vector Databases
 chroma_db_problems/
