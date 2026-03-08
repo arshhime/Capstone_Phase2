@@ -10,7 +10,7 @@ export const updateSuccessScores = async (userId) => {
         console.log(`[SuccessPredictor] Updating scores for user ${userId}...`);
 
         // Call Python Backend for all 2811 predictions
-        const response = await axios.post('http://127.0.0.1:8000/api/predict-all-success', {
+        const response = await axios.post('http://127.0.0.1:5002/api/predict-all-success', {
             userId: userId
         });
 

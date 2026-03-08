@@ -31,7 +31,7 @@ app.add_middleware(
 # MongoDB Configuration
 MONGO_URI = os.getenv("MONGO_URI")
 client = AsyncIOMotorClient(MONGO_URI)
-db = client.get_database() # Uses database name from URI
+db = client.get_default_database(default="test") # Fallback to test if unspecified
 users_collection = db["users"]
 problems_collection = db["display-problems"]
 interactions_collection = db["interactions"]
@@ -40,7 +40,8 @@ print(f"STARTUP: Connected to DB: {db.name}")
 print(f"STARTUP: Collections: {users_collection.name}, {problems_collection.name}")
 
 # Load ML Model
-MODEL_PATH = r"c:\VSCODE_CAPSTONE\Capstone_Phase2\success_predictor\success_predictor_model.pkl"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "ml_models", "success_predictor_model.pkl")
 model = None
 try:
     with open(MODEL_PATH, 'rb') as f:

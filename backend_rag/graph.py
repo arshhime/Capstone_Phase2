@@ -99,15 +99,57 @@ def retrieve(state: GraphState):
 
             if matched_tags or matched_companies:
                 print(f"Tag lookup: {matched_tags}, Company lookup: {matched_companies}")
-                # Fetch a wider net then filter locally since Langchain Chroma doesn't natively support substring LIKE filters
-                raw_docs = db.similarity_search(question_orig, k=50)
-                for d in raw_docs:
-                    doc_tags = d.metadata.get("tags", "").lower()
-                    doc_companies = d.metadata.get("companies", "").lower()
-                    
-                    if any(t in doc_tags for t in matched_tags) or any(c in doc_companies for c in matched_companies):
-                        if d not in documents:
-                            documents.append(d)
+                matching_meta_ids = []
+                try:
+                    all_metas = all_data.get("metadatas", [])
+                    for meta in all_metas:
+                        meta_id = meta.get("id")
+                        if not meta_id:
+                            continue
+                        
+                        doc_tags = meta.get("tags", "").lower() if meta.get("tags") else ""
+                        doc_companies = meta.get("companies", "").lower() if meta.get("companies") else ""
+                        
+                        has_tag_match = any(t in doc_tags for t in matched_tags) if matched_tags else True
+                        has_comp_match = any(c in doc_companies for c in matched_companies) if matched_companies else True
+                        
+                        if has_tag_match and has_comp_match:
+                            matching_meta_ids.append(str(meta_id))
+                            
+                    # Fallback to union if intersection is empty
+                    if not matching_meta_ids and matched_tags and matched_companies:
+                        for meta in all_metas:
+                            meta_id = meta.get("id")
+                            if not meta_id:
+                                continue
+                            doc_tags = meta.get("tags", "").lower() if meta.get("tags") else ""
+                            doc_companies = meta.get("companies", "").lower() if meta.get("companies") else ""
+                            if any(t in doc_tags for t in matched_tags) or any(c in doc_companies for c in matched_companies):
+                                matching_meta_ids.append(str(meta_id))
+                                
+                except Exception as e:
+                    print(f"Error filtering ids locally: {e}")
+
+                if matching_meta_ids:
+                    try:
+                        # Limit to avoid massive $in clauses
+                        search_ids = matching_meta_ids[:50]
+                        raw_docs = db.similarity_search(
+                            question_orig, 
+                            k=5, 
+                            filter={"id": {"$in": search_ids}}
+                        )
+                        for d in raw_docs:
+                            if d not in documents:
+                                documents.append(d)
+                    except Exception as e:
+                        print(f"Filter $in failed: {e}")
+                        # Fallback
+                        for pid in matching_meta_ids[:5]:
+                            docs = db.similarity_search(question_orig, k=1, filter={"id": pid})
+                            for d in docs:
+                                if d not in documents:
+                                    documents.append(d)
                 
                 documents = documents[:5]
 

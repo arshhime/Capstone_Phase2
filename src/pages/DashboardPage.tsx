@@ -354,29 +354,7 @@ const Dashboard: React.FC = () => {
                                             </div>
                                         </div>
 
-                                        {/* AI Prediction Tooltip */}
-                                        {predictions[prob.id] && !predictions[prob.id].error && (
-                                            <div className="absolute right-0 bottom-full mb-2 w-64 p-4 bg-zinc-950/95 backdrop-blur-xl border border-zinc-700 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999] pointer-events-none">
-                                                <div className="flex justify-between items-center mb-2 border-b border-zinc-800 pb-2">
-                                                    <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider flex items-center gap-1">
-                                                        <Target className="w-3 h-3" />
-                                                        Success Chance
-                                                    </span>
-                                                    <span className={`text-sm font-bold ${predictions[prob.id].success_probability >= 70 ? 'text-emerald-400' :
-                                                        predictions[prob.id].success_probability >= 40 ? 'text-amber-400' :
-                                                            'text-rose-400'
-                                                        }`}>{predictions[prob.id].success_probability}%</span>
-                                                </div>
-                                                <p className="text-xs text-zinc-300 leading-relaxed font-medium">
-                                                    {predictions[prob.id].recommendation}
-                                                </p>
-                                                <div className="mt-2 flex items-center gap-1 text-[10px] text-zinc-600">
-                                                    <Zap className="w-3 h-3 text-violet-500" />
-                                                    <span>AI Confidence: <span className="text-zinc-400">{predictions[prob.id].confidence}</span></span>
-                                                </div>
-                                                <div className="absolute right-6 -bottom-1 w-2 h-2 bg-zinc-800 rotate-45"></div>
-                                            </div>
-                                        )}
+                                        {/* AI Prediction Tooltip Removed as requested */}
                                     </motion.div>
                                 ))}
                             </div>
