@@ -49,8 +49,12 @@ To get this project running on your local machine, you will need to set up both 
 3.  **Create a `.env` file**:
     Create a `.env` file in the `server` directory and add your MongoDB connection string and a session secret:
     ```
-    MONGO_URI=your_mongodb_connection_string
-    SECRET_KEY=your_jwt_secret_key
+    PORT=5001
+    MONGO_URI=XXXX (YourMongoURI)
+    SECRET_KEY=mySuperSecretKey123
+    GEMINI_API=XXXX (YourGeminiAPIKey)
+    GOOGLE_CLIENT_ID=XXXX (YourGoogleClientID)
+    GOOGLE_CLIENT_SECRET=XXXX (YourGoogleClientSecret)
     ```
 
 4.  **Start the server**:
